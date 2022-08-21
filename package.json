@@ -18,6 +18,9 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "yarn workspace mindchart-client react-scripts start"
+    "start": "yarn workspace mindchart-client react-scripts start",
+    "build": "yarn workspace mindchart-client react-scripts build",
+    "test": "yarn workspace mindchart-client react-scripts test",
+    "eject": "yarn workspace mindchart-client react-scripts eject"
   }
 }
