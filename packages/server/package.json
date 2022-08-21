@@ -1,0 +1,8 @@
+{
+    "name": "mindchart-server",
+    "version": "1.0.0",
+  
+    "dependencies": {
+      "mindchart-client": "1.0.0"
+    }
+  }
