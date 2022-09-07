@@ -21,7 +21,7 @@ const AddButton = styled('a')({
 const Header = () => {
     return (
         <StyledHeader>
-            <AddButton href="https://www.google.com">
+            <AddButton href="">
                 Add
             </AddButton>
         </StyledHeader>
