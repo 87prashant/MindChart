@@ -10,10 +10,11 @@ const StyledHeader = styled('div')({
     background: '#F4EBD0'
 })
 
-const AddButton = styled('a')({
+const AddButton = styled('button')({
     margin: '0 20px',
     padding: '10px',
     textDecoration: 'none',
+    cursor: 'pointer',
     border: 'solid black',
     borderRadius: '10px'
 })
@@ -21,7 +22,7 @@ const AddButton = styled('a')({
 const Header = () => {
     return (
         <StyledHeader>
-            <AddButton href="">
+            <AddButton >
                 Add
             </AddButton>
         </StyledHeader>
