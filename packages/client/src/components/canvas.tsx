@@ -13,10 +13,13 @@ const Canvas = () => {
   const draw = (ctx: CanvasRenderingContext2D | null) => {
     ctx?.clearRect(0, 0, ctx?.canvas.width, ctx?.canvas.height)
     ctx?.beginPath();
-    ctx?.rect(20, 20, 100, 10);
-    ctx?.stroke();
+    ctx?.rect(20, 20, 40, 18);
+    ctx?.fill();
+    if(ctx !== null) {
+      ctx.fillStyle = "green";
+    }
+    ctx?.fillRect(10, 10, 150, 100);
   }
-
 
   useEffect(() => {
     const canvas = canvasRef.current as unknown as HTMLCanvasElement

@@ -19,10 +19,14 @@ const AddButton = styled('button')({
     borderRadius: '10px'
 })
 
+const addNewThemo = () => {
+    
+}
+
 const Header = () => {
     return (
         <StyledHeader>
-            <AddButton >
+            <AddButton onClick={() => addNewThemo()}>
                 Add
             </AddButton>
         </StyledHeader>
@@ -30,3 +34,4 @@ const Header = () => {
 }
 
 export default Header
+
