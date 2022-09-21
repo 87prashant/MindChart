@@ -11,14 +11,14 @@ const Canvas = () => {
   const canvasRef = useRef(null)
 
   const draw = (ctx: CanvasRenderingContext2D | null) => {
-    ctx?.clearRect(0, 0, ctx?.canvas.width, ctx?.canvas.height)
-    ctx?.beginPath();
-    ctx?.rect(20, 20, 40, 18);
-    ctx?.fill();
-    if(ctx !== null) {
-      ctx.fillStyle = "green";
-    }
-    ctx?.fillRect(10, 10, 150, 100);
+    // ctx?.clearRect(0, 0, ctx?.canvas.width, ctx?.canvas.height)
+    // ctx?.beginPath();
+    // ctx?.rect(20, 20, 40, 18);
+    // ctx?.fill();
+    // if(ctx !== null) {
+    //   ctx.fillStyle = "green";
+    // }
+    // ctx?.fillRect(10, 10, 150, 100);
   }
 
   useEffect(() => {
