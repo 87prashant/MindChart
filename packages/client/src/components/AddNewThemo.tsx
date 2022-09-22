@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React from "react";
-import Data from "../Data";
+import Data from "../Data/Data";
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -48,14 +48,14 @@ const StyledDiv = styled("div")<{ showAddNewThemo: boolean }>(
     top: 0,
     height: "100%",
     width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.30)",
+    backgroundColor: "rgba(0, 0, 0, 0.10)",
   })
 );
 
-const StyledErrors = styled('div')({
-  color: 'red',
-  fontSize: 11
-})
+const StyledErrors = styled("div")({
+  color: "red",
+  fontSize: 11,
+});
 
 interface Props {
   setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>;
@@ -72,18 +72,25 @@ const AddNewThemo = (props: Props) => {
     name: "",
   });
   const [errors, setErrors] = React.useState({ nameError: "" });
-  const handleCancel = () => {
-    setShowAddNewThemo(false);
+
+  const refreshFormData = () => {
     setFormData(() => {
       return {
         name: "",
       };
     });
+  };
+  const refreshErrors = () => {
     setErrors(() => {
       return {
         nameError: "",
       };
     });
+  };
+  const handleCancel = () => {
+    setShowAddNewThemo(false);
+    refreshFormData();
+    refreshErrors();
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(() => {
@@ -106,16 +113,8 @@ const AddNewThemo = (props: Props) => {
     e.preventDefault();
     if (!validateFormData(formData)) return;
     Data.push(formData);
-    setFormData(() => {
-      return {
-        name: "",
-      };
-    });
-    setErrors(() => {
-      return {
-        nameError: "",
-      };
-    });
+    refreshFormData();
+    refreshErrors();
     setShowAddNewThemo(false);
   };
 
