@@ -59,14 +59,15 @@ const AddNewThemo = (props: Props) => {
   const handleClick = () => {
     setShowAddNewThemo(false)
   }
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     setShowAddNewThemo(false)
   }
 
   return (
     <StyledDiv showAddNewThemo={showAddNewThemo}>
       <StyledWrapper>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <h3>Name</h3>
           <NameInput placeholder="Name" />
           <SubmitButton type="submit" value="Submit" />
