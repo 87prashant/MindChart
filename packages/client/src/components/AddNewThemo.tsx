@@ -52,6 +52,11 @@ const StyledDiv = styled("div")<{ showAddNewThemo: boolean }>(
   })
 );
 
+const StyledErrors = styled('div')({
+  color: 'red',
+  fontSize: 11
+})
+
 interface Props {
   setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>;
   showAddNewThemo: boolean;
@@ -90,7 +95,7 @@ const AddNewThemo = (props: Props) => {
     if (!data.name) {
       setErrors(() => {
         return {
-          nameError: "* Name Can not be Empty",
+          nameError: "* Name can not be empty",
         };
       });
       output = false;
@@ -126,7 +131,7 @@ const AddNewThemo = (props: Props) => {
             value={formData.name}
             onChange={(e) => handleChange(e)}
           />
-          {errors.nameError && <p>{errors.nameError}</p>}
+          {errors.nameError && <StyledErrors>{errors.nameError}</StyledErrors>}
           <SubmitButton type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
