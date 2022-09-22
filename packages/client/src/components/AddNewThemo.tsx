@@ -102,6 +102,7 @@ const AddNewThemo = (props: Props) => {
     if (!data.name) {
       setErrors(() => {
         return {
+          ...errors,
           nameError: "* Name can not be empty",
         };
       });
