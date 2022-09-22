@@ -30,26 +30,36 @@ const SubmitButton = styled(Inputs)({
   position: "absolute",
   bottom: 20,
   left: 20,
-  cursor: 'pointer'
+  cursor: "pointer",
 });
 
 const CancelButton = styled(Inputs)({
   position: "absolute",
   bottom: 20,
   right: 20,
-  cursor: 'pointer',
+  cursor: "pointer",
 });
+
+const StyledDiv = styled('div')({
+  position: 'fixed',
+  top: 0,
+  height: '100%',
+  width: '100%',
+  backgroundColor: 'rgba(0, 0, 0, 0.30)'
+})
 
 const AddNewThemo = () => {
   return (
-    <StyledWrapper>
-      <form>
-        <h3>Name</h3>
-        <NameInput placeholder="Name" />
-        <SubmitButton type="submit" value="Submit" />
-        <CancelButton type="button" value="Cancel" />
-      </form>
-    </StyledWrapper>
+    <StyledDiv>
+      <StyledWrapper>
+        <form>
+          <h3>Name</h3>
+          <NameInput placeholder="Name" />
+          <SubmitButton type="submit" value="Submit" />
+          <CancelButton type="button" value="Cancel" />
+        </form>
+      </StyledWrapper>
+    </StyledDiv>
   );
 };
 export default AddNewThemo;
