@@ -5,10 +5,11 @@ import './App.css';
 import AddNewThemo from './components/AddNewThemo';
 
 function App() {
+  const [showAddNewThemo, setShowAddNewThemo] = React.useState(false)
   return (
     <div className="App">
-      <Header/>
-      <AddNewThemo />
+      <Header setShowAddNewThemo={setShowAddNewThemo}/>
+      <AddNewThemo showAddNewThemo={showAddNewThemo} setShowAddNewThemo={setShowAddNewThemo}/>
       <Canvas/>
     </div>
   );

@@ -19,11 +19,14 @@ const AddButton = styled('button')({
     borderRadius: '10px'
 })
 
-const addNewThemo = () => {
-    
+interface Props {
+    setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Header = () => {
+const Header = (props: Props) => {
+    const addNewThemo = () => {
+        props.setShowAddNewThemo(true)
+    }
     return (
         <StyledHeader>
             <AddButton onClick={() => addNewThemo()}>

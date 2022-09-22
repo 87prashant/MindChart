@@ -40,23 +40,37 @@ const CancelButton = styled(Inputs)({
   cursor: "pointer",
 });
 
-const StyledDiv = styled('div')({
+const StyledDiv = styled('div')<{showAddNewThemo: boolean}>(({showAddNewThemo}) => ({
   position: 'fixed',
+  display: showAddNewThemo ? 'block' : 'none',
   top: 0,
   height: '100%',
   width: '100%',
   backgroundColor: 'rgba(0, 0, 0, 0.30)'
-})
+}))
 
-const AddNewThemo = () => {
+interface Props {
+  setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>
+  showAddNewThemo: boolean
+}
+
+const AddNewThemo = (props: Props) => {
+  const {showAddNewThemo, setShowAddNewThemo} = props
+  const handleClick = () => {
+    setShowAddNewThemo(false)
+  }
+  const handleSubmit = () => {
+    setShowAddNewThemo(false)
+  }
+
   return (
-    <StyledDiv>
+    <StyledDiv showAddNewThemo={showAddNewThemo}>
       <StyledWrapper>
-        <form>
+        <form onSubmit={handleSubmit}>
           <h3>Name</h3>
           <NameInput placeholder="Name" />
           <SubmitButton type="submit" value="Submit" />
-          <CancelButton type="button" value="Cancel" />
+          <CancelButton type="button" value="Cancel" onClick={handleClick}/>
         </form>
       </StyledWrapper>
     </StyledDiv>
