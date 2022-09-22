@@ -57,6 +57,10 @@ interface Props {
   showAddNewThemo: boolean;
 }
 
+type formDataType = {
+  name: string
+}
+
 const AddNewThemo = (props: Props) => {
   const { showAddNewThemo, setShowAddNewThemo } = props;
   const [formData, setFormData] = React.useState({
@@ -75,8 +79,13 @@ const AddNewThemo = (props: Props) => {
       return { ...formData, [e.target.name]: e.target.value };
     });
   };
+  const validataFormData = (data: formDataType) => {
+    if(!data.name) return false
+    return true
+  }
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if(!validataFormData(formData)) return
     Data.push(formData)
     setFormData(() => {
       return {

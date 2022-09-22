@@ -2,6 +2,6 @@ interface DataType {
     name: string
 }
 
-const Data: [DataType] = [{name:""}]
+const Data: [DataType?] = []
 
 export default Data
