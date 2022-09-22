@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React from "react";
-import Data from '../Data'
+import Data from "../Data";
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -58,19 +58,25 @@ interface Props {
 }
 
 type formDataType = {
-  name: string
-}
+  name: string;
+};
 
 const AddNewThemo = (props: Props) => {
   const { showAddNewThemo, setShowAddNewThemo } = props;
   const [formData, setFormData] = React.useState({
     name: "",
   });
+  const [errors, setErrors] = React.useState({ nameError: "" });
   const handleCancel = () => {
     setShowAddNewThemo(false);
     setFormData(() => {
       return {
         name: "",
+      };
+    });
+    setErrors(() => {
+      return {
+        nameError: "",
       };
     });
   };
@@ -79,21 +85,33 @@ const AddNewThemo = (props: Props) => {
       return { ...formData, [e.target.name]: e.target.value };
     });
   };
-  const validataFormData = (data: formDataType) => {
-    if(!data.name) return false
-    return true
-  }
+  const validateFormData = (data: formDataType) => {
+    let output = true;
+    if (!data.name) {
+      setErrors(() => {
+        return {
+          nameError: "* Name Can not be Empty",
+        };
+      });
+      output = false;
+    }
+    return output;
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!validataFormData(formData)) return
-    Data.push(formData)
+    if (!validateFormData(formData)) return;
+    Data.push(formData);
     setFormData(() => {
       return {
         name: "",
       };
     });
+    setErrors(() => {
+      return {
+        nameError: "",
+      };
+    });
     setShowAddNewThemo(false);
-    console.log(Data)
   };
 
   return (
@@ -108,6 +126,7 @@ const AddNewThemo = (props: Props) => {
             value={formData.name}
             onChange={(e) => handleChange(e)}
           />
+          {errors.nameError && <p>{errors.nameError}</p>}
           <SubmitButton type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
@@ -115,4 +134,5 @@ const AddNewThemo = (props: Props) => {
     </StyledDiv>
   );
 };
+
 export default AddNewThemo;
