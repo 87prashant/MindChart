@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import React from "react";
+import Data from '../Data'
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -40,38 +41,66 @@ const CancelButton = styled(Inputs)({
   cursor: "pointer",
 });
 
-const StyledDiv = styled('div')<{showAddNewThemo: boolean}>(({showAddNewThemo}) => ({
-  position: 'fixed',
-  display: showAddNewThemo ? 'block' : 'none',
-  top: 0,
-  height: '100%',
-  width: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.30)'
-}))
+const StyledDiv = styled("div")<{ showAddNewThemo: boolean }>(
+  ({ showAddNewThemo }) => ({
+    position: "fixed",
+    display: showAddNewThemo ? "block" : "none",
+    top: 0,
+    height: "100%",
+    width: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.30)",
+  })
+);
 
 interface Props {
-  setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>
-  showAddNewThemo: boolean
+  setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>;
+  showAddNewThemo: boolean;
 }
 
 const AddNewThemo = (props: Props) => {
-  const {showAddNewThemo, setShowAddNewThemo} = props
-  const handleClick = () => {
-    setShowAddNewThemo(false)
-  }
+  const { showAddNewThemo, setShowAddNewThemo } = props;
+  const [formData, setFormData] = React.useState({
+    name: "",
+  });
+  const handleCancel = () => {
+    setShowAddNewThemo(false);
+    setFormData(() => {
+      return {
+        name: "",
+      };
+    });
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(() => {
+      return { ...formData, [e.target.name]: e.target.value };
+    });
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setShowAddNewThemo(false)
-  }
+    e.preventDefault();
+    Data.push(formData)
+    setFormData(() => {
+      return {
+        name: "",
+      };
+    });
+    setShowAddNewThemo(false);
+    console.log(Data)
+  };
 
   return (
     <StyledDiv showAddNewThemo={showAddNewThemo}>
       <StyledWrapper>
         <form onSubmit={(e) => handleSubmit(e)}>
-          <h3>Name</h3>
-          <NameInput placeholder="Name" />
+          <h5>Name</h5>
+          <NameInput
+            placeholder="Name"
+            name="name"
+            type="text"
+            value={formData.name}
+            onChange={(e) => handleChange(e)}
+          />
           <SubmitButton type="submit" value="Submit" />
-          <CancelButton type="button" value="Cancel" onClick={handleClick}/>
+          <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
       </StyledWrapper>
     </StyledDiv>
