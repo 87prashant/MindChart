@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React from "react";
+import React, { useEffect } from "react";
 import Data from "../Data/Data";
 
 const StyledWrapper = styled("div")({
@@ -72,6 +72,9 @@ const AddNewThemo = (props: Props) => {
     name: "",
   });
   const [errors, setErrors] = React.useState({ nameError: "" });
+  useEffect(() => {
+    validateFormData(formData);
+  }, [formData]);
 
   const refreshFormData = () => {
     setFormData(() => {
@@ -93,7 +96,7 @@ const AddNewThemo = (props: Props) => {
     refreshErrors();
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(() => {
+    setFormData((formData) => {
       return { ...formData, [e.target.name]: e.target.value };
     });
   };
@@ -107,13 +110,20 @@ const AddNewThemo = (props: Props) => {
         };
       });
       output = false;
+    } else {
+      setErrors(() => {
+        return {
+          ...errors,
+          nameError: "",
+        };
+      });
     }
     return output;
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData)) return;
-    Data.push(formData);
+    // Data.push(formData);
     refreshFormData();
     refreshErrors();
     setShowAddNewThemo(false);
