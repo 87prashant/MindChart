@@ -1,8 +1,9 @@
 // fix: Change the name to Form as it makes for sense
 
 import styled from "@emotion/styled";
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 // import Data from "../Data/Data";
+import Types from "./Types";
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -27,7 +28,7 @@ const Inputs = styled("input")({
   border: "2px solid black",
 });
 
-const NameInput = styled(Inputs)({});
+const DescriptionInput = styled(Inputs)({});
 
 const SubmitButton = styled(Inputs)({
   position: "absolute",
@@ -64,16 +65,18 @@ interface Props {
   showAddNewThemo: boolean;
 }
 
-interface formDataType {
-  name: string;
+export interface formDataType {
+  type: string;
+  description: string;
 }
 
 const AddNewThemo = (props: Props) => {
   const { showAddNewThemo, setShowAddNewThemo } = props;
   const [formData, setFormData] = useState({
-    name: "",
+    type: "",
+    description: "",
   });
-  const [errors, setErrors] = useState({ nameError: "" });
+  const [errors, setErrors] = useState({ descriptionError: "" });
   useEffect(() => {
     validateFormData(formData);
     return () => {};
@@ -82,14 +85,15 @@ const AddNewThemo = (props: Props) => {
   const refreshFormData = () => {
     setFormData(() => {
       return {
-        name: "",
+        type: "",
+        description: "",
       };
     });
   };
   const refreshErrors = () => {
     setErrors(() => {
       return {
-        nameError: "",
+        descriptionError: "",
       };
     });
   };
@@ -98,18 +102,23 @@ const AddNewThemo = (props: Props) => {
     refreshFormData();
     refreshErrors();
   };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setFormData((formData) => {
       return { ...formData, [e.target.name]: e.target.value };
     });
   };
+  console.log(formData);
   const validateFormData = (data: formDataType) => {
     let output = true;
-    if (!data.name) {
+    if (!data.description) {
       setErrors(() => {
         return {
           ...errors,
-          nameError: "* Name can not be empty",
+          descriptionError: "* Description can not be empty",
         };
       });
       output = false;
@@ -117,7 +126,7 @@ const AddNewThemo = (props: Props) => {
       setErrors(() => {
         return {
           ...errors,
-          nameError: "",
+          descriptionError: "",
         };
       });
     }
@@ -136,15 +145,24 @@ const AddNewThemo = (props: Props) => {
     <StyledDiv showAddNewThemo={showAddNewThemo}>
       <StyledWrapper>
         <form onSubmit={(e) => handleSubmit(e)}>
-          <h5>Name</h5>
-          <NameInput
-            placeholder="Name"
-            name="name"
+          <h5>Type</h5>
+          <Types
+            formData={formData}
+            handleChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              handleChange(e)
+            }
+          />
+          <h5>Description</h5>
+          <DescriptionInput
+            placeholder="Description"
+            name="description"
             type="text"
-            value={formData.name}
+            value={formData.description}
             onChange={(e) => handleChange(e)}
           />
-          {errors.nameError && <StyledErrors>{errors.nameError}</StyledErrors>}
+          {errors.descriptionError && (
+            <StyledErrors>{errors.descriptionError}</StyledErrors>
+          )}
           <SubmitButton type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
