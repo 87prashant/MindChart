@@ -1,6 +1,8 @@
+// fix: Change the name to Form as it makes for sense
+
 import styled from "@emotion/styled";
-import React, { useEffect } from "react";
-import Data from "../Data/Data";
+import React, {useState, useEffect } from "react";
+// import Data from "../Data/Data";
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -62,18 +64,19 @@ interface Props {
   showAddNewThemo: boolean;
 }
 
-type formDataType = {
+interface formDataType {
   name: string;
-};
+}
 
 const AddNewThemo = (props: Props) => {
   const { showAddNewThemo, setShowAddNewThemo } = props;
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = useState({
     name: "",
   });
-  const [errors, setErrors] = React.useState({ nameError: "" });
+  const [errors, setErrors] = useState({ nameError: "" });
   useEffect(() => {
     validateFormData(formData);
+    return () => {};
   }, [formData]);
 
   const refreshFormData = () => {
