@@ -1,22 +1,23 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import ForceGraph from "./ForceGraph";
-import { BaseType } from "d3";
 
 const StyledWrapper = styled("div")({
   border: "5px solid black",
-  width: "calc(100% - 20px)",
-  height: "calc(100vh - 125px)",
+  boxSizing: "border-box",
+  height: "calc(100vh - 100px)",
+  overflow: 'hidden'
 });
 const Main = () => {
-  const ForceGraphComponent: JSX.Element = useMemo(() => {
-     return <ForceGraph />
+  const ref = useRef(null);
+  useEffect(() => {
+    const container = ref.current as unknown as HTMLElement;
+    const w: number = container!.getBoundingClientRect().width;
+    const h: number = container!.getBoundingClientRect().height;
+    const props = { container, w, h };
+    ForceGraph(props);
   }, []);
-  return (
-  <StyledWrapper>
-    {ForceGraphComponent}
-  </StyledWrapper>
-  )
+  return <StyledWrapper ref={ref}></StyledWrapper>;
 };
 
 export default Main;
