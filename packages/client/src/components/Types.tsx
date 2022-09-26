@@ -1,8 +1,8 @@
 import React from "react";
-import { formDataType } from "./AddNewThemo";
+import { FormDataType } from "./AddNewThemo";
 
 interface Props {
-  formData: formDataType;
+  formData: FormDataType;
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 

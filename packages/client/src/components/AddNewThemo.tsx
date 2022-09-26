@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
 // import Data from "../Data/Data";
 import Types from "./Types";
+import Categories from "./Categories";
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -65,18 +66,44 @@ interface Props {
   showAddNewThemo: boolean;
 }
 
-export interface formDataType {
+interface categoriesType {
+  fear: boolean;
+  joy: boolean;
+  anticipation: boolean;
+  trust: boolean;
+  disgust: boolean;
+  anger: boolean;
+  surprise: boolean;
+  sadness: boolean;
+}
+
+export interface FormDataType {
   type: string;
+  categories: categoriesType;
   description: string;
 }
 
 const AddNewThemo = (props: Props) => {
   const { showAddNewThemo, setShowAddNewThemo } = props;
+  const categoriesInitialValue = {
+    fear: false,
+    joy: false,
+    anticipation: false,
+    trust: false,
+    disgust: false,
+    anger: false,
+    surprise: false,
+    sadness: false,
+  };
   const [formData, setFormData] = useState({
-    type: "",
+    type: "Emotion",
+    categories: categoriesInitialValue,
     description: "",
   });
-  const [errors, setErrors] = useState({ descriptionError: "" });
+  const [errors, setErrors] = useState({
+    categoriesError: "",
+    descriptionError: "",
+  });
   useEffect(() => {
     validateFormData(formData);
     return () => {};
@@ -86,6 +113,7 @@ const AddNewThemo = (props: Props) => {
     setFormData(() => {
       return {
         type: "",
+        categories: categoriesInitialValue,
         description: "",
       };
     });
@@ -93,6 +121,7 @@ const AddNewThemo = (props: Props) => {
   const refreshErrors = () => {
     setErrors(() => {
       return {
+        categoriesError: "",
         descriptionError: "",
       };
     });
@@ -107,13 +136,41 @@ const AddNewThemo = (props: Props) => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setFormData((formData) => {
-      return { ...formData, [e.target.name]: e.target.value };
+    setFormData(() => {
+      const { type, value, name } = e.target;
+      if (type === "checkbox") {
+        return {
+          ...formData,
+          categories: {
+            ...formData.categories,
+            [name]: (e.target as HTMLInputElement).checked,
+          },
+        };
+      }
+      return {
+        ...formData,
+        [name]: value,
+      };
     });
   };
-  console.log(formData);
-  const validateFormData = (data: formDataType) => {
+  const validateFormData = (data: FormDataType) => {
     let output = true;
+    if (JSON.stringify(data.categories) === JSON.stringify(categoriesInitialValue)) {
+      setErrors(() => {
+        return {
+          ...errors,
+          categoriesError: "* At least select one category",
+        };
+      });
+      output = false;
+    } else {
+      setErrors(() => {
+        return {
+          ...errors,
+          categoriesError: "",
+        };
+      });
+    }
     if (!data.description) {
       setErrors(() => {
         return {
@@ -135,7 +192,6 @@ const AddNewThemo = (props: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData)) return;
-    // Data.push(formData);
     refreshFormData();
     refreshErrors();
     setShowAddNewThemo(false);
@@ -152,6 +208,16 @@ const AddNewThemo = (props: Props) => {
               handleChange(e)
             }
           />
+          <h5>Category</h5>
+          <Categories
+            formData={formData}
+            handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleChange(e)
+            }
+          />
+          {errors.categoriesError && (
+            <StyledErrors>{errors.categoriesError}</StyledErrors>
+          )}
           <h5>Description</h5>
           <DescriptionInput
             placeholder="Description"
