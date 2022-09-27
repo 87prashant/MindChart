@@ -2,9 +2,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import { FormDataType } from "./AddNewThemo";
 
-const Wrapper = styled("div")({
-
-});
+const Wrapper = styled("div")({});
 interface Props {
   formData: FormDataType;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

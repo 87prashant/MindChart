@@ -29,7 +29,11 @@ const Inputs = styled("input")({
   border: "2px solid black",
 });
 
-const DescriptionInput = styled(Inputs)({});
+const DescriptionInput = styled("textarea")({
+  width: "calc(100% - 6px)",
+  height: "80px",
+  resize: "none",
+});
 
 const SubmitButton = styled(Inputs)({
   position: "absolute",
@@ -52,7 +56,7 @@ const StyledDiv = styled("div")<{ showAddNewThemo: boolean }>(
     top: 0,
     height: "100%",
     width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.10)",
+    backgroundColor: "rgba(0, 0, 0, 0.20)",
   })
 );
 
@@ -111,23 +115,8 @@ const AddNewThemo = (props: Props) => {
     critical: false,
   };
   const categoriesInitialValue = {
-    emotions: {
-      fear: false,
-      joy: false,
-      anticipation: false,
-      trust: false,
-      disgust: false,
-      anger: false,
-      surprise: false,
-      sadness: false,
-    },
-    thoughts: {
-      creative: false,
-      concrete: false,
-      abstract: false,
-      analytical: false,
-      critical: false,
-    },
+    emotions: emotionsInitialValue,
+    thoughts: thoughtsInitialValue,
   };
 
   const [formData, setFormData] = useState({
@@ -200,6 +189,7 @@ const AddNewThemo = (props: Props) => {
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setFormData((formData) => {
       const { type, value, name } = e.target;
@@ -228,7 +218,6 @@ const AddNewThemo = (props: Props) => {
         };
       }
       if (name === "type" && value === "emotion") {
-        console.log("running....")
         refreshFormData("onlyThoughts");
       }
       if (name === "type" && value === "thought") {
@@ -311,7 +300,6 @@ const AddNewThemo = (props: Props) => {
           <DescriptionInput
             placeholder="Description"
             name="description"
-            type="text"
             value={formData.description}
             onChange={(e) => handleChange(e)}
           />

@@ -6,7 +6,7 @@ const StyledWrapper = styled("div")({
   border: "5px solid black",
   boxSizing: "border-box",
   height: "calc(100vh - 100px)",
-  overflow: 'hidden'
+  overflow: "hidden",
 });
 const Main = () => {
   const ref = useRef(null);
