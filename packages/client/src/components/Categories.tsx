@@ -3,8 +3,12 @@ import React from "react";
 import { FormDataType } from "./AddNewThemo";
 
 const Wrapper = styled('div')({
+  '& input': {
+    cursor: 'pointer',
+  },
   '& label': {
-    marginRight: 10
+    marginRight: 10,
+    cursor: 'pointer',
   }
 })
 interface Props {

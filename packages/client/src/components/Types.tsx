@@ -6,6 +6,7 @@ const StyledSelect = styled("select")({
   padding: "4px 10px",
   borderRadius: 7,
   border: "2px solid black",
+  cursor: 'pointer',
 });
 interface Props {
   formData: FormDataType;

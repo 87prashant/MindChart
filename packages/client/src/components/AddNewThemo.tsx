@@ -32,7 +32,7 @@ const Inputs = styled("input")({
 
 const DescriptionInput = styled("textarea")({
   width: "calc(100% - 6px)",
-  height: "80px",
+  height: "180px",
   resize: "none",
   padding: "4px 10px",
   borderRadius: 7,
@@ -69,6 +69,15 @@ const StyledErrors = styled("div")({
   fontSize: 11,
 });
 
+const StyledContainer = styled("div")({
+  height: 350,
+  overflowY: "scroll",
+});
+
+const StyledSlider = styled("input")({
+  cursor: "pointer",
+});
+
 interface Props {
   setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>;
   showAddNewThemo: boolean;
@@ -96,6 +105,7 @@ interface Thoughts {
 export interface FormDataType {
   type: string;
   categories: { emotions: Emotions; thoughts: Thoughts };
+  intensity: number;
   description: string;
 }
 
@@ -129,6 +139,7 @@ const AddNewThemo = (props: Props) => {
       emotions: emotionsInitialValue,
       thoughts: thoughtsInitialValue,
     },
+    intensity: 50,
     description: "",
   });
   const [formErrors, setFormErrors] = useState({
@@ -139,7 +150,6 @@ const AddNewThemo = (props: Props) => {
     validateFormData(formData);
     return () => {};
   }, [formData]);
-
   const refreshFormData = (check: string | undefined = undefined) => {
     if (check === "onlyEmotions") {
       setFormData((formData) => {
@@ -172,6 +182,7 @@ const AddNewThemo = (props: Props) => {
           emotions: emotionsInitialValue,
           thoughts: thoughtsInitialValue,
         },
+        intensity: 50,
         description: "",
       };
     });
@@ -274,7 +285,7 @@ const AddNewThemo = (props: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData)) return;
-    Data.push(formData)
+    Data.push(formData);
     refreshFormData();
     refreshFormErrors();
     setShowAddNewThemo(false);
@@ -284,33 +295,44 @@ const AddNewThemo = (props: Props) => {
     <StyledDiv showAddNewThemo={showAddNewThemo}>
       <StyledWrapper>
         <form onSubmit={(e) => handleSubmit(e)}>
-          <h5>Type</h5>
-          <Types
-            formData={formData}
-            handleChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              handleChange(e)
-            }
-          />
-          <h5>Category</h5>
-          <Categories
-            formData={formData}
-            handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleChange(e)
-            }
-          />
-          {formErrors.categoriesError && (
-            <StyledErrors>{formErrors.categoriesError}</StyledErrors>
-          )}
-          <h5>Description</h5>
-          <DescriptionInput
-            placeholder="Description"
-            name="description"
-            value={formData.description}
-            onChange={(e) => handleChange(e)}
-          />
-          {formErrors.descriptionError && (
-            <StyledErrors>{formErrors.descriptionError}</StyledErrors>
-          )}
+          <StyledContainer>
+            <h5>Type</h5>
+            <Types
+              formData={formData}
+              handleChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                handleChange(e)
+              }
+            />
+            <h5>Category</h5>
+            <Categories
+              formData={formData}
+              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(e)
+              }
+            />
+            {formErrors.categoriesError && (
+              <StyledErrors>{formErrors.categoriesError}</StyledErrors>
+            )}
+            <h5>Intensity/Priority</h5>
+            <StyledSlider
+              type="range"
+              min="10"
+              max="100"
+              name="intensity"
+              onChange={(e) => handleChange(e)}
+              value={formData.intensity}
+            />
+            <h5>Description</h5>
+            <DescriptionInput
+              placeholder="Description"
+              name="description"
+              value={formData.description}
+              onChange={(e) => handleChange(e)}
+            />
+            {formErrors.descriptionError && (
+              <StyledErrors>{formErrors.descriptionError}</StyledErrors>
+            )}
+          </StyledContainer>
           <SubmitButton type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
