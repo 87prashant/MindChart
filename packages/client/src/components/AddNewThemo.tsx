@@ -15,7 +15,7 @@ const StyledWrapper = styled("div")({
   backgroundColor: "rgba(239, 239, 240, 1)",
   border: "2px solid black",
   width: "700px",
-  height: "400px",
+  height: "450px",
   margin: "auto",
   padding: 15,
   borderRadius: 8,
@@ -33,6 +33,9 @@ const DescriptionInput = styled("textarea")({
   width: "calc(100% - 6px)",
   height: "80px",
   resize: "none",
+  padding: "4px 10px",
+  borderRadius: 7,
+  border: "2px solid black",
 });
 
 const SubmitButton = styled(Inputs)({

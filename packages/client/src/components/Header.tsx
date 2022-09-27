@@ -2,7 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 
 const StyledHeader = styled("div")({
-  height: "100px",
+  height: "70px",
   width: "100%",
   display: "flex",
   justifyContent: "flex-end",

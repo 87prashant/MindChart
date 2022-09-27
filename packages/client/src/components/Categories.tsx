@@ -2,7 +2,11 @@ import styled from "@emotion/styled";
 import React from "react";
 import { FormDataType } from "./AddNewThemo";
 
-const Wrapper = styled("div")({});
+const Wrapper = styled('div')({
+  '& label': {
+    marginRight: 10
+  }
+})
 interface Props {
   formData: FormDataType;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,9 +15,9 @@ interface Props {
 const Categories = (props: Props) => {
   const { formData, handleChange } = props;
   return (
-    <Wrapper>
+    <div>
       {formData.type === "emotion" ? (
-        <div>
+        <Wrapper>
           <input
             type="checkbox"
             id="fear"
@@ -78,9 +82,9 @@ const Categories = (props: Props) => {
             onChange={(e) => handleChange(e)}
           />
           <label htmlFor="trust">Trust</label>
-        </div>
+        </Wrapper>
       ) : (
-        <div>
+        <Wrapper>
           <input
             type="checkbox"
             id="creative"
@@ -121,9 +125,9 @@ const Categories = (props: Props) => {
             onChange={(e) => handleChange(e)}
           />
           <label htmlFor="abstract">Abstract</label>
-        </div>
+        </Wrapper>
       )}
-    </Wrapper>
+    </div>
   );
 };
 

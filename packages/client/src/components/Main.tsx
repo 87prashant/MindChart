@@ -4,8 +4,7 @@ import ForceGraph from "./ForceGraph";
 
 const StyledWrapper = styled("div")({
   border: "5px solid black",
-  boxSizing: "border-box",
-  height: "calc(100vh - 100px)",
+  height: "calc(100vh - 70px)",
   overflow: "hidden",
 });
 const Main = () => {
