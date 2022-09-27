@@ -96,11 +96,11 @@ const AddNewThemo = (props: Props) => {
     sadness: false,
   };
   const [formData, setFormData] = useState({
-    type: "Emotion",
+    type: "",
     categories: categoriesInitialValue,
     description: "",
   });
-  const [errors, setErrors] = useState({
+  const [formErrors, setFormErrors] = useState({
     categoriesError: "",
     descriptionError: "",
   });
@@ -118,8 +118,8 @@ const AddNewThemo = (props: Props) => {
       };
     });
   };
-  const refreshErrors = () => {
-    setErrors(() => {
+  const refreshFormErrors = () => {
+    setFormErrors(() => {
       return {
         categoriesError: "",
         descriptionError: "",
@@ -129,7 +129,7 @@ const AddNewThemo = (props: Props) => {
   const handleCancel = () => {
     setShowAddNewThemo(false);
     refreshFormData();
-    refreshErrors();
+    refreshFormErrors();
   };
   const handleChange = (
     e:
@@ -156,33 +156,33 @@ const AddNewThemo = (props: Props) => {
   const validateFormData = (data: FormDataType) => {
     let output = true;
     if (JSON.stringify(data.categories) === JSON.stringify(categoriesInitialValue)) {
-      setErrors(() => {
+      setFormErrors((formErrors) => {
         return {
-          ...errors,
+          ...formErrors,
           categoriesError: "* At least select one category",
         };
       });
       output = false;
     } else {
-      setErrors(() => {
+      setFormErrors((formErrors) => {
         return {
-          ...errors,
+          ...formErrors,
           categoriesError: "",
         };
       });
     }
     if (!data.description) {
-      setErrors(() => {
+      setFormErrors((formErrors) => {
         return {
-          ...errors,
+          ...formErrors,
           descriptionError: "* Description can not be empty",
         };
       });
       output = false;
     } else {
-      setErrors(() => {
+      setFormErrors((formErrors) => {
         return {
-          ...errors,
+          ...formErrors,
           descriptionError: "",
         };
       });
@@ -193,7 +193,7 @@ const AddNewThemo = (props: Props) => {
     e.preventDefault();
     if (!validateFormData(formData)) return;
     refreshFormData();
-    refreshErrors();
+    refreshFormErrors();
     setShowAddNewThemo(false);
   };
 
@@ -215,8 +215,8 @@ const AddNewThemo = (props: Props) => {
               handleChange(e)
             }
           />
-          {errors.categoriesError && (
-            <StyledErrors>{errors.categoriesError}</StyledErrors>
+          {formErrors.categoriesError && (
+            <StyledErrors>{formErrors.categoriesError}</StyledErrors>
           )}
           <h5>Description</h5>
           <DescriptionInput
@@ -226,8 +226,8 @@ const AddNewThemo = (props: Props) => {
             value={formData.description}
             onChange={(e) => handleChange(e)}
           />
-          {errors.descriptionError && (
-            <StyledErrors>{errors.descriptionError}</StyledErrors>
+          {formErrors.descriptionError && (
+            <StyledErrors>{formErrors.descriptionError}</StyledErrors>
           )}
           <SubmitButton type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
