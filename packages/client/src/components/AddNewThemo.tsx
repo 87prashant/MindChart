@@ -1,8 +1,9 @@
-// fix: Change the name to Form as it makes for sense
+// TODO: Change the name to Form as it makes for sense
+// TODO: Optimize the categories by storing only the required ones
 
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
-// import Data from "../Data/Data";
+import Data from "../Data/Data";
 import Types from "./Types";
 import Categories from "./Categories";
 
@@ -166,7 +167,7 @@ const AddNewThemo = (props: Props) => {
     }
     setFormData(() => {
       return {
-        type: "",
+        type: "emotion",
         categories: {
           emotions: emotionsInitialValue,
           thoughts: thoughtsInitialValue,
@@ -273,6 +274,7 @@ const AddNewThemo = (props: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData)) return;
+    Data.push(formData)
     refreshFormData();
     refreshFormErrors();
     setShowAddNewThemo(false);

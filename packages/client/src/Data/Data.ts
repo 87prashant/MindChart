@@ -1,7 +1,6 @@
-interface DataType {
-    name: string
-}
+import {FormDataType} from '../components/AddNewThemo'
 
-const Data: [DataType?] = []
+
+const Data: FormDataType[] = []
 
 export default Data
