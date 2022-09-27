@@ -66,7 +66,7 @@ interface Props {
   showAddNewThemo: boolean;
 }
 
-interface categoriesType {
+interface Emotions {
   fear: boolean;
   joy: boolean;
   anticipation: boolean;
@@ -77,15 +77,23 @@ interface categoriesType {
   sadness: boolean;
 }
 
+interface Thoughts {
+  creative: boolean;
+  concrete: boolean;
+  abstract: boolean;
+  analytical: boolean;
+  critical: boolean;
+}
+
 export interface FormDataType {
   type: string;
-  categories: categoriesType;
+  categories: { emotions: Emotions; thoughts: Thoughts };
   description: string;
 }
 
 const AddNewThemo = (props: Props) => {
   const { showAddNewThemo, setShowAddNewThemo } = props;
-  const categoriesInitialValue = {
+  const emotionsInitialValue = {
     fear: false,
     joy: false,
     anticipation: false,
@@ -95,9 +103,39 @@ const AddNewThemo = (props: Props) => {
     surprise: false,
     sadness: false,
   };
+  const thoughtsInitialValue = {
+    creative: false,
+    concrete: false,
+    abstract: false,
+    analytical: false,
+    critical: false,
+  };
+  const categoriesInitialValue = {
+    emotions: {
+      fear: false,
+      joy: false,
+      anticipation: false,
+      trust: false,
+      disgust: false,
+      anger: false,
+      surprise: false,
+      sadness: false,
+    },
+    thoughts: {
+      creative: false,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+    },
+  };
+
   const [formData, setFormData] = useState({
-    type: "",
-    categories: categoriesInitialValue,
+    type: "emotion",
+    categories: {
+      emotions: emotionsInitialValue,
+      thoughts: thoughtsInitialValue,
+    },
     description: "",
   });
   const [formErrors, setFormErrors] = useState({
@@ -109,11 +147,38 @@ const AddNewThemo = (props: Props) => {
     return () => {};
   }, [formData]);
 
-  const refreshFormData = () => {
+  const refreshFormData = (check: string | undefined = undefined) => {
+    if (check === "onlyEmotions") {
+      setFormData((formData) => {
+        return {
+          ...formData,
+          categories: {
+            ...formData.categories,
+            emotions: emotionsInitialValue,
+          },
+        };
+      });
+      return;
+    }
+    if (check === "onlyThoughts") {
+      setFormData((formData) => {
+        return {
+          ...formData,
+          categories: {
+            ...formData.categories,
+            thoughts: thoughtsInitialValue,
+          },
+        };
+      });
+      return;
+    }
     setFormData(() => {
       return {
         type: "",
-        categories: categoriesInitialValue,
+        categories: {
+          emotions: emotionsInitialValue,
+          thoughts: thoughtsInitialValue,
+        },
         description: "",
       };
     });
@@ -136,16 +201,38 @@ const AddNewThemo = (props: Props) => {
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setFormData(() => {
+    setFormData((formData) => {
       const { type, value, name } = e.target;
       if (type === "checkbox") {
+        if (formData.type === "emotion") {
+          return {
+            ...formData,
+            categories: {
+              ...formData.categories,
+              emotions: {
+                ...formData.categories.emotions,
+                [name]: (e.target as HTMLInputElement).checked,
+              },
+            },
+          };
+        }
         return {
           ...formData,
           categories: {
             ...formData.categories,
-            [name]: (e.target as HTMLInputElement).checked,
+            thoughts: {
+              ...formData.categories.thoughts,
+              [name]: (e.target as HTMLInputElement).checked,
+            },
           },
         };
+      }
+      if (name === "type" && value === "emotion") {
+        console.log("running....")
+        refreshFormData("onlyThoughts");
+      }
+      if (name === "type" && value === "thought") {
+        refreshFormData("onlyEmotions");
       }
       return {
         ...formData,
@@ -155,7 +242,9 @@ const AddNewThemo = (props: Props) => {
   };
   const validateFormData = (data: FormDataType) => {
     let output = true;
-    if (JSON.stringify(data.categories) === JSON.stringify(categoriesInitialValue)) {
+    if (
+      JSON.stringify(data.categories) === JSON.stringify(categoriesInitialValue)
+    ) {
       setFormErrors((formErrors) => {
         return {
           ...formErrors,
