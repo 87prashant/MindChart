@@ -28,7 +28,6 @@ const Header = (props: Props) => {
   const addNewThemo = () => {
     props.setShowAddNewThemo(true);
   };
-  console.log(Data)
   return (
     <StyledHeader>
       <div>{Data.length}</div>

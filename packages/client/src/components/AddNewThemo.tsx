@@ -13,7 +13,7 @@ const StyledWrapper = styled("div")({
   bottom: 0,
   right: 0,
   left: 0,
-  backgroundColor: "rgba(239, 239, 240, 1)",
+  backgroundColor: "rgba(225, 225, 225, 1)",
   border: "2px solid black",
   width: "700px",
   height: "450px",
@@ -66,12 +66,26 @@ const StyledDiv = styled("div")<{ showAddNewThemo: boolean }>(
 
 const StyledErrors = styled("div")({
   color: "red",
-  fontSize: 11,
+  fontSize: 12,
 });
 
 const StyledContainer = styled("div")({
   height: 350,
+  padding: "10px 20px",
+  backgroundColor: "rgba(242, 242, 242, 1)",
+  borderRadius: 8,
   overflowY: "scroll",
+  '::-webkit-scrollbar': {
+    width: 12
+  },
+  '::-webkit-scrollbar-track': {
+    boxShadow: 'inset 0 0 5px grey', 
+    borderRadius: 8
+  },
+  '::-webkit-scrollbar-thumb': {
+    background: "rgba(165, 165, 165, 1)", 
+    borderRadius: 10
+  }
 });
 
 const StyledSlider = styled("input")({

@@ -58,7 +58,7 @@ export default function ForceGraph(props: Props) {
     nodeStroke: "#fff",
     nodeStrokeWidth: 1.5,
     nodeStrokeOpacity: 1,
-    nodeRadius: 5,
+    nodeRadius: 15,
     nodeStrength: undefined,
     linkSource: ({ source }) => source,
     linkTarget: ({ target }) => target,
@@ -96,7 +96,7 @@ export default function ForceGraph(props: Props) {
   } = factors;
   let nodeGroups: any = undefined;
   const { nodes, links } = miserable;
-  const N: number[] = d3.map(nodes, nodeId!).map(intern);
+  const N: number[] = d3.map(nodes, nodeId!).map(intern);   // 
   const LS = d3.map(links, linkSource!).map(intern);
   const LT = d3.map(links, linkTarget!).map(intern);
   const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
@@ -127,7 +127,7 @@ export default function ForceGraph(props: Props) {
     .attr("width", width!)
     .attr("height", height!)
     .attr("viewBox", [-width! / 2, -height! / 2, width!, height!])
-    .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+    .attr("style", "max-width: 100%")
 
   const link = svg
     .append("g")

@@ -7,10 +7,11 @@ const Wrapper = styled('div')({
     cursor: 'pointer',
   },
   '& label': {
-    marginRight: 10,
+    marginRight: 6,
     cursor: 'pointer',
   }
 })
+
 interface Props {
   formData: FormDataType;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
