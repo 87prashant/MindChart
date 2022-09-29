@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
-import ForceGraph from "./ForceGraph";
+// import ForceGraph from "./ForceGraph";
 import MiniChart from "./MiniChart";
 
 const StyledWrapper = styled("div")({
@@ -15,8 +15,8 @@ const Main = () => {
     const w: number = container!.getBoundingClientRect().width;
     const h: number = container!.getBoundingClientRect().height;
     const props = { container, w, h };
-    ForceGraph(props);
-    // MiniChart(props);
+    // ForceGraph(props);
+    MiniChart(props);
   }, []);
   return <StyledWrapper ref={ref}></StyledWrapper>;
 };

@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { forceCollide } from "d3";
 import miserable from "../miserable.json";
 
 export interface miserableType {
@@ -59,7 +60,7 @@ export default function ForceGraph(props: Props) {
     nodeStrokeWidth: 1.5,
     nodeStrokeOpacity: 1,
     nodeRadius: 15,
-    nodeStrength: undefined,
+    nodeStrength: -55,
     linkSource: ({ source }) => source,
     linkTarget: ({ target }) => target,
     linkStroke: "#999",
@@ -94,9 +95,10 @@ export default function ForceGraph(props: Props) {
     height,
     invalidation,
   } = factors;
+
   let nodeGroups: any = undefined;
   const { nodes, links } = miserable;
-  const N: number[] = d3.map(nodes, nodeId!).map(intern);   // 
+  const N: number[] = d3.map(nodes, nodeId!).map(intern); //
   const LS = d3.map(links, linkSource!).map(intern);
   const LT = d3.map(links, linkTarget!).map(intern);
   const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
@@ -107,27 +109,38 @@ export default function ForceGraph(props: Props) {
       : d3.map(links, linkStrokeWidth);
   const L: number[] | null =
     typeof linkStroke !== "function" ? null : d3.map(links, linkStroke);
-  const newNodes: d3.SimulationNodeDatum[] = d3.map(nodes, (_, i) => ({
-    index: N[i],
+
+  const newNodes: d3.SimulationNodeDatum[] = d3.map(nodes, (d) => ({
+    index: N[d.group],
   }));
   const newLinks = d3.map(links, (_, i) => ({
     source: LS[i],
     target: LT[i],
   }));
+
   if (G && nodeGroups === undefined) nodeGroups = d3.sort(G);
   const color =
     nodeGroup == null ? null : d3.scaleOrdinal(nodeGroups!, colors!);
+
   const forceNode = d3.forceManyBody();
   const forceLink = d3.forceLink(newLinks).id(({ index: i }) => N[i!]);
   if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
   if (linkStrength !== undefined) forceLink.strength(linkStrength);
+
   const svg = d3
     .select(container)
     .append("svg")
     .attr("width", width!)
     .attr("height", height!)
     .attr("viewBox", [-width! / 2, -height! / 2, width!, height!])
-    .attr("style", "max-width: 100%")
+    .attr("style", "max-width: 100%");
+
+  const simulation = d3
+    .forceSimulation(newNodes)
+    .force("link", forceLink)
+    .force("charge", forceNode)
+    .force("center", d3.forceCenter())
+    .on("tick", ticked);
 
   const link = svg
     .append("g")
@@ -138,13 +151,6 @@ export default function ForceGraph(props: Props) {
     .selectAll("line")
     .data(newLinks)
     .join("line");
-
-  const simulation = d3
-    .forceSimulation(newNodes)
-    .force("link", forceLink)
-    .force("charge", forceNode)
-    .force("center", d3.forceCenter())
-    .on("tick", ticked);
 
   const node = svg
     .append("g")
