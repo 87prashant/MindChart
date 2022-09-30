@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "@emotion/styled";
-import Data from "../Data/Data";
 
 const StyledHeader = styled("div")({
   height: "70px",
@@ -30,7 +29,6 @@ const Header = (props: Props) => {
   };
   return (
     <StyledHeader>
-      <div>{Data.length}</div>
       <AddButton onClick={() => addNewThemo()}>Add</AddButton>
     </StyledHeader>
   );

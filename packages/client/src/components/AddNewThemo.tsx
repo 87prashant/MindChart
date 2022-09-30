@@ -3,7 +3,6 @@
 
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
-import Data from "../Data/Data";
 import Types from "./Types";
 import Categories from "./Categories";
 
@@ -75,17 +74,17 @@ const StyledContainer = styled("div")({
   backgroundColor: "rgba(242, 242, 242, 1)",
   borderRadius: 8,
   overflowY: "scroll",
-  '::-webkit-scrollbar': {
-    width: 12
+  "::-webkit-scrollbar": {
+    width: 12,
   },
-  '::-webkit-scrollbar-track': {
-    boxShadow: 'inset 0 0 5px grey', 
-    borderRadius: 8
+  "::-webkit-scrollbar-track": {
+    boxShadow: "inset 0 0 5px grey",
+    borderRadius: 8,
   },
-  '::-webkit-scrollbar-thumb': {
-    background: "rgba(165, 165, 165, 1)", 
-    borderRadius: 10
-  }
+  "::-webkit-scrollbar-thumb": {
+    background: "rgba(165, 165, 165, 1)",
+    borderRadius: 10,
+  },
 });
 
 const StyledSlider = styled("input")({
@@ -95,6 +94,8 @@ const StyledSlider = styled("input")({
 interface Props {
   setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>;
   showAddNewThemo: boolean;
+  savedData: FormDataType[];
+  setSavedData: any;
 }
 
 interface Emotions {
@@ -124,7 +125,8 @@ export interface FormDataType {
 }
 
 const AddNewThemo = (props: Props) => {
-  const { showAddNewThemo, setShowAddNewThemo } = props;
+  const { showAddNewThemo, setShowAddNewThemo, setSavedData, savedData } =
+    props;
   const emotionsInitialValue = {
     fear: false,
     joy: false,
@@ -299,7 +301,9 @@ const AddNewThemo = (props: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData)) return;
-    Data.push(formData);
+    setSavedData((savedData: FormDataType[]) => {
+      return [...savedData, formData];
+    });
     refreshFormData();
     refreshFormErrors();
     setShowAddNewThemo(false);
