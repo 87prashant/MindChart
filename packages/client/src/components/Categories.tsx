@@ -61,6 +61,14 @@ const Categories = (props: Props) => {
         onChange={(e) => handleChange(e)}
       />
       <label htmlFor="abstract">Abstract</label>
+      <input
+        type="checkbox"
+        id="unknown"
+        name="categories"
+        checked={formData.categories.unknown}
+        onChange={(e) => handleChange(e)}
+      />
+      <label htmlFor="unknown">Unknown</label>
     </Wrapper>
   );
 };

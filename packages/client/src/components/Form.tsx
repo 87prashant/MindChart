@@ -96,6 +96,7 @@ interface Props {
 }
 
 interface Emotion {
+  neutral: boolean;
   fear: boolean;
   joy: boolean;
   anticipation: boolean;
@@ -112,10 +113,10 @@ interface Thoughts {
   abstract: boolean;
   analytical: boolean;
   critical: boolean;
+  unknown: boolean
 }
 
 export interface FormDataType {
-  // type: string;
   categories: Thoughts;
   emotions: Emotion;
   intensity: number;
@@ -125,6 +126,7 @@ export interface FormDataType {
 const Form: any = (props: Props) => {
   const { showForm, setShowForm, setSavedData, savedData } = props;
   const emotionsInitialValue = {
+    neutral: false,
     fear: false,
     joy: false,
     anticipation: false,
@@ -140,6 +142,7 @@ const Form: any = (props: Props) => {
     abstract: false,
     analytical: false,
     critical: false,
+    unknown: false,
   };
 
   const [formData, setFormData] = useState({
