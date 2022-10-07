@@ -3,8 +3,7 @@
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
 import Emotions from "./Emotions";
-// import Types from "./Types";
-import Categories from "./Emotions";
+import Categories from "./Categories";
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -96,7 +95,7 @@ interface Props {
   setSavedData: any;
 }
 
-interface Emotions {
+interface Emotion {
   fear: boolean;
   joy: boolean;
   anticipation: boolean;
@@ -118,7 +117,7 @@ interface Thoughts {
 export interface FormDataType {
   // type: string;
   categories: Thoughts;
-  emotions: Emotions;
+  emotions: Emotion;
   intensity: number;
   description: string;
 }
@@ -189,22 +188,21 @@ const Form: any = (props: Props) => {
   ) => {
     setFormData((formData) => {
       const { type, value, name, id } = e.target;
-      console.log(e);
       if (type === "checkbox") {
         if (name === "emotions") {
           return {
             ...formData,
-              emotions: {
-                ...formData.emotions,
-                [id]: (e.target as HTMLInputElement).checked,
-              },
+            emotions: {
+              ...formData.emotions,
+              [id]: (e.target as HTMLInputElement).checked,
+            },
           };
         }
         return {
           ...formData,
           categories: {
-              ...formData.categories,
-              [id]: (e.target as HTMLInputElement).checked,
+            ...formData.categories,
+            [id]: (e.target as HTMLInputElement).checked,
           },
         };
       }
@@ -268,6 +266,7 @@ const Form: any = (props: Props) => {
       <StyledWrapper>
         <form onSubmit={(e) => handleSubmit(e)}>
           <StyledContainer>
+            <h5>Description</h5>
             <DescriptionInput
               placeholder="Description"
               name="description"
@@ -298,7 +297,6 @@ const Form: any = (props: Props) => {
               onChange={(e) => handleChange(e)}
               value={formData.intensity}
             />
-            <h5>Description</h5>
           </StyledContainer>
           <SubmitButton type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
