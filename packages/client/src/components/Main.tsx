@@ -21,7 +21,7 @@ const Main = (props: Props) => {
     const w: number = container!.getBoundingClientRect().width;
     const h: number = container!.getBoundingClientRect().height;
     const newProps = { container, w, h, savedData };
-    // ForceGraph(props);
+    // ForceGraph(newProps);
     MiniChart(newProps);
   }, []);
   return <StyledWrapper ref={ref}></StyledWrapper>;

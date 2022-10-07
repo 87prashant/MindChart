@@ -142,15 +142,15 @@ export default function ForceGraph(props: Props) {
     .force("center", d3.forceCenter())
     .on("tick", ticked);
 
-  const link = svg
-    .append("g")
-    .attr("stroke", typeof linkStroke !== "function" ? linkStroke! : null)
-    .attr("stroke-opacity", linkStrokeOpacity!)
-    .attr("stroke-width", linkStrokeWidth!)
-    .attr("stroke-linecap", linkStrokeLinecap!)
-    .selectAll("line")
-    .data(newLinks)
-    .join("line");
+  // const link = svg
+  //   .append("g")
+  //   .attr("stroke", typeof linkStroke !== "function" ? linkStroke! : null)
+  //   .attr("stroke-opacity", linkStrokeOpacity!)
+  //   .attr("stroke-width", linkStrokeWidth!)
+  //   .attr("stroke-linecap", linkStrokeLinecap!)
+  //   .selectAll("line")
+  //   .data(newLinks)
+  //   .join("line");
 
   const node = svg
     .append("g")
@@ -164,8 +164,8 @@ export default function ForceGraph(props: Props) {
     .attr("r", nodeRadius!)
     .call(drag(simulation) as any);
 
-  if (W) link.attr("stroke-width", ({ source: i }) => W[i] as any);
-  if (L) link.attr("stroke", ({ source: i }) => L[i]);
+  // if (W) link.attr("stroke-width", ({ source: i }) => W[i] as any);
+  // if (L) link.attr("stroke", ({ source: i }) => L[i]);
   if (G) node.attr("fill", ({ index: i }) => color!(G[i!]));
   if (T) node.append("title").text(({ index: i }) => T[i!]);
   if (invalidation != null) invalidation.then(() => simulation.stop());
@@ -177,11 +177,11 @@ export default function ForceGraph(props: Props) {
   }
 
   function ticked() {
-    link
-      .attr("x1", (d) => d.source.x)
-      .attr("y1", (d) => d.source.y)
-      .attr("x2", (d) => d.target.x)
-      .attr("y2", (d) => d.target.y);
+    // link
+    //   .attr("x1", (d) => d.source.x)
+    //   .attr("y1", (d) => d.source.y)
+    //   .attr("x2", (d) => d.target.x)
+    //   .attr("y2", (d) => d.target.y);
 
     node.attr("cx", (d) => d.x!).attr("cy", (d) => d.y!);
   }

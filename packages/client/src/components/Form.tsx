@@ -2,8 +2,9 @@
 
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
-import Types from "./Types";
-import Categories from "./Categories";
+import Emotions from "./Emotions";
+// import Types from "./Types";
+import Categories from "./Emotions";
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -51,16 +52,14 @@ const CancelButton = styled(Inputs)({
   cursor: "pointer",
 });
 
-const StyledDiv = styled("div")<{ showForm: boolean }>(
-  ({ showForm }) => ({
-    position: "fixed",
-    display: showForm ? "block" : "none",
-    top: 0,
-    height: "100%",
-    width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.20)",
-  })
-);
+const StyledDiv = styled("div")<{ showForm: boolean }>(({ showForm }) => ({
+  position: "fixed",
+  display: showForm ? "block" : "none",
+  top: 0,
+  height: "100%",
+  width: "100%",
+  backgroundColor: "rgba(0, 0, 0, 0.20)",
+}));
 
 const StyledErrors = styled("div")({
   color: "red",
@@ -117,15 +116,15 @@ interface Thoughts {
 }
 
 export interface FormDataType {
-  type: string;
-  categories: { emotions: Emotions; thoughts: Thoughts };
+  // type: string;
+  categories: Thoughts;
+  emotions: Emotions;
   intensity: number;
   description: string;
 }
 
 const Form: any = (props: Props) => {
-  const { showForm, setShowForm, setSavedData, savedData } =
-    props;
+  const { showForm, setShowForm, setSavedData, savedData } = props;
   const emotionsInitialValue = {
     fear: false,
     joy: false,
@@ -136,24 +135,17 @@ const Form: any = (props: Props) => {
     surprise: false,
     sadness: false,
   };
-  const thoughtsInitialValue = {
+  const categoriesInitialValue = {
     creative: false,
     concrete: false,
     abstract: false,
     analytical: false,
     critical: false,
   };
-  const categoriesInitialValue = {
-    emotions: emotionsInitialValue,
-    thoughts: thoughtsInitialValue,
-  };
 
   const [formData, setFormData] = useState({
-    type: "emotion",
-    categories: {
-      emotions: emotionsInitialValue,
-      thoughts: thoughtsInitialValue,
-    },
+    categories: categoriesInitialValue,
+    emotions: emotionsInitialValue,
     intensity: 50,
     description: "",
   });
@@ -166,37 +158,11 @@ const Form: any = (props: Props) => {
     return () => {};
   }, [formData]);
   const refreshFormData = (check: string | undefined = undefined) => {
-    if (check === "onlyEmotions") {
-      setFormData((formData) => {
-        return {
-          ...formData,
-          categories: {
-            ...formData.categories,
-            emotions: emotionsInitialValue,
-          },
-        };
-      });
-      return;
-    }
-    if (check === "onlyThoughts") {
-      setFormData((formData) => {
-        return {
-          ...formData,
-          categories: {
-            ...formData.categories,
-            thoughts: thoughtsInitialValue,
-          },
-        };
-      });
-      return;
-    }
     setFormData(() => {
       return {
         type: "emotion",
-        categories: {
-          emotions: emotionsInitialValue,
-          thoughts: thoughtsInitialValue,
-        },
+        categories: categoriesInitialValue,
+        emotions: emotionsInitialValue,
         intensity: 50,
         description: "",
       };
@@ -222,36 +188,25 @@ const Form: any = (props: Props) => {
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setFormData((formData) => {
-      const { type, value, name } = e.target;
+      const { type, value, name, id } = e.target;
+      console.log(e);
       if (type === "checkbox") {
-        if (formData.type === "emotion") {
+        if (name === "emotions") {
           return {
             ...formData,
-            categories: {
-              ...formData.categories,
               emotions: {
-                ...formData.categories.emotions,
-                [name]: (e.target as HTMLInputElement).checked,
+                ...formData.emotions,
+                [id]: (e.target as HTMLInputElement).checked,
               },
-            },
           };
         }
         return {
           ...formData,
           categories: {
-            ...formData.categories,
-            thoughts: {
-              ...formData.categories.thoughts,
-              [name]: (e.target as HTMLInputElement).checked,
-            },
+              ...formData.categories,
+              [id]: (e.target as HTMLInputElement).checked,
           },
         };
-      }
-      if (name === "type" && value === "emotion") {
-        refreshFormData("onlyThoughts");
-      }
-      if (name === "type" && value === "thought") {
-        refreshFormData("onlyEmotions");
       }
       return {
         ...formData,
@@ -313,13 +268,15 @@ const Form: any = (props: Props) => {
       <StyledWrapper>
         <form onSubmit={(e) => handleSubmit(e)}>
           <StyledContainer>
-            <h5>Type</h5>
-            <Types
-              formData={formData}
-              handleChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                handleChange(e)
-              }
+            <DescriptionInput
+              placeholder="Description"
+              name="description"
+              value={formData.description}
+              onChange={(e) => handleChange(e)}
             />
+            {formErrors.descriptionError && (
+              <StyledErrors>{formErrors.descriptionError}</StyledErrors>
+            )}
             <h5>Category</h5>
             <Categories
               formData={formData}
@@ -330,6 +287,8 @@ const Form: any = (props: Props) => {
             {formErrors.categoriesError && (
               <StyledErrors>{formErrors.categoriesError}</StyledErrors>
             )}
+            <h5>Emotions</h5>
+            <Emotions formData={formData} handleChange={handleChange} />
             <h5>Intensity/Priority</h5>
             <StyledSlider
               type="range"
@@ -340,15 +299,6 @@ const Form: any = (props: Props) => {
               value={formData.intensity}
             />
             <h5>Description</h5>
-            <DescriptionInput
-              placeholder="Description"
-              name="description"
-              value={formData.description}
-              onChange={(e) => handleChange(e)}
-            />
-            {formErrors.descriptionError && (
-              <StyledErrors>{formErrors.descriptionError}</StyledErrors>
-            )}
           </StyledContainer>
           <SubmitButton type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
