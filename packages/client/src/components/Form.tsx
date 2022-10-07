@@ -113,7 +113,7 @@ interface Thoughts {
   abstract: boolean;
   analytical: boolean;
   critical: boolean;
-  unknown: boolean
+  unknown: boolean;
 }
 
 export interface FormDataType {
@@ -153,6 +153,7 @@ const Form: any = (props: Props) => {
   });
   const [formErrors, setFormErrors] = useState({
     categoriesError: "",
+    emotionsError: "",
     descriptionError: "",
   });
   useEffect(() => {
@@ -174,6 +175,7 @@ const Form: any = (props: Props) => {
     setFormErrors(() => {
       return {
         categoriesError: "",
+        emotionsError: "",
         descriptionError: "",
       };
     });
@@ -235,6 +237,24 @@ const Form: any = (props: Props) => {
         };
       });
     }
+    if (
+      JSON.stringify(data.emotions) === JSON.stringify(emotionsInitialValue)
+    ) {
+      setFormErrors((formErrors) => {
+        return {
+          ...formErrors,
+          emotionsError: "* At least select one emotion",
+        };
+      });
+      output = false;
+    } else {
+      setFormErrors((formErrors) => {
+        return {
+          ...formErrors,
+          emotionsError: "",
+        };
+      });
+    }
     if (!data.description) {
       setFormErrors((formErrors) => {
         return {
@@ -291,6 +311,9 @@ const Form: any = (props: Props) => {
             )}
             <h5>Emotions</h5>
             <Emotions formData={formData} handleChange={handleChange} />
+            {formErrors.emotionsError && (
+              <StyledErrors>{formErrors.emotionsError}</StyledErrors>
+            )}
             <h5>Intensity/Priority</h5>
             <StyledSlider
               type="range"
