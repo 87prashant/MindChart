@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { FormDataType } from "./AddNewThemo";
+import { FormDataType } from "./Form";
 
 interface Props {
   container: HTMLElement;

@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import Main from "./components/Main";
 import Header from "./components/Header";
-import { FormDataType } from "./components/AddNewThemo";
+import { FormDataType } from "./components/Form";
 import "./App.css";
-import AddNewThemo from "./components/AddNewThemo";
+import Form from "./components/Form";
 
 function App() {
-  const [showAddNewThemo, setShowAddNewThemo] = useState(false); // track whether the add new from is open or not
+  const [showForm, setShowForm] = useState(false); // track whether the add new from is open or not
   const [savedData, setSavedData] = useState([] as FormDataType[]);
 
   return (
     <div className="App">
-      <Header setShowAddNewThemo={setShowAddNewThemo} />
-      <AddNewThemo
+      <Header setShowForm={setShowForm} />
+      <Form
         savedData={savedData}
         setSavedData={setSavedData}
-        showAddNewThemo={showAddNewThemo}
-        setShowAddNewThemo={setShowAddNewThemo}
+        showForm={showForm}
+        setShowForm={setShowForm}
       />
       <Main savedData={savedData} />
     </div>

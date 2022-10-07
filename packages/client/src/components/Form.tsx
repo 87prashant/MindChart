@@ -1,5 +1,4 @@
-// TODO: Change the name to Form as it makes for sense
-// TODO: Optimize the categories by storing only the required ones
+// TODO: Optimize the 'categories by storing only the required ones
 
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
@@ -52,10 +51,10 @@ const CancelButton = styled(Inputs)({
   cursor: "pointer",
 });
 
-const StyledDiv = styled("div")<{ showAddNewThemo: boolean }>(
-  ({ showAddNewThemo }) => ({
+const StyledDiv = styled("div")<{ showForm: boolean }>(
+  ({ showForm }) => ({
     position: "fixed",
-    display: showAddNewThemo ? "block" : "none",
+    display: showForm ? "block" : "none",
     top: 0,
     height: "100%",
     width: "100%",
@@ -92,8 +91,8 @@ const StyledSlider = styled("input")({
 });
 
 interface Props {
-  setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>;
-  showAddNewThemo: boolean;
+  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+  showForm: boolean;
   savedData: FormDataType[];
   setSavedData: any;
 }
@@ -124,8 +123,8 @@ export interface FormDataType {
   description: string;
 }
 
-const AddNewThemo = (props: Props) => {
-  const { showAddNewThemo, setShowAddNewThemo, setSavedData, savedData } =
+const Form: any = (props: Props) => {
+  const { showForm, setShowForm, setSavedData, savedData } =
     props;
   const emotionsInitialValue = {
     fear: false,
@@ -212,7 +211,7 @@ const AddNewThemo = (props: Props) => {
     });
   };
   const handleCancel = () => {
-    setShowAddNewThemo(false);
+    setShowForm(false);
     refreshFormData();
     refreshFormErrors();
   };
@@ -306,11 +305,11 @@ const AddNewThemo = (props: Props) => {
     });
     refreshFormData();
     refreshFormErrors();
-    setShowAddNewThemo(false);
+    setShowForm(false);
   };
 
   return (
-    <StyledDiv showAddNewThemo={showAddNewThemo}>
+    <StyledDiv showForm={showForm}>
       <StyledWrapper>
         <form onSubmit={(e) => handleSubmit(e)}>
           <StyledContainer>
@@ -359,4 +358,4 @@ const AddNewThemo = (props: Props) => {
   );
 };
 
-export default AddNewThemo;
+export default Form;

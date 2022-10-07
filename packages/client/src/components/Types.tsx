@@ -1,5 +1,5 @@
 import React from "react";
-import { FormDataType } from "./AddNewThemo";
+import { FormDataType } from "./Form";
 import styled from "@emotion/styled";
 
 const StyledSelect = styled("select")({

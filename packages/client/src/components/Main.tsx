@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 // import ForceGraph from "./ForceGraph";
 import MiniChart from "./MiniChart";
-import { FormDataType } from "./AddNewThemo";
+import { FormDataType } from "./Form";
 
 const StyledWrapper = styled("div")({
   border: "5px solid black",
@@ -20,9 +20,9 @@ const Main = (props: Props) => {
     const container = ref.current as unknown as HTMLElement;
     const w: number = container!.getBoundingClientRect().width;
     const h: number = container!.getBoundingClientRect().height;
-    const props = { container, w, h, savedData };
+    const newProps = { container, w, h, savedData };
     // ForceGraph(props);
-    MiniChart(props);
+    MiniChart(newProps);
   }, []);
   return <StyledWrapper ref={ref}></StyledWrapper>;
 };

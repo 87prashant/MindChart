@@ -20,16 +20,16 @@ const AddButton = styled("button")({
 });
 
 interface Props {
-  setShowAddNewThemo: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Header = (props: Props) => {
-  const addNewThemo = () => {
-    props.setShowAddNewThemo(true);
+  const Form = () => {
+    props.setShowForm(true);
   };
   return (
     <StyledHeader>
-      <AddButton onClick={() => addNewThemo()}>Add</AddButton>
+      <AddButton onClick={() => Form()}>Add</AddButton>
     </StyledHeader>
   );
 };
