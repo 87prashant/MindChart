@@ -1,4 +1,5 @@
 // TODO: Optimize the 'categories by storing only the required ones
+// TODO: fix handlechange types
 
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
@@ -95,16 +96,21 @@ interface Props {
   setSavedData: any;
 }
 
-interface Emotion {
-  neutral: boolean;
-  fear: boolean;
-  joy: boolean;
-  anticipation: boolean;
-  trust: boolean;
-  disgust: boolean;
-  anger: boolean;
-  surprise: boolean;
-  sadness: boolean;
+export interface EmotionProperty {
+  value: boolean;
+  intensity: number;
+}
+
+export interface Emotion {
+  neutral: EmotionProperty;
+  fear: EmotionProperty;
+  joy: EmotionProperty;
+  anticipation: EmotionProperty;
+  trust: EmotionProperty;
+  disgust: EmotionProperty;
+  anger: EmotionProperty;
+  surprise: EmotionProperty;
+  sadness: EmotionProperty;
 }
 
 interface Thoughts {
@@ -119,22 +125,26 @@ interface Thoughts {
 export interface FormDataType {
   categories: Thoughts;
   emotions: Emotion;
-  intensity: number;
+  priority: number;
   description: string;
 }
 
 const Form: any = (props: Props) => {
   const { showForm, setShowForm, setSavedData, savedData } = props;
+  const emotionPropertyInitialValue = {
+    value: false,
+    intensity: 30,
+  };
   const emotionsInitialValue = {
-    neutral: false,
-    fear: false,
-    joy: false,
-    anticipation: false,
-    trust: false,
-    disgust: false,
-    anger: false,
-    surprise: false,
-    sadness: false,
+    neutral: emotionPropertyInitialValue,
+    fear: emotionPropertyInitialValue,
+    joy: emotionPropertyInitialValue,
+    anticipation: emotionPropertyInitialValue,
+    trust: emotionPropertyInitialValue,
+    disgust: emotionPropertyInitialValue,
+    anger: emotionPropertyInitialValue,
+    surprise: emotionPropertyInitialValue,
+    sadness: emotionPropertyInitialValue,
   };
   const categoriesInitialValue = {
     creative: false,
@@ -148,7 +158,7 @@ const Form: any = (props: Props) => {
   const [formData, setFormData] = useState({
     categories: categoriesInitialValue,
     emotions: emotionsInitialValue,
-    intensity: 50,
+    priority: 50,
     description: "",
   });
   const [formErrors, setFormErrors] = useState({
@@ -160,13 +170,13 @@ const Form: any = (props: Props) => {
     validateFormData(formData);
     return () => {};
   }, [formData]);
-  const refreshFormData = (check: string | undefined = undefined) => {
+
+  const refreshFormData = () => {
     setFormData(() => {
       return {
-        type: "emotion",
         categories: categoriesInitialValue,
         emotions: emotionsInitialValue,
-        intensity: 50,
+        priority: 50,
         description: "",
       };
     });
@@ -194,15 +204,6 @@ const Form: any = (props: Props) => {
     setFormData((formData) => {
       const { type, value, name, id } = e.target;
       if (type === "checkbox") {
-        if (name === "emotions") {
-          return {
-            ...formData,
-            emotions: {
-              ...formData.emotions,
-              [id]: (e.target as HTMLInputElement).checked,
-            },
-          };
-        }
         return {
           ...formData,
           categories: {
@@ -287,41 +288,40 @@ const Form: any = (props: Props) => {
   return (
     <StyledDiv showForm={showForm}>
       <StyledWrapper>
-        <form onSubmit={(e) => handleSubmit(e)}>
+        <form onSubmit={handleSubmit}>
           <StyledContainer>
             <h5>Description</h5>
             <DescriptionInput
               placeholder="Description"
               name="description"
               value={formData.description}
-              onChange={(e) => handleChange(e)}
+              onChange={handleChange}
             />
             {formErrors.descriptionError && (
               <StyledErrors>{formErrors.descriptionError}</StyledErrors>
             )}
             <h5>Category</h5>
-            <Categories
-              formData={formData}
-              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(e)
-              }
-            />
+            <Categories formData={formData} handleChange={handleChange} />
             {formErrors.categoriesError && (
               <StyledErrors>{formErrors.categoriesError}</StyledErrors>
             )}
             <h5>Emotions</h5>
-            <Emotions formData={formData} handleChange={handleChange} />
+            <Emotions
+              formData={formData}
+              handleChange={handleChange}
+              setFormData={setFormData}
+            />
             {formErrors.emotionsError && (
               <StyledErrors>{formErrors.emotionsError}</StyledErrors>
             )}
-            <h5>Intensity/Priority</h5>
+            <h5>Priority</h5>
             <StyledSlider
               type="range"
               min="10"
               max="100"
-              name="intensity"
-              onChange={(e) => handleChange(e)}
-              value={formData.intensity}
+              name="priority"
+              onChange={handleChange}
+              value={formData.priority}
             />
           </StyledContainer>
           <SubmitButton type="submit" value="Submit" />

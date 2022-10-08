@@ -1,3 +1,5 @@
+//TODO: make it data driven instead of hard coding
+
 import styled from "@emotion/styled";
 import React from "react";
 import { FormDataType } from "./Form";
@@ -26,7 +28,7 @@ const Categories = (props: Props) => {
         id="creative"
         name="categories"
         checked={formData.categories.creative}
-        onChange={(e) => handleChange(e)}
+        onChange={handleChange}
       />
       <label htmlFor="creative">Creative</label>
       <input
@@ -34,7 +36,7 @@ const Categories = (props: Props) => {
         id="analytical"
         name="categories"
         checked={formData.categories.analytical}
-        onChange={(e) => handleChange(e)}
+        onChange={handleChange}
       />
       <label htmlFor="analytical">Analytical</label>
       <input
@@ -42,7 +44,7 @@ const Categories = (props: Props) => {
         id="critical"
         name="categories"
         checked={formData.categories.critical}
-        onChange={(e) => handleChange(e)}
+        onChange={handleChange}
       />
       <label htmlFor="critical">Critical</label>
       <input
@@ -50,7 +52,7 @@ const Categories = (props: Props) => {
         id="concrete"
         name="categories"
         checked={formData.categories.concrete}
-        onChange={(e) => handleChange(e)}
+        onChange={handleChange}
       />
       <label htmlFor="concrete">Concrete</label>
       <input
@@ -58,7 +60,7 @@ const Categories = (props: Props) => {
         id="abstract"
         name="categories"
         checked={formData.categories.abstract}
-        onChange={(e) => handleChange(e)}
+        onChange={handleChange}
       />
       <label htmlFor="abstract">Abstract</label>
       <input
@@ -66,11 +68,11 @@ const Categories = (props: Props) => {
         id="unknown"
         name="categories"
         checked={formData.categories.unknown}
-        onChange={(e) => handleChange(e)}
+        onChange={handleChange}
       />
       <label htmlFor="unknown">Unknown</label>
     </Wrapper>
   );
 };
 
-export default Categories
+export default Categories;
