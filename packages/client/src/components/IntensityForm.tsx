@@ -1,5 +1,4 @@
 //TODO: what to do when component unmount?
-//TODO: It should be horizontally and vertically centered
 
 import styled from "@emotion/styled";
 import React, { useState } from "react";
