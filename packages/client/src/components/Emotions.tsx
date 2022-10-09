@@ -25,7 +25,7 @@ const Emotions = (props: Props) => {
   const { formData, setFormData } = props;
   const [intensityForm, setIntensityForm] = useState<null | JSX.Element>(null);
 
-  const newHandleChange = (e: any) => {
+  const handleChange = (e: any) => {
     setIntensityForm(() => {
       return (
         <IntensityForm
@@ -47,7 +47,7 @@ const Emotions = (props: Props) => {
           id="neutral"
           name="emotions"
           checked={formData.emotions.neutral.value}
-          onChange={newHandleChange}
+          onChange={handleChange}
         />
         <label htmlFor="neutral">Neutral</label>
         <input
@@ -55,7 +55,7 @@ const Emotions = (props: Props) => {
           id="fear"
           name="emotions"
           checked={formData.emotions.fear.value}
-          onChange={newHandleChange}
+          onChange={handleChange}
         />
         <label htmlFor="fear">Fear</label>
         <input
@@ -63,7 +63,7 @@ const Emotions = (props: Props) => {
           id="anger"
           name="emotions"
           checked={formData.emotions.anger.value}
-          onChange={newHandleChange}
+          onChange={handleChange}
         />
         <label htmlFor="anger">Anger</label>
         <input
@@ -71,7 +71,7 @@ const Emotions = (props: Props) => {
           id="sadness"
           name="emotions"
           checked={formData.emotions.sadness.value}
-          onChange={newHandleChange}
+          onChange={handleChange}
         />
         <label htmlFor="sadness">Sadness</label>
         <input
@@ -79,7 +79,7 @@ const Emotions = (props: Props) => {
           id="disgust"
           name="emotions"
           checked={formData.emotions.disgust.value}
-          onChange={newHandleChange}
+          onChange={handleChange}
         />
         <label htmlFor="disgust">Disgust</label>
         <input
@@ -87,7 +87,7 @@ const Emotions = (props: Props) => {
           id="surprise"
           name="emotions"
           checked={formData.emotions.surprise.value}
-          onChange={newHandleChange}
+          onChange={handleChange}
         />
         <label htmlFor="surprise">Surprise</label>
         <input
@@ -95,7 +95,7 @@ const Emotions = (props: Props) => {
           id="joy"
           name="emotions"
           checked={formData.emotions.joy.value}
-          onChange={newHandleChange}
+          onChange={handleChange}
         />
         <label htmlFor="joy">Joy</label>
         <input
@@ -103,7 +103,7 @@ const Emotions = (props: Props) => {
           id="anticipation"
           name="emotions"
           checked={formData.emotions.anticipation.value}
-          onChange={newHandleChange}
+          onChange={handleChange}
         />
         <label htmlFor="anticipation">Anticipation</label>
         <input
@@ -111,7 +111,7 @@ const Emotions = (props: Props) => {
           id="trust"
           name="emotions"
           checked={formData.emotions.trust.value}
-          onChange={newHandleChange}
+          onChange={handleChange}
         />
         <label htmlFor="trust">Trust</label>
       </Wrapper>

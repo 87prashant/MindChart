@@ -1,5 +1,5 @@
 // TODO: Optimize the 'categories by storing only the required ones
-// TODO: fix handlechange types
+// TODO: fix handleChange types
 
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
@@ -169,6 +169,7 @@ const Form: any = (props: Props) => {
   useEffect(() => {
     validateFormData(formData);
     return () => {};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData]);
 
   const refreshFormData = () => {

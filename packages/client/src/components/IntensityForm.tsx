@@ -20,14 +20,20 @@ const FormWrapper = styled("div")({
   bottom: 0,
   left: 0,
   right: 0,
-  height: 160,
+  height: 170,
   width: 200,
   margin: "auto",
   border: "2px solid black",
   padding: 15,
   borderRadius: 8,
-  backgroundColor: "white",
+  backgroundColor: "rgba(225, 225, 225, 1)",
   boxShadow: "10px 10px 8px #888888",
+});
+
+const StyledDiv = styled("div")({
+  backgroundColor: "rgba(242, 242, 242, 1)",
+  borderRadius: 8,
+  padding: "5px 10px",
 });
 
 const Header = styled("div")({
@@ -40,10 +46,12 @@ const SelectedEmotion = styled("p")({
   fontSize: 15,
   textAlign: "center",
   fontWeight: "bolder",
+  color: "teal",
 });
 
 const SubmitWrapper = styled("div")({
   display: "flex",
+  marginTop: 5,
 });
 
 const DoneButton = styled("button")({
@@ -54,7 +62,7 @@ const DoneButton = styled("button")({
   marginLeft: "auto",
 });
 
-const RemoveButton = styled("button")({
+const CancelButton = styled("button")({
   padding: 4,
   border: "2px solid black",
   borderRadius: 8,
@@ -63,6 +71,7 @@ const RemoveButton = styled("button")({
 
 const StyledSlider = styled("input")({
   cursor: "pointer",
+  width: "100%",
 });
 
 interface Props {
@@ -122,19 +131,23 @@ const IntensityForm = (props: Props) => {
   return (
     <Container>
       <FormWrapper>
-        <Header>Select Intensity</Header>
-        <SelectedEmotion>
-          {id.charAt(0).toUpperCase() + id.slice(1)}
-        </SelectedEmotion>
-        <StyledSlider
-          type="range"
-          min="10"
-          max="100"
-          value={intensity}
-          onChange={(e: any) => handleChange(e)}
-        />
+        <StyledDiv>
+          <Header>Select Intensity</Header>
+          <SelectedEmotion>
+            {id.charAt(0).toUpperCase() + id.slice(1)}
+          </SelectedEmotion>
+          <StyledSlider
+            type="range"
+            min="10"
+            max="100"
+            value={intensity}
+            onChange={handleChange}
+          />
+        </StyledDiv>
         <SubmitWrapper>
-          <RemoveButton onClick={handleCancel}>Remove</RemoveButton>
+          <CancelButton onClick={handleCancel}>
+            {selectedEmotion.value ? "Remove" : "Cancel"}
+          </CancelButton>
           <DoneButton onClick={handleDone}>Done</DoneButton>
         </SubmitWrapper>
       </FormWrapper>
