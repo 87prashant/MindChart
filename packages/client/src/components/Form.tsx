@@ -1,10 +1,10 @@
 // TODO: Optimize the 'categories by storing only the required ones
-// TODO: fix handleChange types
 
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
 import Emotions from "./Emotions";
 import Categories from "./Categories";
+import { validateFormData } from "./FormValidation";
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -22,11 +22,11 @@ const StyledWrapper = styled("div")({
   boxShadow: "10px 10px 8px #888888",
 });
 
-const Header = styled('div')({
+const Header = styled("div")({
   fontWeight: "bold",
   fontSize: 17,
-  marginBottom: 10
-})
+  marginBottom: 10,
+});
 
 const Inputs = styled("input")({
   width: "300px",
@@ -42,7 +42,7 @@ const DescriptionInput = styled("textarea")({
   padding: "4px 10px",
   borderRadius: 7,
   border: "2px solid black",
-  marginBottom: 10
+  marginBottom: 10,
 });
 
 const SubmitButton = styled(Inputs)({
@@ -50,7 +50,7 @@ const SubmitButton = styled(Inputs)({
   bottom: 20,
   left: 20,
   cursor: "pointer",
-  fontWeight: "bold"
+  fontWeight: "bold",
 });
 
 const CancelButton = styled(Inputs)({
@@ -58,7 +58,7 @@ const CancelButton = styled(Inputs)({
   bottom: 20,
   right: 20,
   cursor: "pointer",
-  fontWeight: "bold"
+  fontWeight: "bold",
 });
 
 const StyledDiv = styled("div")<{ showForm: boolean }>(({ showForm }) => ({
@@ -73,7 +73,7 @@ const StyledDiv = styled("div")<{ showForm: boolean }>(({ showForm }) => ({
 const StyledErrors = styled("div")({
   color: "red",
   fontSize: 12,
-  marginBottom: 10
+  marginBottom: 10,
 });
 
 const StyledContainer = styled("div")({
@@ -97,7 +97,7 @@ const StyledContainer = styled("div")({
 
 const StyledSlider = styled("input")({
   cursor: "pointer",
-  marginBottom: 10
+  marginBottom: 10,
 });
 
 interface Props {
@@ -140,32 +140,38 @@ export interface FormDataType {
   description: string;
 }
 
+export interface FormErrorType {
+  categoriesError: string;
+  emotionsError: string;
+  descriptionError: string;
+}
+
+const emotionPropertyInitialValue = {
+  value: false,
+  intensity: 30,
+};
+export const emotionsInitialValue = {
+  neutral: emotionPropertyInitialValue,
+  fear: emotionPropertyInitialValue,
+  joy: emotionPropertyInitialValue,
+  anticipation: emotionPropertyInitialValue,
+  trust: emotionPropertyInitialValue,
+  disgust: emotionPropertyInitialValue,
+  anger: emotionPropertyInitialValue,
+  surprise: emotionPropertyInitialValue,
+  sadness: emotionPropertyInitialValue,
+};
+export const categoriesInitialValue = {
+  creative: false,
+  concrete: false,
+  abstract: false,
+  analytical: false,
+  critical: false,
+  unknown: false,
+};
+
 const Form: any = (props: Props) => {
   const { showForm, setShowForm, setSavedData, savedData } = props;
-  const emotionPropertyInitialValue = {
-    value: false,
-    intensity: 30,
-  };
-  const emotionsInitialValue = {
-    neutral: emotionPropertyInitialValue,
-    fear: emotionPropertyInitialValue,
-    joy: emotionPropertyInitialValue,
-    anticipation: emotionPropertyInitialValue,
-    trust: emotionPropertyInitialValue,
-    disgust: emotionPropertyInitialValue,
-    anger: emotionPropertyInitialValue,
-    surprise: emotionPropertyInitialValue,
-    sadness: emotionPropertyInitialValue,
-  };
-  const categoriesInitialValue = {
-    creative: false,
-    concrete: false,
-    abstract: false,
-    analytical: false,
-    critical: false,
-    unknown: false,
-  };
-
   const [formData, setFormData] = useState({
     categories: categoriesInitialValue,
     emotions: emotionsInitialValue,
@@ -178,9 +184,9 @@ const Form: any = (props: Props) => {
     descriptionError: "",
   });
   useEffect(() => {
-    validateFormData(formData);
+    validateFormData(formData, setFormErrors);
     return () => {};
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData]);
 
   const refreshFormData = () => {
@@ -230,65 +236,9 @@ const Form: any = (props: Props) => {
       };
     });
   };
-  const validateFormData = (data: FormDataType) => {
-    let output = true;
-    if (
-      JSON.stringify(data.categories) === JSON.stringify(categoriesInitialValue)
-    ) {
-      setFormErrors((formErrors) => {
-        return {
-          ...formErrors,
-          categoriesError: "* At least select one category",
-        };
-      });
-      output = false;
-    } else {
-      setFormErrors((formErrors) => {
-        return {
-          ...formErrors,
-          categoriesError: "",
-        };
-      });
-    }
-    if (
-      JSON.stringify(data.emotions) === JSON.stringify(emotionsInitialValue)
-    ) {
-      setFormErrors((formErrors) => {
-        return {
-          ...formErrors,
-          emotionsError: "* At least select one emotion",
-        };
-      });
-      output = false;
-    } else {
-      setFormErrors((formErrors) => {
-        return {
-          ...formErrors,
-          emotionsError: "",
-        };
-      });
-    }
-    if (!data.description) {
-      setFormErrors((formErrors) => {
-        return {
-          ...formErrors,
-          descriptionError: "* Description can not be empty",
-        };
-      });
-      output = false;
-    } else {
-      setFormErrors((formErrors) => {
-        return {
-          ...formErrors,
-          descriptionError: "",
-        };
-      });
-    }
-    return output;
-  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateFormData(formData)) return;
+    if (!validateFormData(formData, setFormErrors)) return;
     setSavedData((savedData: FormDataType[]) => {
       return [...savedData, formData];
     });
