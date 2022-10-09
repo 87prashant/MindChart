@@ -22,7 +22,7 @@ const FormWrapper = styled("div")({
   right: 0,
   height: 170,
   width: 200,
-  margin: "auto",
+  margin: "43vh auto",
   border: "2px solid black",
   padding: 15,
   borderRadius: 8,
