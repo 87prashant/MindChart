@@ -23,6 +23,7 @@ const FormWrapper = styled("div")({
   height: 170,
   width: 200,
   margin: "auto",
+  position: "fixed",
   border: "2px solid black",
   padding: 15,
   borderRadius: 8,
