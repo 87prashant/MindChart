@@ -1,12 +1,20 @@
 import {
   FormDataType,
   categoriesInitialValue,
-  emotionsInitialValue,
   FormErrorType,
+  Emotion,
 } from "./Form";
 
 export const validateFormData = (data: FormDataType, setFormErrors: any) => {
   let output = true;
+  const validateEmotions = (emotionsObject: Emotion) => {
+    for (let key in emotionsObject) {
+      if (emotionsObject[key as keyof typeof emotionsObject].value) {
+        return false;
+      }
+    }
+    return true;
+  };
   if (
     JSON.stringify(data.categories) === JSON.stringify(categoriesInitialValue)
   ) {
@@ -25,7 +33,7 @@ export const validateFormData = (data: FormDataType, setFormErrors: any) => {
       };
     });
   }
-  if (JSON.stringify(data.emotions) === JSON.stringify(emotionsInitialValue)) {
+  if (validateEmotions(data.emotions)) {
     setFormErrors((formErrors: FormErrorType) => {
       return {
         ...formErrors,
