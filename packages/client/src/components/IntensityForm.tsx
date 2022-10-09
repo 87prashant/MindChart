@@ -37,7 +37,7 @@ const StyledDiv = styled("div")({
 });
 
 const Header = styled("div")({
-  fontSize: 20,
+  fontSize: 17,
   fontWeight: "bold",
   textAlign: "center",
 });
@@ -60,6 +60,7 @@ const DoneButton = styled("button")({
   borderRadius: 8,
   cursor: "pointer",
   marginLeft: "auto",
+  fontWeight: "bold"
 });
 
 const CancelButton = styled("button")({
@@ -67,6 +68,7 @@ const CancelButton = styled("button")({
   border: "2px solid black",
   borderRadius: 8,
   cursor: "pointer",
+  fontWeight: "bold"
 });
 
 const StyledSlider = styled("input")({

@@ -13,6 +13,7 @@ const Wrapper = styled("div")({
     marginRight: 6,
     cursor: "pointer",
   },
+  marginBottom: 10
 });
 
 interface Props {

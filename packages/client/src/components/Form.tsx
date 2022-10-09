@@ -22,6 +22,12 @@ const StyledWrapper = styled("div")({
   boxShadow: "10px 10px 8px #888888",
 });
 
+const Header = styled('div')({
+  fontWeight: "bold",
+  fontSize: 17,
+  marginBottom: 10
+})
+
 const Inputs = styled("input")({
   width: "300px",
   padding: "4px 10px",
@@ -36,6 +42,7 @@ const DescriptionInput = styled("textarea")({
   padding: "4px 10px",
   borderRadius: 7,
   border: "2px solid black",
+  marginBottom: 10
 });
 
 const SubmitButton = styled(Inputs)({
@@ -43,6 +50,7 @@ const SubmitButton = styled(Inputs)({
   bottom: 20,
   left: 20,
   cursor: "pointer",
+  fontWeight: "bold"
 });
 
 const CancelButton = styled(Inputs)({
@@ -50,6 +58,7 @@ const CancelButton = styled(Inputs)({
   bottom: 20,
   right: 20,
   cursor: "pointer",
+  fontWeight: "bold"
 });
 
 const StyledDiv = styled("div")<{ showForm: boolean }>(({ showForm }) => ({
@@ -64,6 +73,7 @@ const StyledDiv = styled("div")<{ showForm: boolean }>(({ showForm }) => ({
 const StyledErrors = styled("div")({
   color: "red",
   fontSize: 12,
+  marginBottom: 10
 });
 
 const StyledContainer = styled("div")({
@@ -87,6 +97,7 @@ const StyledContainer = styled("div")({
 
 const StyledSlider = styled("input")({
   cursor: "pointer",
+  marginBottom: 10
 });
 
 interface Props {
@@ -291,7 +302,7 @@ const Form: any = (props: Props) => {
       <StyledWrapper>
         <form onSubmit={handleSubmit}>
           <StyledContainer>
-            <h5>Description</h5>
+            <Header>Description</Header>
             <DescriptionInput
               placeholder="Description"
               name="description"
@@ -301,12 +312,12 @@ const Form: any = (props: Props) => {
             {formErrors.descriptionError && (
               <StyledErrors>{formErrors.descriptionError}</StyledErrors>
             )}
-            <h5>Category</h5>
+            <Header>Category</Header>
             <Categories formData={formData} handleChange={handleChange} />
             {formErrors.categoriesError && (
               <StyledErrors>{formErrors.categoriesError}</StyledErrors>
             )}
-            <h5>Emotions</h5>
+            <Header>Emotions</Header>
             <Emotions
               formData={formData}
               handleChange={handleChange}
@@ -315,7 +326,7 @@ const Form: any = (props: Props) => {
             {formErrors.emotionsError && (
               <StyledErrors>{formErrors.emotionsError}</StyledErrors>
             )}
-            <h5>Priority</h5>
+            <Header>Priority</Header>
             <StyledSlider
               type="range"
               min="10"

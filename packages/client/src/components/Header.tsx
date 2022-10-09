@@ -19,10 +19,14 @@ const HelpButton = styled("a")({
   marginLeft: "20px",
   textDecoration: "none",
   backgroundColor: "white",
+  color: "teal",
   "& span": {
     marginLeft: 10,
     fontWeight: "bold",
   },
+  ":active": {
+    color: "teal",
+  }
 });
 
 const AddButton = styled("button")({
