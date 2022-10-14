@@ -1,5 +1,3 @@
-//TODO: make it data driven instead of hard coding
-
 import styled from "@emotion/styled";
 import React from "react";
 import { FormDataType } from "./Form";
@@ -12,7 +10,7 @@ const Wrapper = styled("div")({
     marginRight: 6,
     cursor: "pointer",
   },
-  marginBottom: 10
+  marginBottom: 10,
 });
 
 interface Props {
@@ -22,58 +20,34 @@ interface Props {
 
 const Categories = (props: Props) => {
   const { formData, handleChange } = props;
-  return (
-    <Wrapper>
-      <input
-        type="checkbox"
-        id="creative"
-        name="categories"
-        checked={formData.categories.creative}
-        onChange={handleChange}
-      />
-      <label htmlFor="creative">Creative</label>
-      <input
-        type="checkbox"
-        id="analytical"
-        name="categories"
-        checked={formData.categories.analytical}
-        onChange={handleChange}
-      />
-      <label htmlFor="analytical">Analytical</label>
-      <input
-        type="checkbox"
-        id="critical"
-        name="categories"
-        checked={formData.categories.critical}
-        onChange={handleChange}
-      />
-      <label htmlFor="critical">Critical</label>
-      <input
-        type="checkbox"
-        id="concrete"
-        name="categories"
-        checked={formData.categories.concrete}
-        onChange={handleChange}
-      />
-      <label htmlFor="concrete">Concrete</label>
-      <input
-        type="checkbox"
-        id="abstract"
-        name="categories"
-        checked={formData.categories.abstract}
-        onChange={handleChange}
-      />
-      <label htmlFor="abstract">Abstract</label>
-      <input
-        type="checkbox"
-        id="unknown"
-        name="categories"
-        checked={formData.categories.unknown}
-        onChange={handleChange}
-      />
-      <label htmlFor="unknown">Unknown</label>
-    </Wrapper>
-  );
+  const categories = [
+    "creative",
+    "analytical",
+    "critical",
+    "concrete",
+    "abstract",
+    "unknown",
+  ];
+
+  const inputs = categories.map((data) => {
+    return (
+      <>
+        <input
+          type="checkbox"
+          id={data}
+          name="categories"
+          checked={
+            formData.categories[data as keyof typeof formData.categories]
+          }
+          onChange={handleChange}
+        />
+        <label htmlFor={data}>
+          {data.slice(0, 1).toUpperCase() + data.slice(1)}
+        </label>
+      </>
+    );
+  });
+  return <Wrapper>{inputs}</Wrapper>;
 };
 
 export default Categories;
