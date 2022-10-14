@@ -18,7 +18,7 @@ const MiniChart = (props: Props) => {
     .attr("viewBox", [-w / 2, -h / 2, w, h])
     .attr("style", "max-width: 100%");
 
-  const node = svg.append("g").selectAll("circles")
+  // const node = svg.append("g").selectAll("circles")
 };
 
 export default MiniChart;
