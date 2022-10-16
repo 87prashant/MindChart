@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { forceCollide } from "d3";
 import miserable from "../miserable.json";
 
 export interface miserableType {
