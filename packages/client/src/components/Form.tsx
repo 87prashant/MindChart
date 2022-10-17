@@ -105,6 +105,7 @@ interface Props {
   showForm: boolean;
   savedData: FormDataType[];
   setSavedData: any;
+  setIsChartAdded: any;
 }
 
 export interface EmotionProperty {
@@ -171,7 +172,7 @@ export const categoriesInitialValue = {
 };
 
 const Form: any = (props: Props) => {
-  const { showForm, setShowForm, setSavedData, savedData } = props;
+  const { showForm, setShowForm, setSavedData, setIsChartAdded } = props;
   const [formData, setFormData] = useState({
     categories: categoriesInitialValue,
     emotions: emotionsInitialValue,
@@ -245,6 +246,7 @@ const Form: any = (props: Props) => {
     refreshFormData();
     refreshFormErrors();
     setShowForm(false);
+    setIsChartAdded(false);
   };
 
   return (

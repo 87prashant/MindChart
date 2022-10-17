@@ -41,7 +41,7 @@ interface factorsType {
 }
 
 interface Props {
-  container: HTMLElement;
+  // container: HTMLElement;
   w: number;
   h: number;
 }
@@ -49,7 +49,7 @@ interface Props {
 // Released under the ISC license.
 // https://observablehq.com/@d3/force-directed-graph
 export default function ForceGraph(props: Props) {
-  const { container, w, h } = props;
+  const { w, h } = props;
   const factors = {
     nodeId: (d) => d.id,
     nodeGroup: (d) => d.group,
@@ -127,8 +127,8 @@ export default function ForceGraph(props: Props) {
   if (linkStrength !== undefined) forceLink.strength(linkStrength);
 
   const svg = d3
-    .select(container)
-    .append("svg")
+    // .select(container)
+    .create("svg")
     .attr("width", width!)
     .attr("height", height!)
     .attr("viewBox", [-width! / 2, -height! / 2, width!, height!])
@@ -215,4 +215,5 @@ export default function ForceGraph(props: Props) {
       .on("drag", dragged)
       .on("end", dragended);
   }
+  return svg.node()
 }
