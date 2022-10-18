@@ -16,6 +16,7 @@ const MiniChart = (props: Props) => {
   }));
 
   const forceNode = d3.forceManyBody();
+  forceNode.strength(1)
 
   const simulation = d3
     .forceSimulation(newNodes)
@@ -25,7 +26,6 @@ const MiniChart = (props: Props) => {
     .on("tick", ticked);
 
   const svg = d3
-    // .select(container)
     .create("svg")
     .attr("height", h)
     .attr("width", w)

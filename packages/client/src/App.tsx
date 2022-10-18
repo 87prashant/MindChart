@@ -6,8 +6,84 @@ import "./App.css";
 import Form from "./components/Form";
 
 function App() {
-  const [showForm, setShowForm] = useState(false); // track whether the add new from is open or not
-  const [savedData, setSavedData] = useState([] as FormDataType[]);
+  const [showForm, setShowForm] = useState(false); 
+  const temp = [{
+    categories: {
+      creative: true,
+      concrete: true,
+      abstract: true,
+      analytical: true,
+      critical: false,
+      unknown: false,
+    },
+    emotions: {
+      neutral: 10
+    },
+    priority: 68,
+    description: "kdfjskdfjlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+      concrete: true,
+      abstract: true,
+      analytical: true,
+      critical: false,
+      unknown: false,
+    },
+    emotions: {
+      neutral: 10
+    },
+    priority: 68,
+    description: "kdfjskdfjlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+      concrete: true,
+      abstract: true,
+      analytical: true,
+      critical: false,
+      unknown: false,
+    },
+    emotions: {
+      neutral: 10
+    },
+    priority: 68,
+    description: "kdfjskdfjlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+      concrete: true,
+      abstract: true,
+      analytical: true,
+      critical: false,
+      unknown: false,
+    },
+    emotions: {
+      neutral: 10
+    },
+    priority: 68,
+    description: "kdfjskdfjlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+      concrete: true,
+      abstract: true,
+      analytical: true,
+      critical: false,
+      unknown: false,
+    },
+    emotions: {
+      neutral: 10
+    },
+    priority: 68,
+    description: "kdfjskdfjlskdj"
+  },
+  ]
+  const [savedData, setSavedData] = useState(temp as FormDataType[]);
   const [isChartAdded, setIsChartAdded] = useState(false);
 
   return (

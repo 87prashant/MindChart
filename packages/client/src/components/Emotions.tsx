@@ -16,7 +16,6 @@ const Wrapper = styled("div")({
 
 interface Props {
   formData: FormDataType;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setFormData: any;
 }
 
@@ -56,7 +55,7 @@ const Emotions = (props: Props) => {
           id={data}
           name="emotions"
           checked={
-            formData.emotions[data as keyof typeof formData.emotions].value
+            !!formData.emotions[data as keyof typeof formData.emotions]
           }
           onChange={handleChange}
         />

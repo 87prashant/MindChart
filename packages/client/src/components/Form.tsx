@@ -108,21 +108,21 @@ interface Props {
   setIsChartAdded: any;
 }
 
-export interface EmotionProperty {
-  value: boolean;
-  intensity: number;
-}
+// export interface EmotionProperty {
+//   value: boolean;
+//   intensity: number;
+// }
 
 export interface Emotion {
-  neutral: EmotionProperty;
-  fear: EmotionProperty;
-  joy: EmotionProperty;
-  anticipation: EmotionProperty;
-  trust: EmotionProperty;
-  disgust: EmotionProperty;
-  anger: EmotionProperty;
-  surprise: EmotionProperty;
-  sadness: EmotionProperty;
+  neutral?: number;
+  fear?: number;
+  joy?: number;
+  anticipation?: number;
+  trust?: number;
+  disgust?: number;
+  anger?: number;
+  surprise?: number;
+  sadness?: number;
 }
 
 interface Thoughts {
@@ -147,21 +147,21 @@ export interface FormErrorType {
   descriptionError: string;
 }
 
-const emotionPropertyInitialValue = {
-  value: false,
-  intensity: 30,
-};
-export const emotionsInitialValue = {
-  neutral: emotionPropertyInitialValue,
-  fear: emotionPropertyInitialValue,
-  joy: emotionPropertyInitialValue,
-  anticipation: emotionPropertyInitialValue,
-  trust: emotionPropertyInitialValue,
-  disgust: emotionPropertyInitialValue,
-  anger: emotionPropertyInitialValue,
-  surprise: emotionPropertyInitialValue,
-  sadness: emotionPropertyInitialValue,
-};
+// const emotionPropertyInitialValue = {
+//   value: false,
+//   intensity: 30,
+// };
+// export const emotionsInitialValue = {
+//   neutral: emotionPropertyInitialValue,
+//   fear: emotionPropertyInitialValue,
+//   joy: emotionPropertyInitialValue,
+//   anticipation: emotionPropertyInitialValue,
+//   trust: emotionPropertyInitialValue,
+//   disgust: emotionPropertyInitialValue,
+//   anger: emotionPropertyInitialValue,
+//   surprise: emotionPropertyInitialValue,
+//   sadness: emotionPropertyInitialValue,
+// };
 export const categoriesInitialValue = {
   creative: false,
   concrete: false,
@@ -175,7 +175,7 @@ const Form: any = (props: Props) => {
   const { showForm, setShowForm, setSavedData, setIsChartAdded } = props;
   const [formData, setFormData] = useState({
     categories: categoriesInitialValue,
-    emotions: emotionsInitialValue,
+    emotions: {},
     priority: 50,
     description: "",
   });
@@ -194,7 +194,7 @@ const Form: any = (props: Props) => {
     setFormData(() => {
       return {
         categories: categoriesInitialValue,
-        emotions: emotionsInitialValue,
+        emotions: {},
         priority: 50,
         description: "",
       };
@@ -272,7 +272,6 @@ const Form: any = (props: Props) => {
             <Header>Emotions</Header>
             <Emotions
               formData={formData}
-              handleChange={handleChange}
               setFormData={setFormData}
             />
             {formErrors.emotionsError && (

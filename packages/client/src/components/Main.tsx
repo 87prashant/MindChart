@@ -24,8 +24,8 @@ const Main = (props: Props) => {
     if (isChartAdded) return;
     setIsChartAdded(true);
     const container = ref.current as unknown as HTMLElement;
-    const w: number = container!.getBoundingClientRect().width;
-    const h: number = container!.getBoundingClientRect().height;
+    const w = container!.getBoundingClientRect().width;
+    const h = container!.getBoundingClientRect().height;
     const newProps = { w, h, savedData };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
     ref.current!.innerHTML = "";

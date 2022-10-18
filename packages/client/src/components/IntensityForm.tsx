@@ -60,7 +60,7 @@ const DoneButton = styled("button")({
   borderRadius: 8,
   cursor: "pointer",
   marginLeft: "auto",
-  fontWeight: "bold"
+  fontWeight: "bold",
 });
 
 const CancelButton = styled("button")({
@@ -68,7 +68,7 @@ const CancelButton = styled("button")({
   border: "2px solid black",
   borderRadius: 8,
   cursor: "pointer",
-  fontWeight: "bold"
+  fontWeight: "bold",
 });
 
 const StyledSlider = styled("input")({
@@ -89,18 +89,8 @@ const IntensityForm = (props: Props) => {
   const selectedEmotion =
     formData.emotions[id as keyof typeof formData.emotions];
   // to force update this component
-  const [intensity, setIntensity] = useState(selectedEmotion.intensity);
+  const [intensity, setIntensity] = useState(selectedEmotion);
   const handleChange = (e: any) => {
-    setFormData((formData: FormDataType) => ({
-      ...formData,
-      emotions: {
-        ...formData.emotions,
-        [id]: {
-          ...selectedEmotion,
-          intensity: e.target.value,
-        },
-      },
-    }));
     setIntensity(e.target.value);
   };
   const handleCancel = () => {
@@ -108,10 +98,7 @@ const IntensityForm = (props: Props) => {
       ...formData,
       emotions: {
         ...formData.emotions,
-        [id]: {
-          value: false,
-          intensity: 30,
-        },
+        [id]: undefined
       },
     }));
     setIntensityForm(null);
@@ -121,10 +108,7 @@ const IntensityForm = (props: Props) => {
       ...formData,
       emotions: {
         ...formData.emotions,
-        [id]: {
-          value: true,
-          intensity: intensity,
-        },
+        [id]: intensity,
       },
     }));
     setIntensityForm(null);
@@ -148,7 +132,7 @@ const IntensityForm = (props: Props) => {
         </StyledDiv>
         <SubmitWrapper>
           <CancelButton onClick={handleCancel}>
-            {selectedEmotion.value ? "Remove" : "Cancel"}
+            {selectedEmotion ? "Remove" : "Cancel"}
           </CancelButton>
           <DoneButton onClick={handleDone}>Done</DoneButton>
         </SubmitWrapper>
