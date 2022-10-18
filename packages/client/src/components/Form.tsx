@@ -108,11 +108,6 @@ interface Props {
   setIsChartAdded: any;
 }
 
-// export interface EmotionProperty {
-//   value: boolean;
-//   intensity: number;
-// }
-
 export interface Emotion {
   neutral?: number;
   fear?: number;
@@ -126,12 +121,12 @@ export interface Emotion {
 }
 
 interface Thoughts {
-  creative: boolean;
-  concrete: boolean;
-  abstract: boolean;
-  analytical: boolean;
-  critical: boolean;
-  unknown: boolean;
+  creative?: boolean;
+  concrete?: boolean;
+  abstract?: boolean;
+  analytical?: boolean;
+  critical?: boolean;
+  unknown?: boolean;
 }
 
 export interface FormDataType {
@@ -147,36 +142,12 @@ export interface FormErrorType {
   descriptionError: string;
 }
 
-// const emotionPropertyInitialValue = {
-//   value: false,
-//   intensity: 30,
-// };
-// export const emotionsInitialValue = {
-//   neutral: emotionPropertyInitialValue,
-//   fear: emotionPropertyInitialValue,
-//   joy: emotionPropertyInitialValue,
-//   anticipation: emotionPropertyInitialValue,
-//   trust: emotionPropertyInitialValue,
-//   disgust: emotionPropertyInitialValue,
-//   anger: emotionPropertyInitialValue,
-//   surprise: emotionPropertyInitialValue,
-//   sadness: emotionPropertyInitialValue,
-// };
-export const categoriesInitialValue = {
-  creative: false,
-  concrete: false,
-  abstract: false,
-  analytical: false,
-  critical: false,
-  unknown: false,
-};
-
 const Form: any = (props: Props) => {
   const { showForm, setShowForm, setSavedData, setIsChartAdded } = props;
   const [formData, setFormData] = useState({
-    categories: categoriesInitialValue,
+    categories: {},
     emotions: {},
-    priority: 50,
+    priority: 40,
     description: "",
   });
   const [formErrors, setFormErrors] = useState({
@@ -193,7 +164,7 @@ const Form: any = (props: Props) => {
   const refreshFormData = () => {
     setFormData(() => {
       return {
-        categories: categoriesInitialValue,
+        categories: {},
         emotions: {},
         priority: 50,
         description: "",
@@ -227,7 +198,7 @@ const Form: any = (props: Props) => {
           ...formData,
           categories: {
             ...formData.categories,
-            [id]: (e.target as HTMLInputElement).checked,
+            [id]: (e.target as HTMLInputElement).checked ? true : undefined,
           },
         };
       }
@@ -270,10 +241,7 @@ const Form: any = (props: Props) => {
               <StyledErrors>{formErrors.categoriesError}</StyledErrors>
             )}
             <Header>Emotions</Header>
-            <Emotions
-              formData={formData}
-              setFormData={setFormData}
-            />
+            <Emotions formData={formData} setFormData={setFormData} />
             {formErrors.emotionsError && (
               <StyledErrors>{formErrors.emotionsError}</StyledErrors>
             )}

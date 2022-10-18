@@ -1,15 +1,8 @@
-import {
-  FormDataType,
-  categoriesInitialValue,
-  FormErrorType,
-  Emotion,
-} from "./Form";
+import { FormDataType, FormErrorType } from "./Form";
 
 export const validateFormData = (data: FormDataType, setFormErrors: any) => {
   let output = true;
-  if (
-    JSON.stringify(data.categories) === JSON.stringify(categoriesInitialValue)
-  ) {
+  if (JSON.stringify(data.categories) === "{}") {
     setFormErrors((formErrors: FormErrorType) => {
       return {
         ...formErrors,

@@ -89,7 +89,7 @@ const IntensityForm = (props: Props) => {
   const selectedEmotion =
     formData.emotions[id as keyof typeof formData.emotions];
   // to force update this component
-  const [intensity, setIntensity] = useState(selectedEmotion);
+  const [intensity, setIntensity] = useState(selectedEmotion || 40);
   const handleChange = (e: any) => {
     setIntensity(e.target.value);
   };
