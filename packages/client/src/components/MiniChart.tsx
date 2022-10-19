@@ -1,5 +1,6 @@
 import * as d3 from "d3";
-import { FormDataType } from "./Form";
+import { emotions } from "./Emotions";
+import { Emotion, FormDataType } from "./Form";
 
 interface Props {
   w: number;
@@ -9,14 +10,33 @@ interface Props {
 
 const MiniChart = (props: Props) => {
   const { w, h, savedData } = props;
-  console.log(savedData);
+  // console.log(savedData);
+
+  const findGroupArray = (data: Emotion) => {
+    let arr = [];
+    for (let key in JSON.parse(JSON.stringify(data))) {
+      arr.push(emotions.indexOf(key));
+    }
+    return arr;
+  };
+
+  const nodesArray = savedData.map((data) => {
+    return {
+      description: data.description,
+      priority: data.priority,
+      categories: JSON.parse(JSON.stringify(data.categories)), // to remove the undefined property
+      emotions: JSON.parse(JSON.stringify(data.emotions)),
+      group: findGroupArray(data.emotions),
+    };
+  });
+
   const N: number[] = savedData.map(intern);
   const newNodes: d3.SimulationNodeDatum[] = d3.map(savedData, (d) => ({
     index: N[d.priority],
   }));
 
   const forceNode = d3.forceManyBody();
-  forceNode.strength(1)
+  forceNode.strength(-10);
 
   const simulation = d3
     .forceSimulation(newNodes)
@@ -41,8 +61,9 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(newNodes)
     .join("circle")
-    .attr("r", 10)
     .call(drag(simulation) as any);
+
+  node.attr("r", ({ index: i }) => savedData[i!].priority); // temporary
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"

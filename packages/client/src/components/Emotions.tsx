@@ -14,6 +14,18 @@ const Wrapper = styled("div")({
   marginBottom: 10,
 });
 
+export const emotions = [
+  "neutral",
+  "fear",
+  "anger",
+  "sadness",
+  "disgust",
+  "surprise",
+  "joy",
+  "anticipation",
+  "trust",
+];
+
 interface Props {
   formData: FormDataType;
   setFormData: any;
@@ -22,17 +34,6 @@ interface Props {
 const Emotions = (props: Props) => {
   const { formData, setFormData } = props;
   const [intensityForm, setIntensityForm] = useState<null | JSX.Element>(null);
-  const emotions = [
-    "neutral",
-    "fear",
-    "anger",
-    "sadness",
-    "disgust",
-    "surprise",
-    "joy",
-    "anticipation",
-    "trust",
-  ];
 
   const handleChange = (e: any) => {
     setIntensityForm(() => {
@@ -54,9 +55,7 @@ const Emotions = (props: Props) => {
           type="checkbox"
           id={data}
           name="emotions"
-          checked={
-            !!formData.emotions[data as keyof typeof formData.emotions]
-          }
+          checked={!!formData.emotions[data as keyof typeof formData.emotions]}
           onChange={handleChange}
         />
         <label htmlFor={data}>

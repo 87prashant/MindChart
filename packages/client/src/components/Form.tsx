@@ -1,5 +1,3 @@
-// TODO: Optimize the 'categories by storing only the required ones
-
 import styled from "@emotion/styled";
 import React, { useState, useEffect } from "react";
 import Emotions from "./Emotions";
@@ -147,7 +145,7 @@ const Form: any = (props: Props) => {
   const [formData, setFormData] = useState({
     categories: {},
     emotions: {},
-    priority: 40,
+    priority: 20,
     description: "",
   });
   const [formErrors, setFormErrors] = useState({
@@ -166,7 +164,7 @@ const Form: any = (props: Props) => {
       return {
         categories: {},
         emotions: {},
-        priority: 50,
+        priority: 20,
         description: "",
       };
     });
@@ -249,7 +247,7 @@ const Form: any = (props: Props) => {
             <StyledSlider
               type="range"
               min="10"
-              max="100"
+              max="50"
               name="priority"
               onChange={handleChange}
               value={formData.priority}

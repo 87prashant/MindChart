@@ -10,76 +10,54 @@ function App() {
   const temp = [{
     categories: {
       creative: true,
-      concrete: true,
-      abstract: true,
-      analytical: true,
-      critical: false,
+    },
+    emotions: {
+      neutral: 10
+    },
+    priority:10,
+    description: "kdfjskdfjlskdj"
+  },
+  {
+    categories: {
+      creative: true,
       unknown: false,
     },
     emotions: {
       neutral: 10
     },
-    priority: 68,
+    priority: 16,
     description: "kdfjskdfjlskdj"
   },
   {
     categories: {
       creative: true,
       concrete: true,
-      abstract: true,
-      analytical: true,
-      critical: false,
-      unknown: false,
     },
     emotions: {
       neutral: 10
     },
-    priority: 68,
+    priority: 25,
     description: "kdfjskdfjlskdj"
   },
   {
     categories: {
       creative: true,
-      concrete: true,
-      abstract: true,
-      analytical: true,
-      critical: false,
-      unknown: false,
+
     },
     emotions: {
       neutral: 10
     },
-    priority: 68,
+    priority: 15,
     description: "kdfjskdfjlskdj"
   },
   {
     categories: {
       creative: true,
-      concrete: true,
-      abstract: true,
-      analytical: true,
-      critical: false,
-      unknown: false,
     },
     emotions: {
       neutral: 10
     },
-    priority: 68,
-    description: "kdfjskdfjlskdj"
-  },
-  {
-    categories: {
-      creative: true,
-      concrete: true,
-      abstract: true,
-      analytical: true,
-      critical: false,
-      unknown: false,
-    },
-    emotions: {
-      neutral: 10
-    },
-    priority: 68,
+    priority: 50,
     description: "kdfjskdfjlskdj"
   },
   ]
