@@ -1,3 +1,5 @@
+//Question: Why the index property in newNodes is Number as N contains strings not the Number 
+
 import * as d3 from "d3";
 import miserable from "../miserable.json";
 
@@ -97,37 +99,35 @@ export default function ForceGraph(props: Props) {
 
   let nodeGroups: any = undefined;
   const { nodes, links } = miserable;
-  const N: number[] = d3.map(nodes, nodeId!).map(intern); //
+  const N = d3.map(nodes, nodeId!).map(intern); //
+  console.log(N[10])
   const LS = d3.map(links, linkSource!).map(intern);
   const LT = d3.map(links, linkTarget!).map(intern);
   const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
   const G = nodeGroup == null ? null : d3.map(nodes, nodeGroup).map(intern);
-  const W =
-    typeof linkStrokeWidth !== "function"
-      ? null
-      : d3.map(links, linkStrokeWidth);
-  const L: number[] | null =
-    typeof linkStroke !== "function" ? null : d3.map(links, linkStroke);
+  // const W =
+  //   typeof linkStrokeWidth !== "function"
+  //     ? null
+  //     : d3.map(links, linkStrokeWidth);
+  // const L: number[] | null =
+  //   typeof linkStroke !== "function" ? null : d3.map(links, linkStroke);
 
   const newNodes: d3.SimulationNodeDatum[] = d3.map(nodes, (d) => ({
     index: N[d.group],
   }));
   const newLinks = d3.map(links, (_, i) => ({
     source: LS[i],
-    target: LT[i],
+    target: LT[i]
   }));
-
   if (G && nodeGroups === undefined) nodeGroups = d3.sort(G);
   const color =
     nodeGroup == null ? null : d3.scaleOrdinal(nodeGroups!, colors!);
-
   const forceNode = d3.forceManyBody();
   const forceLink = d3.forceLink(newLinks).id(({ index: i }) => N[i!]);
   if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
   if (linkStrength !== undefined) forceLink.strength(linkStrength);
 
   const svg = d3
-    // .select(container)
     .create("svg")
     .attr("width", width!)
     .attr("height", height!)
@@ -153,19 +153,19 @@ export default function ForceGraph(props: Props) {
 
   const node = svg
     .append("g")
-    .attr("fill", nodeFill!)
+    .attr("fill", "red")
     .attr("stroke", nodeStroke!)
     .attr("stroke-opacity", nodeStrokeOpacity!)
     .attr("stroke-width", nodeStrokeWidth!)
     .selectAll("circle")
     .data(newNodes)
     .join("circle")
-    .attr("r", nodeRadius!)
+    .attr("r", 15)
     .call(drag(simulation) as any);
 
   // if (W) link.attr("stroke-width", ({ source: i }) => W[i] as any);
   // if (L) link.attr("stroke", ({ source: i }) => L[i]);
-  if (G) node.attr("fill", ({ index: i }) => color!(G[i!]));
+  if (G) node.attr("fill", ({ index: i }) => color!(G[i!])); // same group has same color
   if (T) node.append("title").text(({ index: i }) => T[i!]);
   if (invalidation != null) invalidation.then(() => simulation.stop());
 

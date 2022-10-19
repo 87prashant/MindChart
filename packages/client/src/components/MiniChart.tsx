@@ -1,3 +1,6 @@
+//TODO: Optimize the nodesArray
+//TODO: Optimze the linksArray
+
 import * as d3 from "d3";
 import { emotions } from "./Emotions";
 import { Emotion, FormDataType } from "./Form";
@@ -10,8 +13,6 @@ interface Props {
 
 const MiniChart = (props: Props) => {
   const { w, h, savedData } = props;
-  // console.log(savedData);
-
   const findGroupArray = (data: Emotion) => {
     let arr = [];
     for (let key in JSON.parse(JSON.stringify(data))) {
@@ -19,7 +20,6 @@ const MiniChart = (props: Props) => {
     }
     return arr;
   };
-
   const nodesArray = savedData.map((data) => {
     return {
       description: data.description,
@@ -30,17 +30,37 @@ const MiniChart = (props: Props) => {
     };
   });
 
-  const N: number[] = savedData.map(intern);
-  const newNodes: d3.SimulationNodeDatum[] = d3.map(savedData, (d) => ({
-    index: N[d.priority],
-  }));
+  let linkArray = [];
+  for (let i = 0; i < nodesArray.length; i++) {
+    const groups = nodesArray[i].group;
+    for (let j = 0; j < groups.length; j++) {
+      const group = groups[j];
+      for (let k = i + 1; k < nodesArray.length; k++) {
+        const compareGroups = nodesArray[k].group;
+        for (let l = 0; l < compareGroups.length; l++) {
+          const compareGroup = compareGroups[l];
+          if (group === compareGroup) {
+            linkArray.push({
+              source: nodesArray[i].description,
+              target: nodesArray[k].description,
+            });
+          }
+        }
+      }
+    }
+  }
+
+  const N = d3.map(nodesArray, (d) => d.description).map(intern);
+  console.log(N);
+  const newNodes: d3.SimulationNodeDatum[] = d3.map(savedData, (d) => ({}));
 
   const forceNode = d3.forceManyBody();
-  forceNode.strength(-10);
+  const forceLink = d3.forceLink(linkArray).id(({ index: i }) => N[i!]);
+  forceNode.strength(-400);
 
   const simulation = d3
     .forceSimulation(newNodes)
-    // .force("link", forceLink)
+    .force("link", forceLink)
     .force("charge", forceNode)
     .force("center", d3.forceCenter())
     .on("tick", ticked);
@@ -63,7 +83,18 @@ const MiniChart = (props: Props) => {
     .join("circle")
     .call(drag(simulation) as any);
 
-  node.attr("r", ({ index: i }) => savedData[i!].priority); // temporary
+  const link = svg
+    .append("g")
+    .attr("stroke", "black")
+    // .attr("stroke-opacity", linkStrokeOpacity!)
+    // .attr("stroke-width", linkStrokeWidth!)
+    // .attr("stroke-linecap", linkStrokeLinecap!)
+    .selectAll("line")
+    .data(linkArray)
+    .join("line");
+
+
+  node.attr("r", ({ index: i }) => savedData[i!].priority/2); // temporary
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"
@@ -72,11 +103,11 @@ const MiniChart = (props: Props) => {
   }
 
   function ticked() {
-    // link
-    //   .attr("x1", (d) => d.source.x)
-    //   .attr("y1", (d) => d.source.y)
-    //   .attr("x2", (d) => d.target.x)
-    //   .attr("y2", (d) => d.target.y);
+    link
+      .attr("x1", (d) => (d.source as any).x)
+      .attr("y1", (d) => (d.source as any).y)
+      .attr("x2", (d) => (d.source as any).x)
+      .attr("y2", (d) => (d.source as any).y);
 
     node.attr("cx", (d) => d.x!).attr("cy", (d) => d.y!);
   }
