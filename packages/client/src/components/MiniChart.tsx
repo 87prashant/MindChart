@@ -1,5 +1,5 @@
 //TODO: Optimize the nodesArray
-//TODO: Optimze the linksArray
+//TODO: Optimize the links
 
 import * as d3 from "d3";
 import { emotions } from "./Emotions";
@@ -13,6 +13,7 @@ interface Props {
 
 const MiniChart = (props: Props) => {
   const { w, h, savedData } = props;
+  
   const findGroupArray = (data: Emotion) => {
     let arr = [];
     for (let key in JSON.parse(JSON.stringify(data))) {
@@ -30,7 +31,12 @@ const MiniChart = (props: Props) => {
     };
   });
 
-  let linkArray = [];
+  const N = d3.map(nodesArray, (d) => d.description).map(intern);
+  const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
+    index: N[i],
+  }));
+
+  let links = [];
   for (let i = 0; i < nodesArray.length; i++) {
     const groups = nodesArray[i].group;
     for (let j = 0; j < groups.length; j++) {
@@ -40,7 +46,7 @@ const MiniChart = (props: Props) => {
         for (let l = 0; l < compareGroups.length; l++) {
           const compareGroup = compareGroups[l];
           if (group === compareGroup) {
-            linkArray.push({
+            links.push({
               source: nodesArray[i].description,
               target: nodesArray[k].description,
             });
@@ -49,28 +55,36 @@ const MiniChart = (props: Props) => {
       }
     }
   }
-
-  const N = d3.map(nodesArray, (d) => d.description).map(intern);
-  console.log(N);
-  const newNodes: d3.SimulationNodeDatum[] = d3.map(savedData, (d) => ({}));
+  console.log(nodes)
+  console.log(links)
 
   const forceNode = d3.forceManyBody();
-  const forceLink = d3.forceLink(linkArray).id(({ index: i }) => N[i!]);
+  const forceLink = d3.forceLink(links).id(({ index: i }) => N[i!]);
   forceNode.strength(-400);
-
-  const simulation = d3
-    .forceSimulation(newNodes)
-    .force("link", forceLink)
-    .force("charge", forceNode)
-    .force("center", d3.forceCenter())
-    .on("tick", ticked);
-
+  
   const svg = d3
     .create("svg")
     .attr("height", h)
     .attr("width", w)
     .attr("viewBox", [-w / 2, -h / 2, w, h])
     .attr("style", "max-width: 100%");
+
+  const simulation = d3
+    .forceSimulation(nodes)
+    .force("link", forceLink)
+    .force("charge", forceNode)
+    .force("center", d3.forceCenter())
+    .on("tick", ticked);
+
+  const link = svg
+    .append("g")
+    .attr("stroke", "#000000")
+    // .attr("stroke-opacity", linkStrokeOpacity!)
+    // .attr("stroke-width", linkStrokeWidth!)
+    // .attr("stroke-linecap", linkStrokeLinecap!)
+    .selectAll("line")
+    .data(links)
+    .join("line");
 
   const node = svg
     .append("g")
@@ -79,22 +93,11 @@ const MiniChart = (props: Props) => {
     // .attr("stroke-opacity", nodeStrokeOpacity!)
     // .attr("stroke-width", nodeStrokeWidth!)
     .selectAll("circle")
-    .data(newNodes)
+    .data(nodes)
     .join("circle")
     .call(drag(simulation) as any);
 
-  const link = svg
-    .append("g")
-    .attr("stroke", "black")
-    // .attr("stroke-opacity", linkStrokeOpacity!)
-    // .attr("stroke-width", linkStrokeWidth!)
-    // .attr("stroke-linecap", linkStrokeLinecap!)
-    .selectAll("line")
-    .data(linkArray)
-    .join("line");
-
-
-  node.attr("r", ({ index: i }) => savedData[i!].priority/2); // temporary
+  node.attr("r", ({ index: i }) => savedData[i!].priority / 2); // temporary
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"
@@ -106,8 +109,8 @@ const MiniChart = (props: Props) => {
     link
       .attr("x1", (d) => (d.source as any).x)
       .attr("y1", (d) => (d.source as any).y)
-      .attr("x2", (d) => (d.source as any).x)
-      .attr("y2", (d) => (d.source as any).y);
+      .attr("x2", (d) => (d.target as any).x)
+      .attr("y2", (d) => (d.target as any).y);
 
     node.attr("cx", (d) => d.x!).attr("cy", (d) => d.y!);
   }
