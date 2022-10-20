@@ -13,7 +13,7 @@ interface Props {
 
 const MiniChart = (props: Props) => {
   const { w, h, savedData } = props;
-  
+
   const findGroupArray = (data: Emotion) => {
     let arr = [];
     for (let key in JSON.parse(JSON.stringify(data))) {
@@ -32,7 +32,7 @@ const MiniChart = (props: Props) => {
   });
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
-  const R = d3.map(nodesArray, (d) => d.priority).map(intern)  //radius array
+  const R = d3.map(nodesArray, (d) => d.priority).map(intern); //radius array
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
   }));
@@ -59,10 +59,10 @@ const MiniChart = (props: Props) => {
 
   const forceNode = d3.forceManyBody();
   const forceLink = d3.forceLink(links).id(({ index: i }) => N[i!]);
-  const collisionForce = d3.forceCollide((_, i) => R[i] /2)
+  const collisionForce = d3.forceCollide((_, i) => R[i] / 2);
   forceNode.strength(-60);
-  forceLink.strength(0.2)
-  
+  forceLink.strength(0.2);
+
   const svg = d3
     .create("svg")
     .attr("height", h)
@@ -78,15 +78,15 @@ const MiniChart = (props: Props) => {
     .force("center", d3.forceCenter())
     .on("tick", ticked);
 
-  const link = svg
-    .append("g")
-    .attr("stroke", "#000000")
-    // .attr("stroke-opacity", linkStrokeOpacity!)
-    // .attr("stroke-width", linkStrokeWidth!)
-    // .attr("stroke-linecap", linkStrokeLinecap!)
-    .selectAll("line")
-    .data(links)
-    .join("line");
+  // const link = svg
+  //   .append("g")
+  //   .attr("stroke", "#000000")
+  //   .attr("stroke-opacity", linkStrokeOpacity!)
+  //   .attr("stroke-width", linkStrokeWidth!)
+  //   .attr("stroke-linecap", linkStrokeLinecap!)
+  //   .selectAll("line")
+  //   .data(links)
+  //   .join("line");
 
   const node = svg
     .append("g")
@@ -97,9 +97,8 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(nodes)
     .join("circle")
+    .attr("r", ({ index: i }) => R[i!] / 2)
     .call(drag(simulation) as any);
-
-  node.attr("r", ({ index: i }) => savedData[i!].priority / 2); // temporary
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"
@@ -108,34 +107,30 @@ const MiniChart = (props: Props) => {
   }
 
   function ticked() {
-    link
-      .attr("x1", (d) => (d.source as any).x)
-      .attr("y1", (d) => (d.source as any).y)
-      .attr("x2", (d) => (d.target as any).x)
-      .attr("y2", (d) => (d.target as any).y);
+    // link
+    //   .attr("x1", (d) => (d.source as any).x)
+    //   .attr("y1", (d) => (d.source as any).y)
+    //   .attr("x2", (d) => (d.target as any).x)
+    //   .attr("y2", (d) => (d.target as any).y);
 
     node.attr("cx", (d) => d.x!).attr("cy", (d) => d.y!);
   }
 
   function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
-    function dragstarted(event: {
-      active: any;
-      subject: { fx: any; x: any; fy: any; y: any };
-    }) {
+    function dragstarted(event: any) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
     }
 
-    function dragged(event: { subject: { fx: any; fy: any }; x: any; y: any }) {
-      event.subject.fx = event.x;
-      event.subject.fy = event.y;
+    function dragged(event: any) {
+      event.subject.fx =
+        event.x < -w / 2 ? -w / 2 : event.x > w / 2 ? w / 2 : event.x;
+      event.subject.fy =
+        event.y < -h / 2 ? -h / 2 : event.y > h / 2 ? h / 2 : event.y;
     }
 
-    function dragended(event: {
-      active: any;
-      subject: { fx: null; fy: null };
-    }) {
+    function dragended(event: any) {
       if (!event.active) simulation.alphaTarget(0);
       event.subject.fx = null;
       event.subject.fy = null;
