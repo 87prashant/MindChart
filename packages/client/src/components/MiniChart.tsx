@@ -31,7 +31,8 @@ const MiniChart = (props: Props) => {
     };
   });
 
-  const N = d3.map(nodesArray, (d) => d.description).map(intern);
+  const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
+  const R = d3.map(nodesArray, (d) => d.priority).map(intern)  //radius array
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
   }));
@@ -47,20 +48,20 @@ const MiniChart = (props: Props) => {
           const compareGroup = compareGroups[l];
           if (group === compareGroup) {
             links.push({
-              source: nodesArray[i].description,
-              target: nodesArray[k].description,
+              source: JSON.stringify(nodesArray[i]),
+              target: JSON.stringify(nodesArray[k]),
             });
           }
         }
       }
     }
   }
-  console.log(nodes)
-  console.log(links)
 
   const forceNode = d3.forceManyBody();
   const forceLink = d3.forceLink(links).id(({ index: i }) => N[i!]);
-  forceNode.strength(-400);
+  const collisionForce = d3.forceCollide((_, i) => R[i] /2)
+  forceNode.strength(-60);
+  forceLink.strength(0.2)
   
   const svg = d3
     .create("svg")
@@ -73,6 +74,7 @@ const MiniChart = (props: Props) => {
     .forceSimulation(nodes)
     .force("link", forceLink)
     .force("charge", forceNode)
+    .force("collide", collisionForce)
     .force("center", d3.forceCenter())
     .on("tick", ticked);
 

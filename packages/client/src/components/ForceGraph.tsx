@@ -1,4 +1,4 @@
-//Question: Why the index property in newNodes is Number as N contains strings not the Number 
+// For learning and Testing purpose 
 
 import * as d3 from "d3";
 import miserable from "../miserable.json";
@@ -100,17 +100,16 @@ export default function ForceGraph(props: Props) {
   let nodeGroups: any = undefined;
   const { nodes, links } = miserable;
   const N = d3.map(nodes, nodeId!).map(intern); //
-  console.log(N[10])
   const LS = d3.map(links, linkSource!).map(intern);
   const LT = d3.map(links, linkTarget!).map(intern);
   const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
   const G = nodeGroup == null ? null : d3.map(nodes, nodeGroup).map(intern);
-  // const W =
-  //   typeof linkStrokeWidth !== "function"
-  //     ? null
-  //     : d3.map(links, linkStrokeWidth);
-  // const L: number[] | null =
-  //   typeof linkStroke !== "function" ? null : d3.map(links, linkStroke);
+  const W =
+    typeof linkStrokeWidth !== "function"
+      ? null
+      : d3.map(links, linkStrokeWidth);
+  const L: number[] | null =
+    typeof linkStroke !== "function" ? null : d3.map(links, linkStroke);
 
   const newNodes: d3.SimulationNodeDatum[] = d3.map(nodes, (d) => ({
     index: N[d.group],
@@ -119,6 +118,7 @@ export default function ForceGraph(props: Props) {
     source: LS[i],
     target: LT[i]
   }));
+
   if (G && nodeGroups === undefined) nodeGroups = d3.sort(G);
   const color =
     nodeGroup == null ? null : d3.scaleOrdinal(nodeGroups!, colors!);
@@ -141,15 +141,15 @@ export default function ForceGraph(props: Props) {
     .force("center", d3.forceCenter())
     .on("tick", ticked);
 
-  // const link = svg
-  //   .append("g")
-  //   .attr("stroke", typeof linkStroke !== "function" ? linkStroke! : null)
-  //   .attr("stroke-opacity", linkStrokeOpacity!)
-  //   .attr("stroke-width", linkStrokeWidth!)
-  //   .attr("stroke-linecap", linkStrokeLinecap!)
-  //   .selectAll("line")
-  //   .data(newLinks)
-  //   .join("line");
+  const link = svg
+    .append("g")
+    .attr("stroke", "red")
+    .attr("stroke-opacity", linkStrokeOpacity!)
+    .attr("stroke-width", linkStrokeWidth!)
+    .attr("stroke-linecap", linkStrokeLinecap!)
+    .selectAll("line")
+    .data(newLinks)
+    .join("line");
 
   const node = svg
     .append("g")
@@ -163,8 +163,8 @@ export default function ForceGraph(props: Props) {
     .attr("r", 15)
     .call(drag(simulation) as any);
 
-  // if (W) link.attr("stroke-width", ({ source: i }) => W[i] as any);
-  // if (L) link.attr("stroke", ({ source: i }) => L[i]);
+  if (W) link.attr("stroke-width", ({ source: i }) => W[i] as any);
+  if (L) link.attr("stroke", ({ source: i }) => L[i]);
   if (G) node.attr("fill", ({ index: i }) => color!(G[i!])); // same group has same color
   if (T) node.append("title").text(({ index: i }) => T[i!]);
   if (invalidation != null) invalidation.then(() => simulation.stop());
@@ -176,11 +176,11 @@ export default function ForceGraph(props: Props) {
   }
 
   function ticked() {
-    // link
-    //   .attr("x1", (d) => d.source.x)
-    //   .attr("y1", (d) => d.source.y)
-    //   .attr("x2", (d) => d.target.x)
-    //   .attr("y2", (d) => d.target.y);
+    link
+      .attr("x1", (d) => d.source.x)
+      .attr("y1", (d) => d.source.y)
+      .attr("x2", (d) => d.target.x)
+      .attr("y2", (d) => d.target.y);
 
     node.attr("cx", (d) => d.x!).attr("cy", (d) => d.y!);
   }

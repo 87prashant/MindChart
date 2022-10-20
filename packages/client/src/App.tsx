@@ -57,7 +57,114 @@ function App() {
     emotions: {
       neutral: 10
     },
+    priority: 19,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+    },
+    emotions: {
+      joy: 10
+    },
     priority: 50,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+    },
+    emotions: {
+      anticipation: 10
+    },
+    priority: 27,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+    },
+    emotions: {
+      fear: 10
+    },
+    priority: 37,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+    },
+    emotions: {
+      fear: 10
+    },
+    priority: 49,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+    },
+    emotions: {
+      disgust: 10
+    },
+    priority: 37,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+    },
+    emotions: {
+      disgust: 10
+    },
+    priority: 43,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+    },
+    emotions: {
+      sadness: 10
+    },
+    priority: 12,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+    },
+    emotions: {
+      trust: 10
+    },
+    priority: 34,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      anticipation: true,
+    },
+    emotions: {
+      trust: 10,
+      anticipation: 23,
+      joy: 15,
+      fear: 26,
+      neutral: 32,
+      sadness: 12,
+      disgust: 32,
+      anger: 50,
+    },
+    priority: 12,
+    description: "kdfjskdfjfsdfsdfsdlskdj"
+  },
+  {
+    categories: {
+      creative: true,
+    },
+    emotions: {
+      surprise: 10
+    },
+    priority: 34,
     description: "kdfjskdfjfsdfsdfsdlskdj"
   },
   ]
