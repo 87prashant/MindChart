@@ -81,9 +81,9 @@ const MiniChart = (props: Props) => {
   // const link = svg
   //   .append("g")
   //   .attr("stroke", "#000000")
-  //   .attr("stroke-opacity", linkStrokeOpacity!)
-  //   .attr("stroke-width", linkStrokeWidth!)
-  //   .attr("stroke-linecap", linkStrokeLinecap!)
+  //   // .attr("stroke-opacity", linkStrokeOpacity!)
+  //   // .attr("stroke-width", linkStrokeWidth!)
+  //   // .attr("stroke-linecap", linkStrokeLinecap!)
   //   .selectAll("line")
   //   .data(links)
   //   .join("line");

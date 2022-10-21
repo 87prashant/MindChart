@@ -19,7 +19,6 @@ export const emotions = [
   "fear",
   "anger",
   "sadness",
-  "disgust",
   "surprise",
   "joy",
   "anticipation",

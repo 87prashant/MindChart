@@ -112,7 +112,6 @@ export interface Emotion {
   joy?: number;
   anticipation?: number;
   trust?: number;
-  disgust?: number;
   anger?: number;
   surprise?: number;
   sadness?: number;
