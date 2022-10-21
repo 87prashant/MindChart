@@ -5,7 +5,6 @@ import ForceGraph from "./ForceGraph";
 import { FormDataType } from "./Form";
 
 const StyledWrapper = styled("div")({
-  border: "5px solid black",
   height: "calc(100vh - 70px)",
   overflow: "hidden",
   "& svg": {

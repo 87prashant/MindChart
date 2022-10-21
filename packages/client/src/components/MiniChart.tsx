@@ -32,7 +32,7 @@ const MiniChart = (props: Props) => {
   });
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
-  const R = d3.map(nodesArray, (d) => d.priority).map(intern); //radius array
+  const R = d3.map(nodesArray, (d) => d.priority / 2).map(intern); //radius array
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
   }));
@@ -59,7 +59,7 @@ const MiniChart = (props: Props) => {
 
   const forceNode = d3.forceManyBody();
   const forceLink = d3.forceLink(links).id(({ index: i }) => N[i!]);
-  const collisionForce = d3.forceCollide((_, i) => R[i] / 2);
+  const collisionForce = d3.forceCollide((_, i) => R[i]);
   forceNode.strength(-60);
   forceLink.strength(0.2);
 
@@ -92,12 +92,11 @@ const MiniChart = (props: Props) => {
     .append("g")
     .attr("fill", "red")
     .attr("stroke", "#fff")
-    // .attr("stroke-opacity", nodeStrokeOpacity!)
-    // .attr("stroke-width", nodeStrokeWidth!)
     .selectAll("circle")
     .data(nodes)
     .join("circle")
-    .attr("r", ({ index: i }) => R[i!] / 2)
+    // .attr("stroke-width", ({index: i}) => R[i!])
+    .attr("r", ({ index: i }) => R[i!])
     .call(drag(simulation) as any);
 
   function intern(value: { valueOf: () => any } | null) {
@@ -113,7 +112,21 @@ const MiniChart = (props: Props) => {
     //   .attr("x2", (d) => (d.target as any).x)
     //   .attr("y2", (d) => (d.target as any).y);
 
-    node.attr("cx", (d) => d.x!).attr("cy", (d) => d.y!);
+    node
+      .attr("cx", (d, i) =>
+        d.x! < -w / 2 + R[i]
+          ? -w / 2 + R[i]
+          : d.x! > w / 2 - R[i]
+          ? w / 2 - R[i]
+          : d.x!
+      )
+      .attr("cy", (d, i) =>
+        d.y! < -h / 2 + R[i]
+          ? -h / 2 + R[i]
+          : d.y! > h / 2 - R[i]
+          ? h / 2 - R[i]
+          : d.y!
+      );
   }
 
   function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
@@ -124,10 +137,8 @@ const MiniChart = (props: Props) => {
     }
 
     function dragged(event: any) {
-      event.subject.fx =
-        event.x < -w / 2 ? -w / 2 : event.x > w / 2 ? w / 2 : event.x;
-      event.subject.fy =
-        event.y < -h / 2 ? -h / 2 : event.y > h / 2 ? h / 2 : event.y;
+      event.subject.fx = event.sourceEvent.clientX - w / 2;
+      event.subject.fy = event.sourceEvent.clientY - h / 2 - 70;
     }
 
     function dragended(event: any) {
