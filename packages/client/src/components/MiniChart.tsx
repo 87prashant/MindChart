@@ -32,7 +32,7 @@ const MiniChart = (props: Props) => {
   });
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
-  const R = d3.map(nodesArray, (d) => d.priority / 2).map(intern); //radius array
+  const R = d3.map(nodesArray, (d) => (3 * d.priority) / 4).map(intern); //radius array
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
   }));
@@ -60,7 +60,7 @@ const MiniChart = (props: Props) => {
   const forceNode = d3.forceManyBody();
   const forceLink = d3.forceLink(links).id(({ index: i }) => N[i!]);
   const collisionForce = d3.forceCollide((_, i) => R[i]);
-  forceNode.strength(-60);
+  forceNode.strength(-600);
   forceLink.strength(0.2);
 
   const svg = d3
