@@ -1,33 +1,32 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Emotion } from "./Form";
 
 export const findColors = (emotions: Emotion[]) => {
   const colors: any[] = [];
-  const findColor = (emotion: Emotion) => {
+  const findColor = (emotion: string) => {
     let color;
     switch (emotion) {
       case "neutral":
         color = "#808080";
         break;
-      case "Fear":
+      case "fear":
         color = "#000000";
         break;
-      case "Anger":
+      case "anger":
         color = "#FF0000";
         break;
-      case "Sadness":
+      case "sadness":
         color = "#0000FF";
         break;
-      case "Surprise":
+      case "surprise":
         color = "#A020F0";
         break;
-      case "Joy":
+      case "joy":
         color = "#00FF00";
         break;
-      case "Anticipation":
+      case "anticipation":
         color = "#FFFF00";
         break;
-      case "Trust":
+      case "trust":
         color = "#FFFFFF";
         break;
       default:
@@ -35,9 +34,9 @@ export const findColors = (emotions: Emotion[]) => {
     }
     return color;
   };
-  emotions.forEach((emotion) =>
-    colors.push((emotion: Emotion) => findColor(emotion))
-  );
+  for (let key in emotions) {
+    colors.push(findColor(key));
+  }
 
   return colors;
 };

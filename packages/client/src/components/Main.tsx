@@ -7,6 +7,7 @@ import { FormDataType } from "./Form";
 const StyledWrapper = styled("div")({
   height: "calc(100vh - 70px)",
   overflow: "hidden",
+  backgroundColor: "#D0D0D0",
   "& svg": {
     "& g": {
       "& circle": {

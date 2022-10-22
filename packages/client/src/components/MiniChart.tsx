@@ -3,6 +3,7 @@
 
 import * as d3 from "d3";
 import { emotions } from "./Emotions";
+import { findColors } from "./findColors";
 import { Emotion, FormDataType } from "./Form";
 
 interface Props {
@@ -32,7 +33,8 @@ const MiniChart = (props: Props) => {
   });
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
-  const R = d3.map(nodesArray, (d) => (3 * d.priority) / 4).map(intern); //radius array
+  const R = d3.map(nodesArray, (d) => d.priority).map(intern); //radius array
+  const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern) //colors array
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
   }));
@@ -90,13 +92,15 @@ const MiniChart = (props: Props) => {
 
   const node = svg
     .append("g")
-    .attr("fill", "red")
     .attr("stroke", "#fff")
     .selectAll("circle")
     .data(nodes)
     .join("circle")
     // .attr("stroke-width", ({index: i}) => R[i!])
     .attr("r", ({ index: i }) => R[i!])
+    .attr("fill", ({index: i}) => C[i!][0])
+    .attr("stroke", ({index: i}) => C[i!][1!])
+    .attr("stroke-width", ({index: i}) => R[i!]/15)
     .call(drag(simulation) as any);
 
   function intern(value: { valueOf: () => any } | null) {
