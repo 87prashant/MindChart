@@ -1,42 +1,34 @@
+// currently return color of max intensity emotion
+
 import { Emotion } from "./Form";
 
-export const findColors = (emotions: Emotion[]) => {
-  const colors: any[] = [];
+export const findColors = (emotions: Emotion) => {
   const findColor = (emotion: string) => {
-    let color;
     switch (emotion) {
       case "neutral":
-        color = "#808080";
-        break;
+        return "#808080";
       case "fear":
-        color = "#000000";
-        break;
+        return "#000000";
       case "anger":
-        color = "#FF0000";
-        break;
+        return "#FF0000";
       case "sadness":
-        color = "#0000FF";
-        break;
+        return "#0000FF";
       case "surprise":
-        color = "#A020F0";
-        break;
+        return "#A020F0";
       case "joy":
-        color = "#00FF00";
-        break;
+        return "#00FF00";
       case "anticipation":
-        color = "#FFFF00";
-        break;
+        return "#FFFF00";
       case "trust":
-        color = "#FFFFFF";
-        break;
+        return "#FFFFFF";
       default:
-        color = "#000000";
+        return "#000000";
     }
-    return color;
   };
-  for (let key in emotions) {
-    colors.push(findColor(key));
-  }
+  let max = Math.max(...(Object.values(emotions) as number[]));
+  let emotion = Object.keys(emotions).find(
+    (key) => +emotions[key as keyof Emotion]! === max
+  );
 
-  return colors;
+  return findColor(emotion!);
 };

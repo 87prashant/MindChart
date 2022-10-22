@@ -34,7 +34,7 @@ const MiniChart = (props: Props) => {
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
   const R = d3.map(nodesArray, (d) => d.priority).map(intern); //radius array
-  const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern) //colors array
+  const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
   }));
@@ -98,9 +98,7 @@ const MiniChart = (props: Props) => {
     .join("circle")
     // .attr("stroke-width", ({index: i}) => R[i!])
     .attr("r", ({ index: i }) => R[i!])
-    .attr("fill", ({index: i}) => C[i!][0])
-    .attr("stroke", ({index: i}) => C[i!][1!])
-    .attr("stroke-width", ({index: i}) => R[i!]/15)
+    .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any);
 
   function intern(value: { valueOf: () => any } | null) {
