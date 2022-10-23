@@ -1,4 +1,6 @@
-import React, { useEffect, useRef } from "react";
+// Optimize the resize feature
+
+import { useEffect, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
 import ForceGraph from "./ForceGraph";
@@ -24,22 +26,40 @@ interface Props {
 }
 
 const Main = (props: Props) => {
-  const { savedData, isChartAdded, setIsChartAdded } = props;
   const ref = useRef<HTMLDivElement>(null);
+  const { savedData, isChartAdded, setIsChartAdded } = props;
+  const [dimensions, setDimensions] = useState({
+    w: 0,
+    h: 0,
+  });
 
   useEffect(() => {
     if (isChartAdded) return;
     setIsChartAdded(true);
-    const container = ref.current as unknown as HTMLElement;
-    const w = container!.getBoundingClientRect().width;
-    const h = container!.getBoundingClientRect().height;
+    const { w, h } = dimensions;
     const newProps = { w, h, savedData };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
     // const svg = ForceGraph(newProps) as unknown as HTMLDivElement;
     ref.current!.innerHTML = "";
     ref.current!.append(svg);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedData]);
+  }, [savedData, dimensions]);
+
+  useEffect(() => {
+    setIsChartAdded(false);
+    setDimensions({
+      w: ref.current!.getBoundingClientRect().width,
+      h: ref.current!.getBoundingClientRect().height,
+    });
+    function handleResize() {
+      setIsChartAdded(false);
+      setDimensions({
+        w: ref.current!.getBoundingClientRect().width,
+        h: ref.current!.getBoundingClientRect().height,
+      });
+    }
+    window.addEventListener("resize", handleResize);
+    return ref.current!.removeEventListener("resize", handleResize);
+  }, []);
 
   return <StyledWrapper ref={ref}></StyledWrapper>;
 };
