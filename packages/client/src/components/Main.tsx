@@ -19,6 +19,17 @@ const StyledWrapper = styled("div")({
   },
 });
 
+function debounce(fn: any, ms: number ) {
+  let timer: any
+  return (_: any) => {
+    clearTimeout(timer)
+    timer = setTimeout(function(this: any) {
+      timer = null
+      fn.apply(this, arguments)
+    }, ms)
+  };
+}
+
 interface Props {
   savedData: FormDataType[];
   isChartAdded: boolean;
@@ -50,15 +61,16 @@ const Main = (props: Props) => {
       w: ref.current!.getBoundingClientRect().width,
       h: ref.current!.getBoundingClientRect().height,
     });
-    function handleResize() {
+    const handleDebounceResize = debounce(function handleResize() {
       setIsChartAdded(false);
       setDimensions({
         w: ref.current!.getBoundingClientRect().width,
         h: ref.current!.getBoundingClientRect().height,
       });
-    }
-    window.addEventListener("resize", handleResize);
-    return ref.current!.removeEventListener("resize", handleResize);
+    }, 300)
+
+    window.addEventListener("resize", handleDebounceResize);
+    return ref.current!.removeEventListener("resize", handleDebounceResize);
   }, []);
 
   return <StyledWrapper ref={ref}></StyledWrapper>;
