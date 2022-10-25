@@ -62,8 +62,8 @@ const MiniChart = (props: Props) => {
   const forceNode = d3.forceManyBody();
   const forceLink = d3.forceLink(links).id(({ index: i }) => N[i!]);
   const collisionForce = d3.forceCollide((_, i) => R[i]);
-  forceNode.strength(-600);
-  forceLink.strength(0.2);
+  forceNode.strength(-1000);
+  forceLink.strength(0.13);
 
   const svg = d3
     .create("svg")
@@ -96,7 +96,6 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(nodes)
     .join("circle")
-    // .attr("stroke-width", ({index: i}) => R[i!])
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any);
@@ -131,14 +130,23 @@ const MiniChart = (props: Props) => {
       );
   }
 
+  function handleOtherNodes(request?: string) {
+    nodes.forEach((n) => {
+      n.fx = request ? n.x : null
+      n.fy = request ? n.y : null
+    })
+  }
+
   function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
     function dragstarted(event: any) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
+      handleOtherNodes("fix")
     }
 
     function dragged(event: any) {
+      handleOtherNodes()
       event.subject.fx = event.sourceEvent.clientX - w / 2;
       event.subject.fy = event.sourceEvent.clientY - h / 2 - 70;
     }
