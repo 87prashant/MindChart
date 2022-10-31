@@ -19,7 +19,7 @@ const FormWrapper = styled("div")({
   bottom: 0,
   left: 0,
   right: 0,
-  height: 170,
+  height: 135,
   width: 200,
   margin: "auto",
   position: "fixed",
