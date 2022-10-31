@@ -10,10 +10,11 @@ interface Props {
   w: number;
   h: number;
   savedData: FormDataType[];
+  handleHover: any;
 }
 
 const MiniChart = (props: Props) => {
-  const { w, h, savedData } = props;
+  const { w, h, savedData, handleHover } = props;
 
   const findGroupArray = (data: Emotion) => {
     let arr = [];
@@ -35,6 +36,7 @@ const MiniChart = (props: Props) => {
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
   const R = d3.map(nodesArray, (d) => d.priority).map(intern); //radius array
   const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array
+  const D = d3.map(nodesArray, (d) => d.description).map(intern)
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
   }));
@@ -96,9 +98,11 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(nodes)
     .join("circle")
+    .attr("id", ({index: i}) => D[i!]) // for 'HoverModel'
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
-    .call(drag(simulation) as any);
+    .call(drag(simulation) as any)
+    .on("mouseover", (e) => handleHover(e));
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"
@@ -132,9 +136,9 @@ const MiniChart = (props: Props) => {
 
   function handleOtherNodes(request?: string) {
     nodes.forEach((n) => {
-      n.fx = request ? n.x : null
-      n.fy = request ? n.y : null
-    })
+      n.fx = request ? n.x : null;
+      n.fy = request ? n.y : null;
+    });
   }
 
   function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
@@ -142,11 +146,11 @@ const MiniChart = (props: Props) => {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
-      handleOtherNodes("fix")
+      handleOtherNodes("fix");
     }
 
     function dragged(event: any) {
-      handleOtherNodes()
+      handleOtherNodes();
       event.subject.fx = event.sourceEvent.clientX - w / 2;
       event.subject.fy = event.sourceEvent.clientY - h / 2 - 70;
     }
