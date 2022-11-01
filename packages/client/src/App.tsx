@@ -11,7 +11,7 @@ const Container = styled("div")({
   border: "2px solid black",
   position: "absolute",
   display: "none",
-  backgroundColor: "white",
+  backgroundColor: "rgba(225, 225, 225, 1)",
   borderRadius: 7,
   padding: 4,
   maxWidth: 200,
@@ -165,18 +165,22 @@ function App() {
   const [savedData, setSavedData] = useState(temp as FormDataType[]);
   const [isChartAdded, setIsChartAdded] = useState(false);
   const ref = createRef<HTMLDivElement>();
-  let current: HTMLDivElement;
+  const [current, setCurrent] = useState<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    current = ref.current as HTMLDivElement;
-  }, []);
+    setCurrent(() => ref.current)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
 
   function handleHover(e: any) {
-    console.log(e.srcElement.id);
+    if(!e) {
+      current!.style.display = "none"
+      return
+    }
     current!.style.display = "block";
+    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id
   }
-
+  console.log(current!)
   return (
     <div className="App">
       <Header setShowForm={setShowForm} />

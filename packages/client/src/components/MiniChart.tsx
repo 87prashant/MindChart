@@ -102,7 +102,8 @@ const MiniChart = (props: Props) => {
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)
-    .on("mouseover", (e) => handleHover(e));
+    .on("mouseover", (e) => handleHover(e))
+    .on("mouseout", () => handleHover())
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"
