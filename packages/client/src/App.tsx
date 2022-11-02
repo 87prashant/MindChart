@@ -1,4 +1,4 @@
-import { useState, createRef, useEffect } from "react";
+import { useState, createRef, useEffect, useRef } from "react";
 import Main from "./components/Main";
 import Header from "./components/Header";
 import { FormDataType } from "./components/Form";
@@ -160,27 +160,72 @@ const temp = [
   },
 ];
 
+function debounce(fn: any, ms: number) {
+  let timer: any;
+  return (_: any) => {
+    clearTimeout(timer);
+    timer = setTimeout(function (this: any) {
+      timer = null;
+      fn.apply(this, arguments);
+    }, ms);
+  };
+}
+
 function App() {
   const [showForm, setShowForm] = useState(false);
   const [savedData, setSavedData] = useState(temp as FormDataType[]);
   const [isChartAdded, setIsChartAdded] = useState(false);
-  const ref = createRef<HTMLDivElement>();
-  const [current, setCurrent] = useState<HTMLDivElement | null>(null)
+  const ref = useRef<HTMLDivElement>(null);
+  const ref2 = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({
+    w: 0,
+    h: 0,
+  });
+  const [current, setCurrent] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    setCurrent(() => ref.current)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setIsChartAdded(false);
+    setDimensions({
+      w: ref2.current!.getBoundingClientRect().width,
+      h: ref2.current!.getBoundingClientRect().height,
+    });
+    const handleDebounceResize = debounce(function handleResize() {
+      setIsChartAdded(false);
+      setDimensions({
+        w: ref2.current!.getBoundingClientRect().width,
+        h: ref2.current!.getBoundingClientRect().height,
+      });
+    }, 300);
+
+    window.addEventListener("resize", handleDebounceResize);
+    return ref.current!.removeEventListener("resize", handleDebounceResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setCurrent(() => ref.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
   function handleHover(e: any) {
-    if(!e) {
-      current!.style.display = "none"
-      return
+    if (!e) {
+      current!.style.display = "none";
+      return;
     }
+    const xPosition =
+      Number(e.srcElement.cx.baseVal.valueAsString) +
+      dimensions.w / 2 -
+      e.srcElement.r.baseVal.value;
+    const yPosition =
+      Number(e.srcElement.cy.baseVal.valueAsString) +
+      dimensions.h / 2 -
+      e.srcElement.r.baseVal.value;
+    current!.style.left = xPosition + "px";
+    current!.style.top = yPosition + "px";
     current!.style.display = "block";
-    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id
+    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
   }
-  console.log(current!)
+
   return (
     <div className="App">
       <Header setShowForm={setShowForm} />
@@ -199,6 +244,8 @@ function App() {
         isChartAdded={isChartAdded}
         setIsChartAdded={setIsChartAdded}
         handleHover={handleHover}
+        dimensions={dimensions}
+        ref2={ref2}
       />
     </div>
   );
