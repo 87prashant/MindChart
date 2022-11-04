@@ -1,4 +1,4 @@
-import { useState, createRef, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, MouseEvent } from "react";
 import Main from "./components/Main";
 import Header from "./components/Header";
 import { FormDataType } from "./components/Form";
@@ -120,7 +120,7 @@ const temp = [
       sadness: 10,
     },
     priority: 12,
-    description: "kdfjskdfjfsdfsdfsdlskdj",
+    description: "Hello all",
   },
   {
     categories: {
@@ -156,7 +156,7 @@ const temp = [
       surprise: 10,
     },
     priority: 34,
-    description: "kdfjskdfjfsdfsdfsdlskdj",
+    description: "Hello all kdsfjsdkl fsdkjf dkslfj dskljfsdk lfjds;kljf sdkljfsd;jds;lkj flksj flkdsjf lkdsj flkdsjf lkdsj flkdsjf lkdjsflkdsjfdsk lfjdksljf",
   },
 ];
 
@@ -207,15 +207,24 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
-  function handleHover(e: any) {
+  //handling both mouseover and mouseout of nodes and 'HoverModal' component
+  function handleHover(e: any, str: string | undefined) {
     if (!e) {
       current!.style.display = "none";
       return;
     }
-    const xPosition =
+    if (str) {
+      current!.style.display = str === "block" ? "block" : "none";
+      return;
+    }
+    let xPosition =
       Number(e.srcElement.cx.baseVal.valueAsString) +
       dimensions.w / 2 -
       e.srcElement.r.baseVal.value;
+    // console.log(current!.clientHeight)
+    // if(current!.offsetHeight > 70 && e.srcElement.cy >= e.srcElement.r.baseVal.value){
+    //   xPosition = xPosition + e.srcElement.r.baseVal.value
+    // }
     const yPosition =
       Number(e.srcElement.cy.baseVal.valueAsString) +
       dimensions.h / 2 -
@@ -229,7 +238,11 @@ function App() {
   return (
     <div className="App">
       <Header setShowForm={setShowForm} />
-      <Container ref={ref}>
+      <Container
+        ref={ref}
+        onMouseOver={(e) => handleHover(e, "block")}
+        onMouseOut={(e) => handleHover(e, "none")}
+      >
         <HoverModal />
       </Container>
       <Form
