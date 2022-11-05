@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, MouseEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import Main from "./components/Main";
 import Header from "./components/Header";
 import { FormDataType } from "./components/Form";
@@ -10,7 +10,7 @@ import styled from "@emotion/styled";
 const Container = styled("div")({
   border: "2px solid black",
   position: "absolute",
-  display: "none",
+  visibility: "hidden",
   backgroundColor: "rgba(225, 225, 225, 1)",
   borderRadius: 7,
   padding: 4,
@@ -156,7 +156,8 @@ const temp = [
       surprise: 10,
     },
     priority: 34,
-    description: "Hello all kdsfjsdkl fsdkjf dkslfj dskljfsdk lfjds;kljf sdkljfsd;jds;lkj flksj flkdsjf lkdsj flkdsjf lkdsj flkdsjf lkdjsflkdsjfdsk lfjdksljf",
+    description:
+      "Hello all kdsfjsdkl fsdkjf dkslfj dskljfsdk lfjds;kljf sdkljfsd;jds;lkj flksj flkdsjf lkdsj flkdsjf lkdsj flkdsjf lkdjsflkdsjfdsk lfjdksljf",
   },
 ];
 
@@ -175,13 +176,13 @@ function App() {
   const [showForm, setShowForm] = useState(false);
   const [savedData, setSavedData] = useState(temp as FormDataType[]);
   const [isChartAdded, setIsChartAdded] = useState(false);
+  const [current, setCurrent] = useState<HTMLDivElement | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const ref2 = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({
     w: 0,
     h: 0,
   });
-  const [current, setCurrent] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setIsChartAdded(false);
@@ -210,29 +211,32 @@ function App() {
   //handling both mouseover and mouseout of nodes and 'HoverModal' component
   function handleHover(e: any, str: string | undefined) {
     if (!e) {
-      current!.style.display = "none";
+      current!.style.visibility = "hidden";
       return;
     }
     if (str) {
-      current!.style.display = str === "block" ? "block" : "none";
+      current!.style.visibility = str === "block" ? "visible" : "hidden";
       return;
     }
+    const r = e.srcElement.r.baseVal.value;
+    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
     let xPosition =
-      Number(e.srcElement.cx.baseVal.valueAsString) +
-      dimensions.w / 2 -
-      e.srcElement.r.baseVal.value;
-    // console.log(current!.clientHeight)
-    // if(current!.offsetHeight > 70 && e.srcElement.cy >= e.srcElement.r.baseVal.value){
-    //   xPosition = xPosition + e.srcElement.r.baseVal.value
-    // }
+      Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
+    console.log(current!.offsetHeight);
+    if (current!.offsetHeight > 80) {
+      xPosition = xPosition + r * 2 - 10;
+    }
+    if (
+      e.srcElement.cx.baseVal.value >
+      dimensions.w / 2 - r - current!.offsetWidth
+    ) {
+      xPosition = xPosition - r * 2 - current!.offsetWidth + 20;
+    }
     const yPosition =
-      Number(e.srcElement.cy.baseVal.valueAsString) +
-      dimensions.h / 2 -
-      e.srcElement.r.baseVal.value;
+      Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r;
     current!.style.left = xPosition + "px";
     current!.style.top = yPosition + "px";
-    current!.style.display = "block";
-    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
+    current!.style.visibility = "visible";
   }
 
   return (
