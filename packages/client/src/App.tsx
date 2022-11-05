@@ -262,6 +262,7 @@ function App() {
         setIsChartAdded={setIsChartAdded}
         handleHover={handleHover}
         dimensions={dimensions}
+        current={current}
         ref2={ref2}
       />
     </div>

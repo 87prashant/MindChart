@@ -11,10 +11,11 @@ interface Props {
   h: number;
   savedData: FormDataType[];
   handleHover: any;
+  current: HTMLDivElement | null;
 }
 
 const MiniChart = (props: Props) => {
-  const { w, h, savedData, handleHover } = props;
+  const { w, h, savedData, handleHover, current } = props;
 
   const findGroupArray = (data: Emotion) => {
     let arr = [];
@@ -36,7 +37,7 @@ const MiniChart = (props: Props) => {
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
   const R = d3.map(nodesArray, (d) => d.priority).map(intern); //radius array
   const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array
-  const D = d3.map(nodesArray, (d) => d.description).map(intern)
+  const D = d3.map(nodesArray, (d) => d.description).map(intern);
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
   }));
@@ -98,12 +99,12 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(nodes)
     .join("circle")
-    .attr("id", ({index: i}) => D[i!]) // for 'HoverModel'
+    .attr("id", ({ index: i }) => D[i!]) // for 'HoverModel'
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)
     .on("mouseover", (e) => handleHover(e))
-    .on("mouseout", () => handleHover())
+    .on("mouseout", () => handleHover());
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"
@@ -148,6 +149,7 @@ const MiniChart = (props: Props) => {
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
       handleOtherNodes("fix");
+      current!.style.visibility = "hidden";
     }
 
     function dragged(event: any) {

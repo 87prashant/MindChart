@@ -29,6 +29,7 @@ interface Props {
     w: number;
     h: number;
   };
+  current: HTMLDivElement | null
 }
 
 const Main = (props: Props) => {
@@ -39,13 +40,14 @@ const Main = (props: Props) => {
     handleHover,
     ref2,
     dimensions,
+    current
   } = props;
 
   useEffect(() => {
     if (isChartAdded) return;
     setIsChartAdded(true);
     const { w, h } = dimensions;
-    const newProps = { w, h, savedData, handleHover };
+    const newProps = { w, h, savedData, handleHover, current };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
     // const svg = ForceGraph(newProps) as unknown as HTMLDivElement;
     ref2.current!.innerHTML = "";
@@ -53,7 +55,7 @@ const Main = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedData, dimensions]);
 
-  return <StyledWrapper ref={ref2}></StyledWrapper>;
+  return <StyledWrapper ref={ref2} ></StyledWrapper>;
 };
 
 export default Main;
