@@ -28,7 +28,7 @@ const temp = [
       neutral: 10,
     },
     priority: 10,
-    description: "kdfjskdcvsdffjlskdj",
+    description: "Random text 1 for demo",
   },
   {
     categories: {
@@ -39,7 +39,7 @@ const temp = [
       neutral: 10,
     },
     priority: 16,
-    description: "kdfjsdfsskdfjlskdj",
+    description: "Random text 2 for demo",
   },
   {
     categories: {
@@ -50,7 +50,7 @@ const temp = [
       neutral: 10,
     },
     priority: 25,
-    description: "kdfjskdfjlsksdfssdj",
+    description: "Random text 3 for demo",
   },
   {
     categories: {
@@ -60,7 +60,7 @@ const temp = [
       neutral: 10,
     },
     priority: 15,
-    description: "kddsfjskdfjlskdj",
+    description: "Random text 4 for demo",
   },
   {
     categories: {
@@ -70,7 +70,7 @@ const temp = [
       neutral: 10,
     },
     priority: 19,
-    description: "kdfjskdfjfsdfsdfsdlskdj",
+    description: "Random text 5 for demo",
   },
   {
     categories: {
@@ -80,7 +80,7 @@ const temp = [
       joy: 10,
     },
     priority: 50,
-    description: "kdfjskdfjfsdfsdfsdlskdj",
+    description: "Random text 6 for demo",
   },
   {
     categories: {
@@ -90,7 +90,7 @@ const temp = [
       anticipation: 10,
     },
     priority: 27,
-    description: "kdfjskdfjfsdfsdfsdlskdj",
+    description: "Random text 7 for demo",
   },
   {
     categories: {
@@ -100,7 +100,7 @@ const temp = [
       fear: 10,
     },
     priority: 37,
-    description: "kdfjskdfjfsdfsdfsdlskdj",
+    description: "Random text 8 for demo",
   },
   {
     categories: {
@@ -110,7 +110,7 @@ const temp = [
       fear: 10,
     },
     priority: 49,
-    description: "kdfjskdfjfsdfsdfsdlskdj",
+    description: "Random text 9 for demo",
   },
   {
     categories: {
@@ -120,7 +120,7 @@ const temp = [
       sadness: 10,
     },
     priority: 12,
-    description: "Hello all",
+    description: "Random text 10 for demo",
   },
   {
     categories: {
@@ -130,7 +130,7 @@ const temp = [
       trust: 10,
     },
     priority: 34,
-    description: "kdfjskdfjfsdfsdfsdlskdj",
+    description: "Random text 11 for demo",
   },
   {
     categories: {
@@ -146,7 +146,7 @@ const temp = [
       anger: 50,
     },
     priority: 12,
-    description: "kdfjskdfjfsdfsdfsdlskdj",
+    description: "Random text 12 for demo",
   },
   {
     categories: {
@@ -155,9 +155,9 @@ const temp = [
     emotions: {
       surprise: 10,
     },
-    priority: 34,
+    priority: 10,
     description:
-      "Hello all kdsfjsdkl fsdkjf dkslfj dskljfsdk lfjds;kljf sdkljfsd;jds;lkj flksj flkdsjf lkdsj flkdsjf lkdsj flkdsjf lkdjsflkdsjfdsk lfjdksljf",
+      "Random text 9 for demo Random text 9 for demo Random text 9 for demo Random text 9 for demo Random text 9 for demo Random text 9 for demo Random text 9 for demo Random text 9 for demo Random text 9 for demo ",
   },
 ];
 
@@ -222,20 +222,33 @@ function App() {
     current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
     let xPosition =
       Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
-    console.log(current!.offsetHeight);
-    if (current!.offsetHeight > 80) {
-      xPosition = xPosition + r * 2 - 10;
+    let isUp = false;
+    if (
+      current!.offsetHeight > 80 &&
+      Math.floor(
+        Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2
+      ) === r
+    ) {
+      xPosition = xPosition + r * 2;
+      isUp = true;
     }
     if (
       e.srcElement.cx.baseVal.value >
       dimensions.w / 2 - r - current!.offsetWidth
     ) {
-      xPosition = xPosition - r * 2 - current!.offsetWidth + 20;
+      xPosition = xPosition - current!.offsetWidth + 2 * r;
+      if (isUp) {
+        xPosition = xPosition - r * 4;
+      }
     }
     const yPosition =
-      Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r;
+      Number(e.srcElement.cy.baseVal.valueAsString) +
+      dimensions.h / 2 +
+      73 -
+      r -
+      current!.offsetHeight;
     current!.style.left = xPosition + "px";
-    current!.style.top = yPosition + "px";
+    current!.style.top = yPosition < 0 ? "0px" : yPosition + "px";
     current!.style.visibility = "visible";
   }
 
