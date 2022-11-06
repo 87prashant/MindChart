@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "@emotion/styled";
+import { FormDataType } from "./Form";
 
 const Header = styled("div")({
   display: "flex",
@@ -44,19 +45,38 @@ const Content = styled("div")({
   },
 });
 
-const HoverModal = () => {
+interface Props {
+  setSavedData: any;
+  savedData: any;
+  setIsChartAdded: any;
+  current: HTMLDivElement | null;
+}
+
+const HoverModal = (props: Props) => {
+  const { savedData, setSavedData, setIsChartAdded, current } = props;
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  function handleDelete(e: any) {
+    const description = ref.current!.innerHTML;
+    const newSavedData = savedData.filter(
+      (d: FormDataType) => d.description !== description
+    );
+    setSavedData([...newSavedData]);
+    setIsChartAdded(false);
+    current!.style.visibility = "hidden";
+  }
+
   return (
     <div>
       <Header>
-        <Button name={"delete"}>
+        <Button name={"delete"} onClick={(e) => handleDelete(e)}>
           <img src="/delete.svg" alt="" />
         </Button>
         <Button name={"edit"}>
           <img src="/edit.svg" alt="" />
         </Button>
       </Header>
-      <Content>
-      </Content>
+      <Content ref={ref}></Content>
     </div>
   );
 };

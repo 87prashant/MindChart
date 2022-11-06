@@ -186,8 +186,6 @@ function App() {
     h: 0,
   });
 
-  console.log(savedData)
-
   useEffect(() => {
     setIsChartAdded(false);
     setDimensions({
@@ -271,7 +269,12 @@ function App() {
         onMouseOver={(e) => handleHover(e, "visible")}
         onMouseOut={(e) => handleHover(e, "hidden")}
       >
-        <HoverModal />
+        <HoverModal
+          savedData={savedData}
+          setSavedData={setSavedData}
+          setIsChartAdded={setIsChartAdded}
+          current={current}
+        />
       </Container>
       <Form
         savedData={savedData}
