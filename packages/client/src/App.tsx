@@ -18,8 +18,7 @@ const Container = styled("div")({
   maxHeight: 200,
 });
 
-// only for checking working
-const temp = [
+const demoData = [
   {
     categories: {
       creative: true,
@@ -173,8 +172,11 @@ function debounce(fn: any, ms: number) {
 }
 
 function App() {
+  const [isDemoActive, setIsDemoActive] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [savedData, setSavedData] = useState(temp as FormDataType[]);
+  const [savedData, setSavedData] = useState(
+    isDemoActive ? demoData : ([] as FormDataType[])
+  );
   const [isChartAdded, setIsChartAdded] = useState(false);
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -183,6 +185,8 @@ function App() {
     w: 0,
     h: 0,
   });
+
+  console.log(savedData)
 
   useEffect(() => {
     setIsChartAdded(false);
@@ -215,7 +219,7 @@ function App() {
       return;
     }
     if (str) {
-      current!.style.visibility = str === "block" ? "visible" : "hidden";
+      current!.style.visibility = str === "visible" ? "visible" : "hidden";
       return;
     }
     const r = e.srcElement.r.baseVal.value;
@@ -244,7 +248,7 @@ function App() {
     const yPosition =
       Number(e.srcElement.cy.baseVal.valueAsString) +
       dimensions.h / 2 +
-      73 -
+      70 -
       r -
       current!.offsetHeight;
     current!.style.left = xPosition + "px";
@@ -254,11 +258,18 @@ function App() {
 
   return (
     <div className="App">
-      <Header setShowForm={setShowForm} />
+      <Header
+        setIsDemoActive={setIsDemoActive}
+        isDemoActive={isDemoActive}
+        setShowForm={setShowForm}
+        setSavedData={setSavedData}
+        setIsChartAdded={setIsChartAdded}
+        demoData={demoData}
+      />
       <Container
         ref={ref}
-        onMouseOver={(e) => handleHover(e, "block")}
-        onMouseOut={(e) => handleHover(e, "none")}
+        onMouseOver={(e) => handleHover(e, "visible")}
+        onMouseOut={(e) => handleHover(e, "hidden")}
       >
         <HoverModal />
       </Container>

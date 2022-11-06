@@ -16,7 +16,6 @@ interface Props {
 
 const MiniChart = (props: Props) => {
   const { w, h, savedData, handleHover, current } = props;
-
   const findGroupArray = (data: Emotion) => {
     let arr = [];
     for (let key in JSON.parse(JSON.stringify(data))) {
