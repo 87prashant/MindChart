@@ -16,6 +16,7 @@ const Button = styled("button")<{ name: string }>(({ name }) => ({
   justifyContent: "center",
   alignItems: "center",
   borderRadius: 7,
+  userSelect: "none",
   padding: 3,
   "& img": {
     width: 18,
@@ -31,6 +32,7 @@ const Content = styled("div")({
   maxHeight: 150,
   overflow: "auto",
   padding: 5,
+  cursor: "default",
   "::-webkit-scrollbar": {
     width: 10,
     height: 10,
@@ -50,13 +52,20 @@ interface Props {
   savedData: any;
   setIsChartAdded: any;
   current: HTMLDivElement | null;
+  handleEdit: any
 }
 
 const HoverModal = (props: Props) => {
-  const { savedData, setSavedData, setIsChartAdded, current } = props;
+  const {
+    savedData,
+    setSavedData,
+    setIsChartAdded,
+    current,
+    handleEdit
+  } = props;
   const ref = useRef<HTMLDivElement | null>(null);
 
-  function handleDelete(e: any) {
+  function handleDelete() {
     const description = ref.current!.innerHTML;
     const newSavedData = savedData.filter(
       (d: FormDataType) => d.description !== description
@@ -69,10 +78,10 @@ const HoverModal = (props: Props) => {
   return (
     <div>
       <Header>
-        <Button name={"delete"} onClick={(e) => handleDelete(e)}>
+        <Button name={"delete"} onClick={handleDelete}>
           <img src="/delete.svg" alt="" />
         </Button>
-        <Button name={"edit"}>
+        <Button name={"edit"} onClick={() => handleEdit(ref)}>
           <img src="/edit.svg" alt="" />
         </Button>
       </Header>

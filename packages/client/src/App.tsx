@@ -185,6 +185,13 @@ function App() {
     w: 0,
     h: 0,
   });
+  // const [editingData, setEditingData] = useState<FormDataType | null>(null)
+  const [formData, setFormData] = useState({
+    categories: {},
+    emotions: {},
+    priority: 20,
+    description: "",
+  });
 
   useEffect(() => {
     setIsChartAdded(false);
@@ -254,6 +261,15 @@ function App() {
     current!.style.visibility = "visible";
   }
 
+  function handleEdit(ref2: any) {
+      const description = ref2.current!.innerHTML;
+      current!.style.visibility = "hidden";
+      console.log((savedData as any).find((d: FormDataType) => d.description === description))
+      setFormData((savedData as any).find((d: FormDataType) => d.description === description))
+      setShowForm(true)
+  }
+  // console.log(formData)
+
   return (
     <div className="App">
       <Header
@@ -274,6 +290,7 @@ function App() {
           setSavedData={setSavedData}
           setIsChartAdded={setIsChartAdded}
           current={current}
+          handleEdit={handleEdit}
         />
       </Container>
       <Form
@@ -282,6 +299,8 @@ function App() {
         showForm={showForm}
         setShowForm={setShowForm}
         setIsChartAdded={setIsChartAdded}
+        formData={formData} 
+        setFormData={setFormData}
       />
       <Main
         savedData={savedData}

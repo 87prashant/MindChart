@@ -104,6 +104,8 @@ interface Props {
   savedData: FormDataType[];
   setSavedData: any;
   setIsChartAdded: any;
+  formData: FormDataType;
+  setFormData: any;
 }
 
 export interface Emotion {
@@ -140,13 +142,15 @@ export interface FormErrorType {
 }
 
 const Form: any = (props: Props) => {
-  const { showForm, setShowForm, setSavedData, setIsChartAdded } = props;
-  const [formData, setFormData] = useState({
-    categories: {},
-    emotions: {},
-    priority: 20,
-    description: "",
-  });
+  const {
+    showForm,
+    setShowForm,
+    setSavedData,
+    setIsChartAdded,
+    formData,
+    setFormData,
+    savedData
+  } = props;
   const [formErrors, setFormErrors] = useState({
     categoriesError: "",
     emotionsError: "",
@@ -188,7 +192,7 @@ const Form: any = (props: Props) => {
       | React.ChangeEvent<HTMLSelectElement>
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    setFormData((formData) => {
+    setFormData((formData: FormDataType) => {
       const { type, value, name, id } = e.target;
       if (type === "checkbox") {
         return {
@@ -208,6 +212,7 @@ const Form: any = (props: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData, setFormErrors)) return;
+    if(savedData.indexOf(formData) !== -1 ) return;
     setSavedData((savedData: FormDataType[]) => {
       return [...savedData, formData];
     });

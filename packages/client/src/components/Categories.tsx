@@ -37,7 +37,7 @@ const Categories = (props: Props) => {
           id={data}
           name="categories"
           checked={
-            formData.categories[data as keyof typeof formData.categories]
+            formData.categories?.[data as keyof typeof formData.categories]
           }
           onChange={handleChange}
         />
