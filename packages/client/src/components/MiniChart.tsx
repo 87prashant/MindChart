@@ -155,6 +155,7 @@ const MiniChart = (props: Props) => {
       handleOtherNodes();
       event.subject.fx = event.sourceEvent.clientX - w / 2;
       event.subject.fy = event.sourceEvent.clientY - h / 2 - 70;
+      current!.style.visibility = "hidden";
     }
 
     function dragended(event: any) {
