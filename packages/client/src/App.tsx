@@ -264,11 +264,9 @@ function App() {
   function handleEdit(ref2: any) {
       const description = ref2.current!.innerHTML;
       current!.style.visibility = "hidden";
-      console.log((savedData as any).find((d: FormDataType) => d.description === description))
       setFormData((savedData as any).find((d: FormDataType) => d.description === description))
       setShowForm(true)
   }
-  // console.log(formData)
 
   return (
     <div className="App">

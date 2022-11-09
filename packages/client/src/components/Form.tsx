@@ -43,13 +43,15 @@ const DescriptionInput = styled("textarea")({
   marginBottom: 10,
 });
 
-const SubmitButton = styled(Inputs)({
+const SubmitButton = styled(Inputs)<{ isSame: boolean }>(({ isSame }) => ({
   position: "absolute",
   bottom: 20,
   left: 20,
-  cursor: "pointer",
+  cursor: isSame ? "not-allowed" : "pointer",
   fontWeight: "bold",
-});
+  color: isSame ? "rgba(0, 0, 0, 0.3)" : "black",
+  border: isSame ? "2px solid rgba(0, 0, 0, 0.3)" : "2px solid black"
+}));
 
 const CancelButton = styled(Inputs)({
   position: "absolute",
@@ -158,7 +160,7 @@ const Form: any = (props: Props) => {
   });
   useEffect(() => {
     validateFormData(formData, setFormErrors);
-    return () => {};
+    return () => { };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData]);
 
@@ -209,10 +211,12 @@ const Form: any = (props: Props) => {
       };
     });
   };
+
+  const isSame = savedData.some((d) => JSON.stringify(d) === JSON.stringify(formData))
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData, setFormErrors)) return;
-    if(savedData.indexOf(formData) !== -1 ) return;
+    if (isSame) return;
     setSavedData((savedData: FormDataType[]) => {
       return [...savedData, formData];
     });
@@ -257,7 +261,7 @@ const Form: any = (props: Props) => {
               value={formData.priority}
             />
           </StyledContainer>
-          <SubmitButton type="submit" value="Submit" />
+          <SubmitButton isSame={isSame} type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
       </StyledWrapper>
