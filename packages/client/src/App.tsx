@@ -233,11 +233,12 @@ function App() {
       Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
     let isUp = false;
     if (
-      current!.offsetHeight > 70 &&
-      Math.floor(
+      current!.offsetHeight > 70 + r  &&
+      Math.round(
         Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2
-      ) === r && current!.offsetHeight > 70 + r
+      ) === r
     ) {
+      console.log("running....")
       xPosition = xPosition + r * 2;
       isUp = true;
     }
