@@ -17,7 +17,8 @@ const StyledWrapper = styled("div")({
   margin: "auto",
   padding: 15,
   borderRadius: 8,
-  boxShadow: "10px 10px 8px #888888",
+  boxShadow: "10px 10px 8px rgba(0, 0, 0, 0.3)",
+  userSelect: "none"
 });
 
 const Header = styled("div")({

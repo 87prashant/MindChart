@@ -9,6 +9,7 @@ const StyledHeader = styled("div")({
   justifyContent: "flex-end",
   alignItems: "center",
   background: "#F4EBD0",
+  userSelect: "none"
 });
 
 const HelpButton = styled("a")({
@@ -43,9 +44,7 @@ const AddButton = styled("button")({
 
 const DemoButton = styled("button")<{ isDemoActive: boolean }>(
   ({ isDemoActive }) => ({
-    border: isDemoActive
-      ? "2px solid rgba(0, 0, 0)"
-      : "2px solid rgba(0, 0, 0, 0.3)",
+    border: "none",
     padding: "10px",
     margin: "0 20px",
     textDecoration: "none",
@@ -60,8 +59,8 @@ const WarningTooltip = styled("div")({
   position: "absolute",
   width: "10",
   height: "30",
-  top: 55,
-  right: 70,
+  top: 56,
+  right: 63,
   color: "red",
   fontSize: 13,
   display: "none",

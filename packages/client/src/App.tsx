@@ -233,12 +233,11 @@ function App() {
       Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
     let isUp = false;
     if (
-      current!.offsetHeight > 70 + r  &&
+      current!.offsetHeight > 70 + r &&
       Math.round(
         Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2
       ) === r
     ) {
-      console.log("running....")
       xPosition = xPosition + r * 2;
       isUp = true;
     }
@@ -263,10 +262,10 @@ function App() {
   }
 
   function handleEdit(ref2: any) {
-      const description = ref2.current!.innerHTML;
-      current!.style.visibility = "hidden";
-      setFormData((savedData as any).find((d: FormDataType) => d.description === description))
-      setShowForm(true)
+    const description = ref2.current!.innerHTML;
+    current!.style.visibility = "hidden";
+    setFormData((savedData as any).find((d: FormDataType) => d.description === description))
+    setShowForm(true)
   }
 
   return (
@@ -298,7 +297,7 @@ function App() {
         showForm={showForm}
         setShowForm={setShowForm}
         setIsChartAdded={setIsChartAdded}
-        formData={formData} 
+        formData={formData}
         setFormData={setFormData}
       />
       <Main

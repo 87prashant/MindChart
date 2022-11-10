@@ -147,7 +147,7 @@ const MiniChart = (props: Props) => {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
-      handleOtherNodes("fix");
+      handleOtherNodes("fixOtherNodes");
       current!.style.visibility = "hidden";
     }
 
@@ -157,7 +157,7 @@ const MiniChart = (props: Props) => {
       event.subject.fy = event.sourceEvent.clientY - h / 2 - 70;
       current!.style.visibility = "hidden";
     }
-
+    
     function dragended(event: any) {
       if (!event.active) simulation.alphaTarget(0);
       event.subject.fx = null;
