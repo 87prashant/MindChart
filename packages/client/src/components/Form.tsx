@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Emotions from "./Emotions";
 import Categories from "./Categories";
 import { validateFormData } from "./FormValidation";
+import Tips from "./Tips";
 
 const StyledWrapper = styled("div")({
   position: "fixed",
@@ -13,7 +14,7 @@ const StyledWrapper = styled("div")({
   backgroundColor: "rgba(225, 225, 225, 1)",
   border: "2px solid black",
   width: "700px",
-  height: "450px",
+  height: "480px",
   margin: "auto",
   padding: 15,
   borderRadius: 8,
@@ -46,7 +47,7 @@ const DescriptionInput = styled("textarea")({
 
 const SubmitButton = styled(Inputs)<{ isSame: boolean }>(({ isSame }) => ({
   position: "absolute",
-  bottom: 20,
+  bottom: 50,
   left: 20,
   cursor: isSame ? "not-allowed" : "pointer",
   fontWeight: "bold",
@@ -56,7 +57,7 @@ const SubmitButton = styled(Inputs)<{ isSame: boolean }>(({ isSame }) => ({
 
 const CancelButton = styled(Inputs)({
   position: "absolute",
-  bottom: 20,
+  bottom: 50,
   right: 20,
   cursor: "pointer",
   fontWeight: "bold",
@@ -265,6 +266,7 @@ const Form: any = (props: Props) => {
           <SubmitButton isSame={isSame} type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
+        <Tips />
       </StyledWrapper>
     </StyledDiv>
   );
