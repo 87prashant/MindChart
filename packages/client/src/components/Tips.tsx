@@ -10,13 +10,13 @@ const StyledWrapper = styled('div')({
     fontSize: 13
 })
 
-const Tips = () => {
-    const TipsArray = [
-        "Larger size means high priority",
-        "Color of entity represent highest its intensity emotion",
-        "Similar emotion entities are closer to each other"
-    ];
+const TipsArray = [
+    "Larger size means high priority",
+    "Color of entity represent highest its intensity emotion",
+    "Similar emotion entities are closer to each other"
+];
 
+const Tips = () => {
     function giveRandomTip() {
         const randomIndex = Math.floor(Math.random() * TipsArray.length)
         return TipsArray[randomIndex]

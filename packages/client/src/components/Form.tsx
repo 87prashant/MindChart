@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Emotions from "./Emotions";
 import Categories from "./Categories";
 import { validateFormData } from "./FormValidation";
@@ -237,6 +237,11 @@ const Form: any = (props: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedData])
 
+  const tips = useMemo(() => {
+    return <Tips/>
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showForm])
+
   return (
     <StyledDiv showForm={showForm}>
       <StyledWrapper>
@@ -275,7 +280,7 @@ const Form: any = (props: Props) => {
           <SubmitButton isSame={isSame} type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
-        <Tips />
+        {tips}
       </StyledWrapper>
     </StyledDiv>
   );
