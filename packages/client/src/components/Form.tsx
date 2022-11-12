@@ -72,11 +72,11 @@ const StyledDiv = styled("div")<{ showForm: boolean }>(({ showForm }) => ({
   backgroundColor: "rgba(0, 0, 0, 0.20)",
 }));
 
-const StyledErrors = styled("div")({
-  color: "red",
+const StyledErrors = styled("div")<{ isEarlySubmit: boolean }>(({ isEarlySubmit }) => ({
+  color: isEarlySubmit ? "red" : "teal",
   fontSize: 12,
   marginBottom: 10,
-});
+}));
 
 const StyledContainer = styled("div")({
   height: 350,
@@ -162,6 +162,7 @@ const Form: any = (props: Props) => {
     emotionsError: "",
     descriptionError: "",
   });
+  const [isEarlySubmit, setIsEarlySubmit] = useState(false)
   useEffect(() => {
     validateFormData(formData, setFormErrors);
     return () => { };
@@ -191,6 +192,7 @@ const Form: any = (props: Props) => {
     setShowForm(false);
     refreshFormData();
     refreshFormErrors();
+    setIsEarlySubmit(false)
   };
   const handleChange = (
     e:
@@ -219,7 +221,10 @@ const Form: any = (props: Props) => {
   const isSame = savedData.some((d) => JSON.stringify(d) === JSON.stringify(formData))
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateFormData(formData, setFormErrors)) return;
+    if (!validateFormData(formData, setFormErrors)) {
+      setIsEarlySubmit(true)
+      return;
+    }
     if (isSame) return;
     setSavedData((savedData: FormDataType[]) => {
       return [...savedData, formData];
@@ -228,18 +233,19 @@ const Form: any = (props: Props) => {
     refreshFormErrors();
     setShowForm(false);
     setIsChartAdded(false);
+    setIsEarlySubmit(false)
   };
-  
+
   useEffect(() => {
     if (!isDemoActive) {
       window.localStorage.setItem("savedData", JSON.stringify(savedData))
-    }    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedData])
 
   const tips = useMemo(() => {
-    return <Tips/>
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return <Tips />
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showForm])
 
   return (
@@ -255,17 +261,17 @@ const Form: any = (props: Props) => {
               onChange={handleChange}
             />
             {formErrors.descriptionError && (
-              <StyledErrors>{formErrors.descriptionError}</StyledErrors>
+              <StyledErrors isEarlySubmit={isEarlySubmit}>{formErrors.descriptionError}</StyledErrors>
             )}
             <Header>Category</Header>
             <Categories formData={formData} handleChange={handleChange} />
             {formErrors.categoriesError && (
-              <StyledErrors>{formErrors.categoriesError}</StyledErrors>
+              <StyledErrors isEarlySubmit={isEarlySubmit}>{formErrors.categoriesError}</StyledErrors>
             )}
             <Header>Emotions</Header>
             <Emotions formData={formData} setFormData={setFormData} />
             {formErrors.emotionsError && (
-              <StyledErrors>{formErrors.emotionsError}</StyledErrors>
+              <StyledErrors isEarlySubmit={isEarlySubmit}>{formErrors.emotionsError}</StyledErrors>
             )}
             <Header>Priority</Header>
             <StyledSlider
