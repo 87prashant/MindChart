@@ -172,10 +172,12 @@ function debounce(fn: any, ms: number) {
 }
 
 function App() {
-  const [isDemoActive, setIsDemoActive] = useState(true);
+  const [isDemoActive, setIsDemoActive] = useState(false)
   const [showForm, setShowForm] = useState(false);
+  const storedData: FormDataType[] = window.localStorage.getItem("savedData") ?
+    JSON.parse(window.localStorage.getItem("savedData")!) : ([] as FormDataType[])
   const [savedData, setSavedData] = useState(
-    isDemoActive ? demoData : ([] as FormDataType[])
+    isDemoActive ? demoData : storedData
   );
   const [isChartAdded, setIsChartAdded] = useState(false);
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
@@ -299,6 +301,7 @@ function App() {
         setIsChartAdded={setIsChartAdded}
         formData={formData}
         setFormData={setFormData}
+        isDemoActive={isDemoActive}
       />
       <Main
         savedData={savedData}

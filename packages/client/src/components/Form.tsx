@@ -110,6 +110,7 @@ interface Props {
   setIsChartAdded: any;
   formData: FormDataType;
   setFormData: any;
+  isDemoActive: boolean
 }
 
 export interface Emotion {
@@ -153,7 +154,8 @@ const Form: any = (props: Props) => {
     setIsChartAdded,
     formData,
     setFormData,
-    savedData
+    savedData,
+    isDemoActive
   } = props;
   const [formErrors, setFormErrors] = useState({
     categoriesError: "",
@@ -227,6 +229,13 @@ const Form: any = (props: Props) => {
     setShowForm(false);
     setIsChartAdded(false);
   };
+  
+  useEffect(() => {
+    if (!isDemoActive) {
+      window.localStorage.setItem("savedData", JSON.stringify(savedData))
+    }    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedData])
 
   return (
     <StyledDiv showForm={showForm}>

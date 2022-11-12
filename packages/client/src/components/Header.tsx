@@ -91,8 +91,9 @@ const Header = (props: Props) => {
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
+    const storedData: FormDataType[] = window.localStorage.getItem("savedData") ? JSON.parse(window.localStorage.getItem("savedData")!) : []
     //"!isDemoActive" because I am updating isDemoActive at the same time above
-    setSavedData((prev: FormDataType[]) => (!isDemoActive ? demoData : []));
+    setSavedData((prev: FormDataType[]) => (!isDemoActive ? demoData : storedData));
     setIsChartAdded((prev: boolean) => false);
   }
 
