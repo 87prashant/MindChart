@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { FormDataType } from "./Form";
 
@@ -55,17 +55,6 @@ const DemoButton = styled("button")<{ isDemoActive: boolean }>(
   })
 );
 
-const WarningTooltip = styled("div")({
-  position: "absolute",
-  width: "10",
-  height: "30",
-  top: 56,
-  right: 63,
-  color: "red",
-  fontSize: 13,
-  display: "none",
-});
-
 interface Props {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
   isDemoActive: boolean;
@@ -84,7 +73,6 @@ const Header = (props: Props) => {
     demoData,
     setIsChartAdded,
   } = props;
-  const ref = useRef<HTMLDivElement | null>(null);
   const showForm = () => {
     setShowForm(true);
   };
@@ -95,11 +83,6 @@ const Header = (props: Props) => {
     //"!isDemoActive" because I am updating isDemoActive at the same time above
     setSavedData((prev: FormDataType[]) => (!isDemoActive ? demoData : storedData));
     setIsChartAdded((prev: boolean) => false);
-  }
-
-  function showWarning() {
-    if (isDemoActive) return;
-    ref.current!.style.display = "block";
   }
 
   return (
@@ -114,14 +97,9 @@ const Header = (props: Props) => {
       <DemoButton
         isDemoActive={isDemoActive}
         onClick={handleClick}
-        onMouseOver={showWarning}
-        onMouseOut={() => {
-          ref.current!.style.display = "none";
-        }}
       >
         Demo
       </DemoButton>
-      <WarningTooltip ref={ref}>Your progress will get lost</WarningTooltip>
       <AddButton onClick={() => showForm()}>Add</AddButton>
     </StyledHeader>
   );
