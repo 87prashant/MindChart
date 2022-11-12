@@ -48,37 +48,21 @@ const Content = styled("div")({
 });
 
 interface Props {
-  setSavedData: any;
-  savedData: any;
-  setIsChartAdded: any;
-  current: HTMLDivElement | null;
   handleEdit: any
+  handleDelete: any
 }
 
 const HoverModal = (props: Props) => {
   const {
-    savedData,
-    setSavedData,
-    setIsChartAdded,
-    current,
-    handleEdit
+    handleEdit,
+    handleDelete
   } = props;
   const ref = useRef<HTMLDivElement | null>(null);
-
-  function handleDelete() {
-    const description = ref.current!.innerHTML;
-    const newSavedData = savedData.filter(
-      (d: FormDataType) => d.description !== description
-    );
-    setSavedData([...newSavedData]);
-    setIsChartAdded(false);
-    current!.style.visibility = "hidden";
-  }
 
   return (
     <div>
       <Header>
-        <Button name={"delete"} onClick={handleDelete}>
+        <Button name={"delete"} onClick={() => handleDelete(ref)}>
           <img src="/delete.svg" alt="" />
         </Button>
         <Button name={"edit"} onClick={() => handleEdit(ref)}>

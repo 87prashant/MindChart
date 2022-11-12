@@ -267,7 +267,18 @@ function App() {
     const description = ref2.current!.innerHTML;
     current!.style.visibility = "hidden";
     setFormData((savedData as any).find((d: FormDataType) => d.description === description))
+    handleDelete(ref2)
     setShowForm(true)
+  }
+
+  function handleDelete(ref: any) {
+    const description = ref.current!.innerHTML;
+    const newSavedData = (savedData as any).filter(
+      (d: FormDataType) => d.description !== description
+    );
+    setSavedData([...newSavedData]);
+    setIsChartAdded(false);
+    current!.style.visibility = "hidden";
   }
 
   return (
@@ -286,11 +297,8 @@ function App() {
         onMouseOut={(e) => handleHover(e, "hidden")}
       >
         <HoverModal
-          savedData={savedData}
-          setSavedData={setSavedData}
-          setIsChartAdded={setIsChartAdded}
-          current={current}
           handleEdit={handleEdit}
+          handleDelete={handleDelete}
         />
       </Container>
       <Form
