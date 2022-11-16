@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import styled from "@emotion/styled";
-import { FormDataType } from "./Form";
 
 const Header = styled("div")({
   display: "flex",

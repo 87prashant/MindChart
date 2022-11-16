@@ -267,7 +267,6 @@ function App() {
     const description = ref2.current!.innerHTML;
     current!.style.visibility = "hidden";
     setFormData((savedData as any).find((d: FormDataType) => d.description === description))
-    handleDelete(ref2)
     setShowForm(true)
   }
 
