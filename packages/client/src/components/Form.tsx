@@ -225,6 +225,7 @@ const Form: any = (props: Props) => {
       setIsEarlySubmit(true)
       return;
     }
+    // handleDelete()
     if (isSame) return;
     setSavedData((savedData: FormDataType[]) => {
       return [...savedData, formData];

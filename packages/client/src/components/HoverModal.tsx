@@ -46,6 +46,10 @@ const Content = styled("div")({
   },
 });
 
+const HackDataDiv = styled('div')({
+  position: "absolute",
+})
+
 interface Props {
   handleEdit: any
   handleDelete: any
@@ -57,18 +61,20 @@ const HoverModal = (props: Props) => {
     handleDelete
   } = props;
   const ref = useRef<HTMLDivElement | null>(null);
+  const hackDataRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <div>
       <Header>
-        <Button name={"delete"} onClick={() => handleDelete(ref)}>
+        <Button name={"delete"} onClick={() => handleDelete(hackDataRef)}>
           <img src="/delete.svg" alt="" />
         </Button>
-        <Button name={"edit"} onClick={() => handleEdit(ref)}>
+        <Button name={"edit"} onClick={() => handleEdit(hackDataRef)}>
           <img src="/edit.svg" alt="" />
         </Button>
       </Header>
       <Content ref={ref}></Content>
+      <HackDataDiv ref={hackDataRef}></HackDataDiv>
     </div>
   );
 };

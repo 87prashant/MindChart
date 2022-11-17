@@ -16,6 +16,7 @@ const Container = styled("div")({
   padding: 4,
   maxWidth: 200,
   maxHeight: 200,
+  overflow: "hidden"
 });
 
 const demoData = [
@@ -230,7 +231,8 @@ function App() {
       return;
     }
     const r = e.srcElement.r.baseVal.value;
-    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
+    current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML = JSON.parse(e.srcElement.id).description;
+    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id
     let xPosition =
       Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
     let isUp = false;
@@ -263,18 +265,17 @@ function App() {
     current!.style.visibility = "visible";
   }
 
-  function handleEdit(ref2: any) {
-    const description = ref2.current!.innerHTML;
+  function handleEdit(hackDataRef: any) {
+    const data = hackDataRef.current!.innerHTML;
     current!.style.visibility = "hidden";
-    setFormData((savedData as any).find((d: FormDataType) => d.description === description))
+    setFormData(() => JSON.parse(data))
     setShowForm(true)
   }
 
-  function handleDelete(ref: any) {
-    const description = ref.current!.innerHTML;
+  function handleDelete(hackDataRef: any) {
+    const data = hackDataRef.current!.innerHTML;
     const newSavedData = (savedData as any).filter(
-      (d: FormDataType) => d.description !== description
-    );
+      (d: FormDataType) => d === data);
     setSavedData([...newSavedData]);
     setIsChartAdded(false);
     current!.style.visibility = "hidden";

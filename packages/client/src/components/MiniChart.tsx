@@ -33,10 +33,21 @@ const MiniChart = (props: Props) => {
     };
   });
 
+  const hackDataArray = savedData.map((data) => {
+    return {
+      categories: JSON.parse(JSON.stringify(data.categories)), 
+      emotions: JSON.parse(JSON.stringify(data.emotions)),
+      priority: data.priority,
+      description: data.description,
+    }
+  })
+
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
   const R = d3.map(nodesArray, (d) => d.priority).map(intern); //radius array
   const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array
-  const D = d3.map(nodesArray, (d) => d.description).map(intern);
+  // const D = d3.map(nodesArray, (d) => d.description).map(intern);
+  const mappedHackDataArray = d3.map(hackDataArray, (d) => JSON.stringify(d))
+
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
   }));
@@ -98,7 +109,7 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(nodes)
     .join("circle")
-    .attr("id", ({ index: i }) => D[i!]) // for 'HoverModel'
+    .attr("id", ({ index: i }) => mappedHackDataArray[i!]) // for 'HoverModel'
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)
@@ -144,6 +155,7 @@ const MiniChart = (props: Props) => {
 
   function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
     function dragstarted(event: any) {
+      console.log(event)
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
