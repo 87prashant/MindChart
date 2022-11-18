@@ -155,7 +155,6 @@ const MiniChart = (props: Props) => {
 
   function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
     function dragstarted(event: any) {
-      console.log(event)
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;

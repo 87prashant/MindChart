@@ -110,7 +110,9 @@ interface Props {
   setIsChartAdded: any;
   formData: FormDataType;
   setFormData: any;
-  isDemoActive: boolean
+  isDemoActive: boolean;
+  hackedNodeData: FormDataType;
+  setHackedNodeData: any
 }
 
 export interface Emotion {
@@ -155,7 +157,9 @@ const Form: any = (props: Props) => {
     formData,
     setFormData,
     savedData,
-    isDemoActive
+    isDemoActive, 
+    hackedNodeData,
+    setHackedNodeData
   } = props;
   const [formErrors, setFormErrors] = useState({
     categoriesError: "",
@@ -218,6 +222,7 @@ const Form: any = (props: Props) => {
     });
   };
 
+  //TODO: Maybe can be modified with the 'hackedNodeData'
   const isSame = savedData.some((d) => JSON.stringify(d) === JSON.stringify(formData))
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -225,11 +230,12 @@ const Form: any = (props: Props) => {
       setIsEarlySubmit(true)
       return;
     }
-    // handleDelete()
     if (isSame) return;
-    setSavedData((savedData: FormDataType[]) => {
-      return [...savedData, formData];
+    const newSavedData = savedData.filter(d => JSON.stringify(d) !== JSON.stringify(hackedNodeData))
+    setSavedData((prev: FormDataType[]) => {
+      return [...newSavedData, formData];
     });
+    setHackedNodeData(null);
     refreshFormData();
     refreshFormErrors();
     setShowForm(false);

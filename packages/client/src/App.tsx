@@ -109,7 +109,7 @@ const demoData = [
     emotions: {
       fear: 10,
     },
-    priority: 49,
+    priority: 70,
     description: "Random text 9 for demo",
   },
   {
@@ -180,6 +180,9 @@ function App() {
   const [savedData, setSavedData] = useState(
     isDemoActive ? demoData : storedData
   );
+  // After clicking the edit button on the hoverModal it stores the data of that node. If
+  // it got edited then origin node should be deleted.
+  const [hackedNodeData, setHackedNodeData] = useState<FormDataType | null>(null)
   const [isChartAdded, setIsChartAdded] = useState(false);
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -267,6 +270,7 @@ function App() {
 
   function handleEdit(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
+    setHackedNodeData(JSON.parse(data))
     current!.style.visibility = "hidden";
     setFormData(() => JSON.parse(data))
     setShowForm(true)
@@ -310,6 +314,8 @@ function App() {
         formData={formData}
         setFormData={setFormData}
         isDemoActive={isDemoActive}
+        hackedNodeData={hackedNodeData}
+        setHackedNodeData={setHackedNodeData}
       />
       <Main
         savedData={savedData}
