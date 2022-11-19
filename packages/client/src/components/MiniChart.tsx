@@ -26,7 +26,7 @@ const MiniChart = (props: Props) => {
   const nodesArray = savedData.map((data) => {
     return {
       description: data.description,
-      priority: data.priority,
+      priority: +data.priority,
       categories: JSON.parse(JSON.stringify(data.categories)), // to remove the undefined property
       emotions: JSON.parse(JSON.stringify(data.emotions)),
       group: findGroupArray(data.emotions),
@@ -43,9 +43,8 @@ const MiniChart = (props: Props) => {
   })
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
-  const R = d3.map(nodesArray, (d) => d.priority).map(intern); //radius array
+  const R = d3.map(nodesArray, (d) => d.priority) ; //radius array
   const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array
-  // const D = d3.map(nodesArray, (d) => d.description).map(intern);
   const mappedHackDataArray = d3.map(hackDataArray, (d) => JSON.stringify(d))
 
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
@@ -131,6 +130,7 @@ const MiniChart = (props: Props) => {
 
     node
       .attr("cx", (d, i) =>
+      // x axis boundary conditions
         d.x! < -w / 2 + R[i]
           ? -w / 2 + R[i]
           : d.x! > w / 2 - R[i]
@@ -138,6 +138,7 @@ const MiniChart = (props: Props) => {
           : d.x!
       )
       .attr("cy", (d, i) =>
+      // y axis boundary conditions
         d.y! < -h / 2 + R[i]
           ? -h / 2 + R[i]
           : d.y! > h / 2 - R[i]
@@ -155,6 +156,7 @@ const MiniChart = (props: Props) => {
 
   function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
     function dragstarted(event: any) {
+      console.log(event)
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;

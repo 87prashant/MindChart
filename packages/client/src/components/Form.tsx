@@ -231,8 +231,9 @@ const Form: any = (props: Props) => {
       return;
     }
     if (isSame) return;
+    console.log(hackedNodeData)
     const newSavedData = savedData.filter(d => JSON.stringify(d) !== JSON.stringify(hackedNodeData))
-    setSavedData((prev: FormDataType[]) => {
+    setSavedData(() => {
       return [...newSavedData, formData];
     });
     setHackedNodeData(null);
