@@ -19,7 +19,7 @@ const StyledWrapper = styled("div")({
   padding: 15,
   borderRadius: 8,
   boxShadow: "10px 10px 8px rgba(0, 0, 0, 0.3)",
-  userSelect: "none"
+  userSelect: "none",
 });
 
 const Header = styled("div")({
@@ -52,7 +52,7 @@ const SubmitButton = styled(Inputs)<{ isSame: boolean }>(({ isSame }) => ({
   cursor: isSame ? "not-allowed" : "pointer",
   fontWeight: "bold",
   color: isSame ? "rgba(0, 0, 0, 0.3)" : "black",
-  border: isSame ? "2px solid rgba(0, 0, 0, 0.3)" : "2px solid black"
+  border: isSame ? "2px solid rgba(0, 0, 0, 0.3)" : "2px solid black",
 }));
 
 const CancelButton = styled(Inputs)({
@@ -72,11 +72,13 @@ const StyledDiv = styled("div")<{ showForm: boolean }>(({ showForm }) => ({
   backgroundColor: "rgba(0, 0, 0, 0.20)",
 }));
 
-const StyledErrors = styled("div")<{ isEarlySubmit: boolean }>(({ isEarlySubmit }) => ({
-  color: isEarlySubmit ? "red" : "teal",
-  fontSize: 12,
-  marginBottom: 10,
-}));
+const StyledErrors = styled("div")<{ isEarlySubmit: boolean }>(
+  ({ isEarlySubmit }) => ({
+    color: isEarlySubmit ? "red" : "teal",
+    fontSize: 12,
+    marginBottom: 10,
+  })
+);
 
 const StyledContainer = styled("div")({
   height: 350,
@@ -112,7 +114,7 @@ interface Props {
   setFormData: any;
   isDemoActive: boolean;
   hackedNodeData: FormDataType;
-  setHackedNodeData: any
+  setHackedNodeData: any;
 }
 
 export interface Emotion {
@@ -157,16 +159,16 @@ const Form: any = (props: Props) => {
     formData,
     setFormData,
     savedData,
-    isDemoActive, 
+    isDemoActive,
     hackedNodeData,
-    setHackedNodeData
+    setHackedNodeData,
   } = props;
   const [formErrors, setFormErrors] = useState({
     categoriesError: "",
     emotionsError: "",
     descriptionError: "",
   });
-  const [isEarlySubmit, setIsEarlySubmit] = useState(false)
+  const [isEarlySubmit, setIsEarlySubmit] = useState(false);
   useEffect(() => {
     validateFormData(formData, setFormErrors);
     return () => { };
@@ -196,7 +198,7 @@ const Form: any = (props: Props) => {
     setShowForm(false);
     refreshFormData();
     refreshFormErrors();
-    setIsEarlySubmit(false)
+    setIsEarlySubmit(false);
   };
   const handleChange = (
     e:
@@ -223,16 +225,19 @@ const Form: any = (props: Props) => {
   };
 
   //TODO: Maybe can be modified with the 'hackedNodeData'
-  const isSame = savedData.some((d) => JSON.stringify(d) === JSON.stringify(formData))
+  const isSame = savedData.some(
+    (d) => JSON.stringify(d) === JSON.stringify(formData)
+  );
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData, setFormErrors)) {
-      setIsEarlySubmit(true)
+      setIsEarlySubmit(true);
       return;
     }
     if (isSame) return;
-    console.log(hackedNodeData)
-    const newSavedData = savedData.filter(d => JSON.stringify(d) !== JSON.stringify(hackedNodeData))
+    const newSavedData = savedData.filter(
+      (d) => JSON.stringify(d) !== JSON.stringify(hackedNodeData)
+    );
     setSavedData(() => {
       return [...newSavedData, formData];
     });
@@ -241,20 +246,20 @@ const Form: any = (props: Props) => {
     refreshFormErrors();
     setShowForm(false);
     setIsChartAdded(false);
-    setIsEarlySubmit(false)
+    setIsEarlySubmit(false);
   };
 
   useEffect(() => {
     if (!isDemoActive) {
-      window.localStorage.setItem("savedData", JSON.stringify(savedData))
+      window.localStorage.setItem("savedData", JSON.stringify(savedData));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedData])
+  }, [savedData]);
 
   const tips = useMemo(() => {
-    return <Tips />
+    return <Tips />;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showForm])
+  }, [showForm]);
 
   return (
     <StyledDiv showForm={showForm}>
@@ -269,17 +274,23 @@ const Form: any = (props: Props) => {
               onChange={handleChange}
             />
             {formErrors.descriptionError && (
-              <StyledErrors isEarlySubmit={isEarlySubmit}>{formErrors.descriptionError}</StyledErrors>
+              <StyledErrors isEarlySubmit={isEarlySubmit}>
+                {formErrors.descriptionError}
+              </StyledErrors>
             )}
             <Header>Category</Header>
             <Categories formData={formData} handleChange={handleChange} />
             {formErrors.categoriesError && (
-              <StyledErrors isEarlySubmit={isEarlySubmit}>{formErrors.categoriesError}</StyledErrors>
+              <StyledErrors isEarlySubmit={isEarlySubmit}>
+                {formErrors.categoriesError}
+              </StyledErrors>
             )}
             <Header>Emotions</Header>
             <Emotions formData={formData} setFormData={setFormData} />
             {formErrors.emotionsError && (
-              <StyledErrors isEarlySubmit={isEarlySubmit}>{formErrors.emotionsError}</StyledErrors>
+              <StyledErrors isEarlySubmit={isEarlySubmit}>
+                {formErrors.emotionsError}
+              </StyledErrors>
             )}
             <Header>Priority</Header>
             <StyledSlider

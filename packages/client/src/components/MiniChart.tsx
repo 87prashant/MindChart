@@ -35,7 +35,7 @@ const MiniChart = (props: Props) => {
 
   const hackDataArray = savedData.map((data) => {
     return {
-      categories: JSON.parse(JSON.stringify(data.categories)), 
+      categories: JSON.parse(JSON.stringify(data.categories)),
       emotions: JSON.parse(JSON.stringify(data.emotions)),
       priority: data.priority,
       description: data.description,
@@ -43,7 +43,7 @@ const MiniChart = (props: Props) => {
   })
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
-  const R = d3.map(nodesArray, (d) => d.priority) ; //radius array
+  const R = d3.map(nodesArray, (d) => d.priority); //radius array
   const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array
   const mappedHackDataArray = d3.map(hackDataArray, (d) => JSON.stringify(d))
 
@@ -130,20 +130,20 @@ const MiniChart = (props: Props) => {
 
     node
       .attr("cx", (d, i) =>
-      // x axis boundary conditions
+        // x axis boundary conditions
         d.x! < -w / 2 + R[i]
           ? -w / 2 + R[i]
           : d.x! > w / 2 - R[i]
-          ? w / 2 - R[i]
-          : d.x!
+            ? w / 2 - R[i]
+            : d.x!
       )
       .attr("cy", (d, i) =>
-      // y axis boundary conditions
+        // y axis boundary conditions
         d.y! < -h / 2 + R[i]
           ? -h / 2 + R[i]
           : d.y! > h / 2 - R[i]
-          ? h / 2 - R[i]
-          : d.y!
+            ? h / 2 - R[i]
+            : d.y!
       );
   }
 
@@ -156,7 +156,6 @@ const MiniChart = (props: Props) => {
 
   function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
     function dragstarted(event: any) {
-      console.log(event)
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
@@ -170,7 +169,7 @@ const MiniChart = (props: Props) => {
       event.subject.fy = event.sourceEvent.clientY - h / 2 - 70;
       current!.style.visibility = "hidden";
     }
-    
+
     function dragended(event: any) {
       if (!event.active) simulation.alphaTarget(0);
       event.subject.fx = null;
