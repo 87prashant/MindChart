@@ -284,7 +284,7 @@ const Form: any = (props: Props) => {
             <Header>Priority</Header>
             <StyledSlider
               type="range"
-              min="20"
+              min="10"
               max="70"
               name="priority"
               onChange={handleChange}
