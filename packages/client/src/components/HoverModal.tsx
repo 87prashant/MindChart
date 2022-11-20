@@ -4,10 +4,13 @@ import styled from "@emotion/styled";
 const Header = styled("div")({
   display: "flex",
   flexDirection: "row-reverse",
+  '& button + button': {
+    marginRight: 5
+  }
 });
 
 const Button = styled("button")<{ name: string }>(({ name }) => ({
-  marginRight: 5,
+  // marginRight: 5,
   border: "2px solid black",
   cursor: "pointer",
   backgroundColor: name === "delete" ? "red" : undefined,
