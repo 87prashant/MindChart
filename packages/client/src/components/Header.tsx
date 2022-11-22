@@ -62,6 +62,7 @@ interface Props {
   setSavedData: any;
   setIsChartAdded: any;
   demoData: FormDataType[];
+  backendData: any
 }
 
 const Header = (props: Props) => {
@@ -72,6 +73,7 @@ const Header = (props: Props) => {
     setSavedData,
     demoData,
     setIsChartAdded,
+    backendData
   } = props;
   const showForm = () => {
     setShowForm(true);
@@ -94,6 +96,7 @@ const Header = (props: Props) => {
         <img src="github_logo.png" alt="" width="25" height="25" />
         <span>Help in Development</span>
       </HelpButton>
+        {/* {backendData} */}
       <DemoButton
         isDemoActive={isDemoActive}
         onClick={handleClick}

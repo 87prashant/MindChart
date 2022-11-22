@@ -284,6 +284,11 @@ function App() {
     setIsChartAdded(false);
     current!.style.visibility = "hidden";
   }
+  const [backendData, setBackendData] = useState([{}])
+
+  useEffect(() => {
+    fetch('/api').then(response => response.json()).then(data => setBackendData(data))
+  }, [])
 
   return (
     <div className="App">
@@ -294,6 +299,7 @@ function App() {
         setSavedData={setSavedData}
         setIsChartAdded={setIsChartAdded}
         demoData={demoData}
+        backendData={backendData}
       />
       <Container
         ref={ref}
