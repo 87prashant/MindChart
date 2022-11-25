@@ -86,6 +86,7 @@ const Header = (props: Props) => {
     setSavedData((prev: FormDataType[]) => (!isDemoActive ? demoData : storedData));
     setIsChartAdded((prev: boolean) => false);
   }
+  console.log(backendData)
 
   return (
     <StyledHeader>
@@ -96,7 +97,6 @@ const Header = (props: Props) => {
         <img src="github_logo.png" alt="" width="25" height="25" />
         <span>Help in Development</span>
       </HelpButton>
-        {/* {backendData} */}
       <DemoButton
         isDemoActive={isDemoActive}
         onClick={handleClick}

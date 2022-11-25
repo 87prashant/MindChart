@@ -29,9 +29,9 @@ const Categories = (props: Props) => {
     "unknown",
   ];
 
-  const inputs = categories.map((data) => {
+  const inputs = categories.map((data, index) => {
     return (
-      <>
+      <div key={index}>
         <input
           type="checkbox"
           id={data}
@@ -44,7 +44,7 @@ const Categories = (props: Props) => {
         <label htmlFor={data}>
           {data.slice(0, 1).toUpperCase() + data.slice(1)}
         </label>
-      </>
+      </div>
     );
   });
   return <Wrapper>{inputs}</Wrapper>;

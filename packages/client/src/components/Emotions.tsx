@@ -47,9 +47,9 @@ const Emotions = (props: Props) => {
     });
   };
 
-  const inputs = emotions.map((data) => {
+  const inputs = emotions.map((data, index) => {
     return (
-      <>
+      <div key={index}>
         <input
           type="checkbox"
           id={data}
@@ -60,7 +60,7 @@ const Emotions = (props: Props) => {
         <label htmlFor={data}>
           {data.slice(0, 1).toUpperCase() + data.slice(1)}
         </label>
-      </>
+      </div>
     );
   });
 
