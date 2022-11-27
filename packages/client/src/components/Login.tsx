@@ -13,6 +13,15 @@ const Wrapper = styled(StyledWrapper)({
     border: "2px solid black",
 })
 
+const StyledHeader = styled(Header)({
+    fontSize: 18,
+    color: "teal"
+})
+
+const StyledName = styled(Header)({
+    fontSize: 12,
+})
+
 const Name = styled(Inputs)({
     
 })
@@ -32,7 +41,9 @@ const Login = (props: Props) => {
         <Container showForm={false} ref={loginFormRef}>
             <Wrapper>
                 <form onSubmit={handleLogin}>
-                <Header>Login</Header>
+                <StyledHeader>Login</StyledHeader>
+                <StyledName>Name</StyledName>
+                <Name type={"text"}/>
                 </form>
             </Wrapper>
         </Container>
