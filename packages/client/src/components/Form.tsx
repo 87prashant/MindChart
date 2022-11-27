@@ -5,7 +5,7 @@ import Categories from "./Categories";
 import { validateFormData } from "./FormValidation";
 import Tips from "./Tips";
 
-const StyledWrapper = styled("div")({
+export const StyledWrapper = styled("div")({
   position: "fixed",
   top: 0,
   bottom: 0,
@@ -22,13 +22,13 @@ const StyledWrapper = styled("div")({
   userSelect: "none",
 });
 
-const Header = styled("div")({
+export const Header = styled("div")({
   fontWeight: "bold",
   fontSize: 17,
   marginBottom: 10,
 });
 
-const Inputs = styled("input")({
+export const Inputs = styled("input")({
   width: "300px",
   padding: "4px 10px",
   borderRadius: 7,
@@ -45,7 +45,7 @@ const DescriptionInput = styled("textarea")({
   marginBottom: 10,
 });
 
-const SubmitButton = styled(Inputs)<{ isSame: boolean }>(({ isSame }) => ({
+export const SubmitButton = styled(Inputs)<{ isSame: boolean }>(({ isSame }) => ({
   position: "absolute",
   bottom: 50,
   left: 20,
@@ -55,7 +55,7 @@ const SubmitButton = styled(Inputs)<{ isSame: boolean }>(({ isSame }) => ({
   border: isSame ? "2px solid rgba(0, 0, 0, 0.3)" : "2px solid black",
 }));
 
-const CancelButton = styled(Inputs)({
+export const CancelButton = styled(Inputs)({
   position: "absolute",
   bottom: 50,
   right: 20,
@@ -63,7 +63,7 @@ const CancelButton = styled(Inputs)({
   fontWeight: "bold",
 });
 
-const StyledDiv = styled("div")<{ showForm: boolean }>(({ showForm }) => ({
+export const StyledDiv = styled("div")<{ showForm: boolean}>(({ showForm }) => ({
   position: "fixed",
   display: showForm ? "block" : "none",
   top: 0,

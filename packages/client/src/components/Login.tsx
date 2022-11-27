@@ -1,13 +1,20 @@
 import React from 'react'
 import styled from '@emotion/styled'
+import {Header, Inputs, StyledWrapper, StyledDiv, SubmitButton, CancelButton} from "./Form"
 
-const Container = styled("button")({
-    position: "fixed",
-    width: "100vw",
-    height: "100vh",
-    top: "0",
-    backgroundColor: "rgba(0,0,0, 0.2)",
+const Container = styled(StyledDiv)({
     display: "none"
+})
+
+const Wrapper = styled(StyledWrapper)({
+    margin: "auto",
+    width: 250,
+    height: 300,
+    border: "2px solid black",
+})
+
+const Name = styled(Inputs)({
+    
 })
 
 interface Props {
@@ -16,9 +23,18 @@ interface Props {
 
 const Login = (props: Props) => {
     const { loginFormRef } = props
-    return (
-        <Container ref={loginFormRef}>
 
+    function handleLogin() {
+
+    }
+
+    return (
+        <Container showForm={false} ref={loginFormRef}>
+            <Wrapper>
+                <form onSubmit={handleLogin}>
+                <Header>Login</Header>
+                </form>
+            </Wrapper>
         </Container>
     )
 }
