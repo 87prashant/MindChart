@@ -15,15 +15,31 @@ const Wrapper = styled(StyledWrapper)({
 
 const StyledHeader = styled(Header)({
     fontSize: 18,
-    color: "teal"
+    color: "teal",
+    textAlign: "center",
+    margin: "0px 0px 20px 0px"
 })
 
-const StyledName = styled(Header)({
+const StyledInputName = styled(Header)({
     fontSize: 12,
+    margin: 0
 })
 
-const Name = styled(Inputs)({
-    
+const StyledInput = styled(Inputs)({
+    width: "100%",
+    margin: "0px 0px 10px 0px"
+})
+
+const StyledSubmitButton = styled(SubmitButton)({
+    width: 80,
+    bottom: 20,
+    left: 15
+})
+
+const StyledCancelButton = styled(CancelButton)({
+    width: 80,
+    bottom: 20,
+    right: 15
 })
 
 interface Props {
@@ -33,17 +49,27 @@ interface Props {
 const Login = (props: Props) => {
     const { loginFormRef } = props
 
-    function handleLogin() {
-
+    function handleLogin(e: any) {
+        e.preventDefault()
+    }
+    
+    function handleLoginCancel() {
+        loginFormRef.current!.style.display = "none"
     }
 
     return (
         <Container showForm={false} ref={loginFormRef}>
             <Wrapper>
-                <form onSubmit={handleLogin}>
+                <form onSubmit={(e) => handleLogin(e)}>
                 <StyledHeader>Login</StyledHeader>
-                <StyledName>Name</StyledName>
-                <Name type={"text"}/>
+                <StyledInputName>Name</StyledInputName>
+                <StyledInput type={"text"} placeholder="Name"/>
+                <StyledInputName>Email</StyledInputName>
+                <StyledInput type="email" placeholder="Email"/>
+                <StyledInputName>Password</StyledInputName>
+                <StyledInput type="password" placeholder="Password"/>
+                <StyledSubmitButton isSame={false} type="submit" value="Submit"/>
+                <StyledCancelButton type="button" value="Cancel" onClick={handleLoginCancel}/>
                 </form>
             </Wrapper>
         </Container>

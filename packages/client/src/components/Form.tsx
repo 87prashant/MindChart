@@ -61,6 +61,7 @@ export const CancelButton = styled(Inputs)({
   right: 20,
   cursor: "pointer",
   fontWeight: "bold",
+  backgroundColor: 'red'
 });
 
 export const StyledDiv = styled("div")<{ showForm: boolean}>(({ showForm }) => ({
