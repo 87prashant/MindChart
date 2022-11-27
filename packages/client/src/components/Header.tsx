@@ -85,13 +85,12 @@ const Header = (props: Props) => {
     setSavedData,
     demoData,
     setIsChartAdded,
-    backendData
   } = props;
 
   const showForm = () => {
     setShowForm(true);
   };
-  
+
   const signUpFormRef = useRef<HTMLDivElement | null>(null)
 
   function handleClick() {
@@ -101,7 +100,7 @@ const Header = (props: Props) => {
     setSavedData((prev: FormDataType[]) => (!isDemoActive ? demoData : storedData));
     setIsChartAdded((prev: boolean) => false);
   }
-  
+
   function openLoginPage() {
     signUpFormRef.current!.style.display = "block"
   }
@@ -122,8 +121,8 @@ const Header = (props: Props) => {
         Demo
       </DemoButton>
       <AddButton onClick={() => showForm()}>Add</AddButton>
-      <SignUpButton onClick={openLoginPage} >Register</SignUpButton>
-      <SignUp signUpFormRef={signUpFormRef}/>
+      <SignUpButton onClick={openLoginPage}>Register</SignUpButton>
+      <SignUp signUpFormRef={signUpFormRef} />
     </StyledHeader>
   );
 };

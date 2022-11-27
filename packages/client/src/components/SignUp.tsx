@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import {Header, Inputs, StyledWrapper, StyledDiv, SubmitButton, CancelButton} from "./Form"
+import { Header, Inputs, StyledWrapper, StyledDiv, SubmitButton, CancelButton } from "./Form"
 
 const Container = styled(StyledDiv)({
     display: "none"
@@ -53,7 +53,7 @@ const SignUp = (props: Props) => {
         e.preventDefault()
 
     }
-    
+
     function handleSignUpCancel() {
         signUpFormRef.current!.style.display = "none"
     }
@@ -62,15 +62,15 @@ const SignUp = (props: Props) => {
         <Container showForm={false} ref={signUpFormRef}>
             <Wrapper>
                 <form onSubmit={(e) => handleSignUp(e)}>
-                <StyledHeader>Create an account</StyledHeader>
-                <StyledInputName>Name</StyledInputName>
-                <StyledInput type={"text"} placeholder="Name"/>
-                <StyledInputName>Email</StyledInputName>
-                <StyledInput type="email" placeholder="Email"/>
-                <StyledInputName>Password</StyledInputName>
-                <StyledInput type="password" placeholder="Password"/>
-                <StyledSubmitButton isSame={false} type="submit" value="Submit"/>
-                <StyledCancelButton type="button" value="Cancel" onClick={handleSignUpCancel}/>
+                    <StyledHeader>Create an account</StyledHeader>
+                    <StyledInputName>Name</StyledInputName>
+                    <StyledInput type={"text"} placeholder="Name" />
+                    <StyledInputName>Email</StyledInputName>
+                    <StyledInput type="email" placeholder="Email" />
+                    <StyledInputName>Password</StyledInputName>
+                    <StyledInput type="password" placeholder="Password" />
+                    <StyledSubmitButton isSame={false} type="submit" value="Submit" />
+                    <StyledCancelButton type="button" value="Cancel" onClick={handleSignUpCancel} />
                 </form>
             </Wrapper>
         </Container>
