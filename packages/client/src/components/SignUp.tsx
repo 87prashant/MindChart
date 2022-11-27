@@ -43,25 +43,26 @@ const StyledCancelButton = styled(CancelButton)({
 })
 
 interface Props {
-    loginFormRef: any,
+    signUpFormRef: any,
 }
 
-const Login = (props: Props) => {
-    const { loginFormRef } = props
+const SignUp = (props: Props) => {
+    const { signUpFormRef } = props
 
-    function handleLogin(e: any) {
+    function handleSignUp(e: any) {
         e.preventDefault()
+
     }
     
-    function handleLoginCancel() {
-        loginFormRef.current!.style.display = "none"
+    function handleSignUpCancel() {
+        signUpFormRef.current!.style.display = "none"
     }
 
     return (
-        <Container showForm={false} ref={loginFormRef}>
+        <Container showForm={false} ref={signUpFormRef}>
             <Wrapper>
-                <form onSubmit={(e) => handleLogin(e)}>
-                <StyledHeader>Login</StyledHeader>
+                <form onSubmit={(e) => handleSignUp(e)}>
+                <StyledHeader>Create an account</StyledHeader>
                 <StyledInputName>Name</StyledInputName>
                 <StyledInput type={"text"} placeholder="Name"/>
                 <StyledInputName>Email</StyledInputName>
@@ -69,11 +70,11 @@ const Login = (props: Props) => {
                 <StyledInputName>Password</StyledInputName>
                 <StyledInput type="password" placeholder="Password"/>
                 <StyledSubmitButton isSame={false} type="submit" value="Submit"/>
-                <StyledCancelButton type="button" value="Cancel" onClick={handleLoginCancel}/>
+                <StyledCancelButton type="button" value="Cancel" onClick={handleSignUpCancel}/>
                 </form>
             </Wrapper>
         </Container>
     )
 }
 
-export default Login
+export default SignUp

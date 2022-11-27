@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import styled from "@emotion/styled";
 import { FormDataType } from "./Form";
-import Login from "./Login"
+import SignUp from "./SignUp"
 
 const StyledHeader = styled("div")({
   height: "70px",
@@ -56,7 +56,7 @@ const DemoButton = styled("button")<{ isDemoActive: boolean }>(
   })
 );
 
-const LoginButton = styled("button")({
+const SignUpButton = styled("button")({
   margin: "0 20px",
   padding: "10px",
   textDecoration: "none",
@@ -92,7 +92,7 @@ const Header = (props: Props) => {
     setShowForm(true);
   };
   
-  const loginFormRef = useRef<HTMLDivElement | null>(null)
+  const signUpFormRef = useRef<HTMLDivElement | null>(null)
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
@@ -103,7 +103,7 @@ const Header = (props: Props) => {
   }
   
   function openLoginPage() {
-    loginFormRef.current!.style.display = "block"
+    signUpFormRef.current!.style.display = "block"
   }
 
   return (
@@ -122,8 +122,8 @@ const Header = (props: Props) => {
         Demo
       </DemoButton>
       <AddButton onClick={() => showForm()}>Add</AddButton>
-      <LoginButton onClick={openLoginPage} >Login</LoginButton>
-      <Login loginFormRef={loginFormRef}/>
+      <SignUpButton onClick={openLoginPage} >Register</SignUpButton>
+      <SignUp signUpFormRef={signUpFormRef}/>
     </StyledHeader>
   );
 };
