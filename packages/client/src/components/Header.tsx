@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "@emotion/styled";
 import { FormDataType } from "./Form";
+import Login from "./Login"
 
 const StyledHeader = styled("div")({
   height: "70px",
@@ -55,6 +56,17 @@ const DemoButton = styled("button")<{ isDemoActive: boolean }>(
   })
 );
 
+const LoginButton = styled("button")({
+  margin: "0 20px",
+  padding: "10px",
+  textDecoration: "none",
+  cursor: "pointer",
+  border: "solid black",
+  borderRadius: "10px",
+  backgroundColor: "white",
+  fontWeight: "bolder",
+})
+
 interface Props {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
   isDemoActive: boolean;
@@ -75,9 +87,12 @@ const Header = (props: Props) => {
     setIsChartAdded,
     backendData
   } = props;
+
   const showForm = () => {
     setShowForm(true);
   };
+  
+  const loginFormRef = useRef<HTMLDivElement | null>(null)
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
@@ -86,7 +101,10 @@ const Header = (props: Props) => {
     setSavedData((prev: FormDataType[]) => (!isDemoActive ? demoData : storedData));
     setIsChartAdded((prev: boolean) => false);
   }
-  console.log(backendData)
+  
+  function openLoginPage() {
+    loginFormRef.current!.style.display = "block"
+  }
 
   return (
     <StyledHeader>
@@ -104,6 +122,8 @@ const Header = (props: Props) => {
         Demo
       </DemoButton>
       <AddButton onClick={() => showForm()}>Add</AddButton>
+      <LoginButton onClick={openLoginPage} >Login</LoginButton>
+      <Login loginFormRef={loginFormRef}/>
     </StyledHeader>
   );
 };
