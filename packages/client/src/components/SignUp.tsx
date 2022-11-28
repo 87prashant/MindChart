@@ -51,7 +51,7 @@ const SignUp = (props: Props) => {
 
     function handleSignUp(e: any) {
         e.preventDefault()
-
+        fetch("http://localhost:8000/register").then(response => response.json()).then(data => console.log(data))
     }
 
     function handleSignUpCancel() {
