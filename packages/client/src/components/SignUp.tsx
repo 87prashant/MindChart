@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from '@emotion/styled'
 import { Header, Inputs, StyledWrapper, StyledDiv, SubmitButton, CancelButton } from "./Form"
 
@@ -49,9 +49,18 @@ interface Props {
 const SignUp = (props: Props) => {
     const { signUpFormRef } = props
 
+    const nameRef = useRef<HTMLInputElement | null>(null)
+    const emailRef = useRef<HTMLInputElement | null>(null)
+    const passRef = useRef<HTMLInputElement | null>(null)
     function handleSignUp(e: any) {
         e.preventDefault()
-        fetch("/register", {method: "post"}).then(response => response.json()).then(data => console.log(data))
+        fetch("/register",
+            {
+                method: "post",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: nameRef.current!.value, email: emailRef.current!.value, password: passRef.current!.value })
+            })
+        // .then(response => response.json()).then(data => console.log(data))
     }
 
     function handleSignUpCancel() {
@@ -64,11 +73,11 @@ const SignUp = (props: Props) => {
                 <form onSubmit={(e) => handleSignUp(e)}>
                     <StyledHeader>Create an account</StyledHeader>
                     <StyledInputName>Name</StyledInputName>
-                    <StyledInput type={"text"} placeholder="Name" />
+                    <StyledInput ref={nameRef} type={"text"} placeholder="Name" />
                     <StyledInputName>Email</StyledInputName>
-                    <StyledInput type="email" placeholder="Email" />
+                    <StyledInput ref={emailRef} type="email" placeholder="Email" />
                     <StyledInputName>Password</StyledInputName>
-                    <StyledInput type="password" placeholder="Password" />
+                    <StyledInput ref={passRef} type="password" placeholder="Password" />
                     <StyledSubmitButton isSame={false} type="submit" value="Submit" />
                     <StyledCancelButton type="button" value="Cancel" onClick={handleSignUpCancel} />
                 </form>

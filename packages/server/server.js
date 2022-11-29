@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const path = require("path");
 const cors = require("cors")
+const bcrypt = require("bcryptjs")
 const User = require("./model/user");
 
 const app = express();
@@ -16,8 +17,7 @@ async function connection() {
 }
 
 app.post("/register", function (req, res) {
-  User.create()
-  res.json({"h":"it is working..."});
+  console.log(req.body)
 });
 
 app.listen(8000);
