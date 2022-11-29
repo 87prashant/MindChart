@@ -12,10 +12,11 @@ app.use(bodyParser.json());
 app.use(cors());
 
 async function connection() {
-  mongoose.connect("mongodb://localhost:27017/userCredentials");
+  mongoose.connect("mongodb://localhost:27017/userdatadb");
 }
 
 app.post("/register", function (req, res) {
+  User.create()
   res.json({"h":"it is working..."});
 });
 
