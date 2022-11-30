@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { Header, Inputs, StyledWrapper, StyledDiv, SubmitButton, CancelButton } from "./Form"
 
@@ -44,11 +44,12 @@ const StyledCancelButton = styled(CancelButton)({
 
 interface Props {
     signUpFormRef: any,
+    setIsRegistered: any
 }
 
 const SignUp = (props: Props) => {
-    const { signUpFormRef } = props
-
+    const { signUpFormRef, setIsRegistered } = props
+    const [status, setStatus] = useState(null)
     const nameRef = useRef<HTMLInputElement | null>(null)
     const emailRef = useRef<HTMLInputElement | null>(null)
     const passRef = useRef<HTMLInputElement | null>(null)
@@ -60,7 +61,14 @@ const SignUp = (props: Props) => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username: nameRef.current!.value, email: emailRef.current!.value, password: passRef.current!.value })
             })
-        // .then(response => response.json()).then(data => console.log(data))
+            .then(response => response.json()).then(data => {
+                if(data.status === "ok") {
+                    setIsRegistered(true)
+                }
+                else {
+                    setStatus(data.error)
+                }
+            })
     }
 
     function handleSignUpCancel() {
@@ -80,6 +88,7 @@ const SignUp = (props: Props) => {
                     <StyledInput ref={passRef} type="password" placeholder="Password" />
                     <StyledSubmitButton isSame={false} type="submit" value="Submit" />
                     <StyledCancelButton type="button" value="Cancel" onClick={handleSignUpCancel} />
+                    {status}
                 </form>
             </Wrapper>
         </Container>

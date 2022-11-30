@@ -173,6 +173,7 @@ function debounce(fn: any, ms: number) {
 }
 
 function App() {
+  const [isRegistered, setIsRegistered] = useState(false)
   const [isDemoActive, setIsDemoActive] = useState(false)
   const [showForm, setShowForm] = useState(false);
   const storedData: FormDataType[] = window.localStorage.getItem("savedData") ?
@@ -284,11 +285,7 @@ function App() {
     setIsChartAdded(false);
     current!.style.visibility = "hidden";
   }
-  const [backendData, setBackendData] = useState([{}])
-
-  // useEffect(() => {
-  //   fetch('/api').then(response => response.json()).then(data => setBackendData(data))
-  // }, [])
+  // const [backendData, setBackendData] = useState([{}])
 
   return (
     <div className="App">
@@ -299,7 +296,8 @@ function App() {
         setSavedData={setSavedData}
         setIsChartAdded={setIsChartAdded}
         demoData={demoData}
-        backendData={backendData}
+        isRegistered={isRegistered}
+        setIsRegistered={setIsRegistered}
       />
       <Container
         ref={ref}

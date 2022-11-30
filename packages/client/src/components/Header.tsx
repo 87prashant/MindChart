@@ -74,7 +74,8 @@ interface Props {
   setSavedData: any;
   setIsChartAdded: any;
   demoData: FormDataType[];
-  backendData: any
+  setIsRegistered: any;
+  isRegistered: boolean;
 }
 
 const Header = (props: Props) => {
@@ -85,6 +86,8 @@ const Header = (props: Props) => {
     setSavedData,
     demoData,
     setIsChartAdded,
+    setIsRegistered,
+    isRegistered
   } = props;
 
   const showForm = () => {
@@ -121,8 +124,8 @@ const Header = (props: Props) => {
         Demo
       </DemoButton>
       <AddButton onClick={() => showForm()}>Add</AddButton>
-      <SignUpButton onClick={openLoginPage}>Register</SignUpButton>
-      <SignUp signUpFormRef={signUpFormRef} />
+      {!isRegistered && <SignUpButton onClick={openLoginPage}>Register</SignUpButton>}
+      {!isRegistered && <SignUp signUpFormRef={signUpFormRef} setIsRegistered={setIsRegistered} />}
     </StyledHeader>
   );
 };
