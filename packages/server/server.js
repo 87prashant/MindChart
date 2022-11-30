@@ -15,7 +15,8 @@ app.use(cors());
 mongoose.connect("mongodb://localhost:27017/userdatadb");
 
 app.post("/register", async function (req, res) {
-  const {username, email, password} = req.body
+  const {username, email, password: plainPassword} = req.body
+  const password = await bcrypt.hash(plainPassword, 10)
   try {
     const response = await User.create({username, email, password})
     console.log(response)
