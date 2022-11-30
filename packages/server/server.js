@@ -16,6 +16,9 @@ mongoose.connect("mongodb://localhost:27017/userdatadb");
 
 app.post("/register", async function (req, res) {
   const {username, email, password: plainPassword} = req.body
+  if(!plainPassword || !email || !username){
+    return res.json({status: "error", error: "All fields are compulsory"})
+  }
   if(plainPassword.length < 6) {
     return res.json({status: "error", error: "Password should be at least 5 symbol long"})
   }
