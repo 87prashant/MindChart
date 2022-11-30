@@ -19,6 +19,12 @@ app.post("/register", async function (req, res) {
   if (!plainPassword || !email || !username) {
     return res.json({ status: "error", error: "All fields are compulsory" });
   }
+  if (username.length < 6) {
+    return res.json({
+      status: "error",
+      error: "Username should be at least 5 symbol long",
+    });
+  }
   if (plainPassword.length < 6) {
     return res.json({
       status: "error",

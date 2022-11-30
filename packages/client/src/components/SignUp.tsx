@@ -62,7 +62,7 @@ const SignUp = (props: Props) => {
                 body: JSON.stringify({ username: nameRef.current!.value, email: emailRef.current!.value, password: passRef.current!.value })
             })
             .then(response => response.json()).then(data => {
-                if(data.status === "ok") {
+                if (data.status === "ok") {
                     setIsRegistered(true)
                 }
                 else {

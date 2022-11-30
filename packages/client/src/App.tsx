@@ -285,7 +285,6 @@ function App() {
     setIsChartAdded(false);
     current!.style.visibility = "hidden";
   }
-  // const [backendData, setBackendData] = useState([{}])
 
   return (
     <div className="App">
