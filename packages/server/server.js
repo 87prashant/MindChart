@@ -14,11 +14,15 @@ app.use(cors());
 
 mongoose.connect("mongodb://localhost:27017/userdatadb");
 
-app.post("/register", function (req, res) {
-  console.log(req.body)
+app.post("/register", async function (req, res) {
   const {username, email, password} = req.body
-  User.create({username, email, password})
-
+  try {
+    const response = await User.create({username, email, password})
+    console.log(response)
+  } catch(error) {
+    console.log("Error occurred...", error)
+    return res.json({status: "error"})
+  }
 });
 
 app.listen(8000);
