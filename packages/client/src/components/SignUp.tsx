@@ -58,7 +58,7 @@ const SignUp = (props: Props) => {
             {
                 method: "post",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: nameRef.current!.value, email: emailRef.current!.value, password: passRef.current!.value })
+                body: JSON.stringify({ username: nameRef.current!.value, email: emailRef.current!.value, password: passRef.current!.value })
             })
         // .then(response => response.json()).then(data => console.log(data))
     }

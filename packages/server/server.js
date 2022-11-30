@@ -12,12 +12,13 @@ app.use(express.static(path.join(__dirname, "build")));
 app.use(bodyParser.json());
 app.use(cors());
 
-async function connection() {
-  mongoose.connect("mongodb://localhost:27017/userdatadb");
-}
+mongoose.connect("mongodb://localhost:27017/userdatadb");
 
 app.post("/register", function (req, res) {
   console.log(req.body)
+  const {username, email, password} = req.body
+  User.create({username, email, password})
+
 });
 
 app.listen(8000);
