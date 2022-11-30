@@ -16,13 +16,17 @@ mongoose.connect("mongodb://localhost:27017/userdatadb");
 
 app.post("/register", async function (req, res) {
   const {username, email, password: plainPassword} = req.body
+  if(plainPassword.length < 6) {
+    return res.json({status: "error", error: "Password should be at least 5 symbol long"})
+  }
   const password = await bcrypt.hash(plainPassword, 10)
   try {
     const response = await User.create({username, email, password})
     console.log(response)
   } catch(error) {
-    console.log("Error occurred...", error)
-    return res.json({status: "error"})
+    if(error.code === 11000) 
+      return res.json({status: "error", error: "Email is already registered"})
+    throw error
   }
 });
 
