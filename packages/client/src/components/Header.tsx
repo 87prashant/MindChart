@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import styled from "@emotion/styled";
 import { FormDataType } from "./Form";
 import SignUp from "./SignUp"
+import Account from "./Account";
 
 const StyledHeader = styled("div")({
   height: "70px",
@@ -126,7 +127,7 @@ const Header = (props: Props) => {
       <AddButton onClick={() => showForm()}>Add</AddButton>
       {!isRegistered && <SignUpButton onClick={openLoginPage}>Register</SignUpButton>}
       {!isRegistered && <SignUp signUpFormRef={signUpFormRef} setIsRegistered={setIsRegistered} setUserInfo={setUserInfo} />}
-      {/* {isRegistered && <Account/>} */}
+      {isRegistered && <Account userInfo={userInfo}/>}
     </StyledHeader>
   );
 };
