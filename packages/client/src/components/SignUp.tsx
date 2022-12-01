@@ -32,14 +32,20 @@ const StyledInput = styled(Inputs)({
 
 const StyledSubmitButton = styled(SubmitButton)({
     width: 80,
-    bottom: 20,
+    bottom: 12,
     left: 15
 })
 
 const StyledCancelButton = styled(CancelButton)({
     width: 80,
-    bottom: 20,
+    bottom: 12,
     right: 15
+})
+
+const StyledStatus = styled("div")({
+    fontSize: 11,
+    color: "red",
+    fontWeight: "bold"
 })
 
 interface Props {
@@ -88,7 +94,7 @@ const SignUp = (props: Props) => {
                     <StyledInput ref={passRef} type="password" placeholder="Password" />
                     <StyledSubmitButton isSame={false} type="submit" value="Submit" />
                     <StyledCancelButton type="button" value="Cancel" onClick={handleSignUpCancel} />
-                    {status}
+                    <StyledStatus>{status}</StyledStatus>
                 </form>
             </Wrapper>
         </Container>
