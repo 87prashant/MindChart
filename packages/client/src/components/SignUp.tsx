@@ -51,10 +51,11 @@ const StyledStatus = styled("div")({
 interface Props {
     signUpFormRef: any,
     setIsRegistered: any
+    setUserInfo: any
 }
 
 const SignUp = (props: Props) => {
-    const { signUpFormRef, setIsRegistered } = props
+    const { signUpFormRef, setIsRegistered, setUserInfo } = props
     const [status, setStatus] = useState(null)
     const nameRef = useRef<HTMLInputElement | null>(null)
     const emailRef = useRef<HTMLInputElement | null>(null)
@@ -70,6 +71,7 @@ const SignUp = (props: Props) => {
             .then(response => response.json()).then(data => {
                 if (data.status === "ok") {
                     setIsRegistered(true)
+                    setUserInfo(() => ({username: data.username, email: data.email}))
                 }
                 else {
                     setStatus(data.error)
@@ -80,7 +82,7 @@ const SignUp = (props: Props) => {
     function handleSignUpCancel() {
         signUpFormRef.current!.style.display = "none"
     }
-
+    
     return (
         <Container showForm={false} ref={signUpFormRef}>
             <Wrapper>

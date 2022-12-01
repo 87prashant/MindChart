@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styled from "@emotion/styled";
 import { FormDataType } from "./Form";
 import SignUp from "./SignUp"
@@ -95,6 +95,7 @@ const Header = (props: Props) => {
   };
 
   const signUpFormRef = useRef<HTMLDivElement | null>(null)
+  const [userInfo, setUserInfo] = useState({ username: "", email: "" })
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
@@ -103,7 +104,6 @@ const Header = (props: Props) => {
     setSavedData((prev: FormDataType[]) => (!isDemoActive ? demoData : storedData));
     setIsChartAdded((prev: boolean) => false);
   }
-
   function openLoginPage() {
     signUpFormRef.current!.style.display = "block"
   }
@@ -125,7 +125,8 @@ const Header = (props: Props) => {
       </DemoButton>
       <AddButton onClick={() => showForm()}>Add</AddButton>
       {!isRegistered && <SignUpButton onClick={openLoginPage}>Register</SignUpButton>}
-      {!isRegistered && <SignUp signUpFormRef={signUpFormRef} setIsRegistered={setIsRegistered} />}
+      {!isRegistered && <SignUp signUpFormRef={signUpFormRef} setIsRegistered={setIsRegistered} setUserInfo={setUserInfo} />}
+      {/* {isRegistered && <Account/>} */}
     </StyledHeader>
   );
 };

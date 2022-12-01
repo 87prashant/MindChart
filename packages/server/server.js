@@ -43,7 +43,7 @@ app.post("/register", async function (req, res) {
       });
     throw error;
   }
-  return res.json({ status: "ok" });
+  return res.json({ status: "ok", username, email });
 });
 
 app.listen(8000);
