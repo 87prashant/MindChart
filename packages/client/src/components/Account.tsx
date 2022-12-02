@@ -5,22 +5,31 @@ const Container = styled('div')({
     width: 50,
     height: 50,
     borderRadius: "50%",
-    backgroundColor: "red",
+    backgroundColor: "teal",
     display: "flex",
-    alignItems: "center",
+    WebkitAlignItems: "center",
     justifyContent: "center",
-    fontSize: 17
+    fontSize: 20,
+    margin: "0 20px",
+    cursor: "pointer",
 })
 
 interface Props {
-    userInfo: {username: string; email: string}
+    userInfo: { username: string; email: string }
 }
 
 const Account = (props: Props) => {
-    const {userInfo} = props
+    const { userInfo: { username } } = props
+    let i: any = 0
+    let surnameFirstLetter: string = "";
+    for (i in username as any) {
+        if (username[i] === ' ')
+            surnameFirstLetter = username[++i]
+    }
+    const content = (username.slice(0, 1) + surnameFirstLetter).toUpperCase()
     return (
         <Container>
-            {userInfo.username.slice(0,1)}
+            {content}
         </Container>
     )
 }

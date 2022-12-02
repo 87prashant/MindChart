@@ -19,16 +19,16 @@ app.post("/register", async function (req, res) {
   if (!plainPassword || !email || !username) {
     return res.json({ status: "error", error: "All fields are compulsory" });
   }
-  if (username.length < 6) {
+  if (username.length < 5) {
     return res.json({
       status: "error",
       error: "Username should be at least 5 symbol long",
     });
   }
-  if (plainPassword.length < 6) {
+  if (plainPassword.length < 8) {
     return res.json({
       status: "error",
-      error: "Password should be at least 5 symbol long",
+      error: "Password should be at least 8 symbol long",
     });
   }
   const password = await bcrypt.hash(plainPassword, 10);
