@@ -81,34 +81,53 @@ interface Props {
 
 const SignUp = (props: Props) => {
     const { signUpFormRef, setIsRegistered, setUserInfo } = props
+
     const [status, setStatus] = useState(null)
     const [isRegister, setIsRegister] = useState(true)
-    const nameRef = useRef<HTMLInputElement | null>(null)
-    const emailRef = useRef<HTMLInputElement | null>(null)
-    const passRef = useRef<HTMLInputElement | null>(null)
+
+    const registerNameRef = useRef<HTMLInputElement | null>(null)
+    const registerEmailRef = useRef<HTMLInputElement | null>(null)
+    const registerPassRef = useRef<HTMLInputElement | null>(null)
+    const loginEmailRef = useRef<HTMLInputElement | null>(null)
+    const loginPassRef = useRef<HTMLInputElement | null>(null)
     const formContainerRef = useRef<HTMLDivElement | null>(null)
 
-    function handleSignUp(e: any) {
+    function handleFormSubmit(e: any) {
         e.preventDefault()
-        fetch("/register",
-            {
-                method: "post",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username: nameRef.current!.value, email: emailRef.current!.value, password: passRef.current!.value })
-            })
-            .then(response => response.json()).then(data => {
-                if (data.status === "ok") {
-                    setIsRegistered(true)
-                    setUserInfo(() => ({ username: data.username, email: data.email }))
-                }
-                else {
-                    setStatus(data.error)
-                }
-            })
-    }
-
-    function handleLogin(e: any) {
-        e.preventDefault();
+        if (isRegister) {
+            fetch("/register",
+                {
+                    method: "post",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: registerNameRef.current!.value, email: registerEmailRef.current!.value, password: registerPassRef.current!.value })
+                })
+                .then(response => response.json()).then(data => {
+                    if (data.status === "ok") {
+                        setIsRegistered(true)
+                        setUserInfo(() => ({ username: data.username, email: data.email }))
+                    }
+                    else {
+                        setStatus(data.error)
+                    }
+                })
+        }
+        else {
+            fetch("/login",
+                {
+                    method: "post",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: loginEmailRef.current!.value, password: loginPassRef.current!.value })
+                })
+                .then(response => response.json()).then(data => {
+                    if (data.status === "ok") {
+                        setIsRegistered(true)
+                        setUserInfo(() => ({ username: data.username, email: data.email }))
+                    }
+                    else {
+                        setStatus(data.error)
+                    }
+                })
+        }
     }
 
     function handleCancel() {
@@ -117,6 +136,7 @@ const SignUp = (props: Props) => {
 
     function handleUserChoice() {
         setIsRegister(!isRegister)
+        setStatus(null)
         formContainerRef.current!.style.transform = isRegister ? "translate(-232px)" : ""
     }
 
@@ -124,28 +144,28 @@ const SignUp = (props: Props) => {
         <Container showForm={false} ref={signUpFormRef}>
             <Wrapper>
                 <FormContainer ref={formContainerRef}>
-                    <RegisterForm onSubmit={(e) => handleSignUp(e)} >
+                    <RegisterForm >
                         <StyledHeader>Create an account</StyledHeader>
                         <StyledInputName>Name</StyledInputName>
-                        <StyledInput ref={nameRef} type={"text"} placeholder="Name" />
+                        <StyledInput ref={registerNameRef} type={"text"} placeholder="Name" />
                         <StyledInputName>Email</StyledInputName>
-                        <StyledInput ref={emailRef} type="email" placeholder="Email" />
+                        <StyledInput ref={registerEmailRef} type="email" placeholder="Email" />
                         <StyledInputName>Password</StyledInputName>
-                        <StyledInput ref={passRef} type="password" placeholder="Password" />
+                        <StyledInput ref={registerPassRef} type="password" placeholder="Password" />
                         <StyledStatus>{status}</StyledStatus>
                         <Button onClick={handleUserChoice}>Login instead</Button>
                     </RegisterForm>
-                    <LoginForm onSubmit={(e) => handleLogin(e)}>
+                    <LoginForm >
                         <StyledHeader>Log in</StyledHeader>
                         <StyledInputName>Email</StyledInputName>
-                        <StyledInput type="email" placeholder="Email" />
+                        <StyledInput ref={loginEmailRef} type="email" placeholder="Email" />
                         <StyledInputName>Password</StyledInputName>
-                        <StyledInput type="password" placeholder="Password" />
+                        <StyledInput ref={loginPassRef} type="password" placeholder="Password" />
                         <StyledStatus>{status}</StyledStatus>
                         <Button onClick={handleUserChoice}>Register</Button>
                     </LoginForm>
                 </FormContainer>
-                <StyledSubmitButton onClick={(e) => handleSignUp(e)} isSame={false} type="submit" value="Submit" />
+                <StyledSubmitButton onClick={(e) => handleFormSubmit(e)} isSame={false} type="submit" value="Submit" />
                 <StyledCancelButton type="button" value="Cancel" onClick={handleCancel} />
             </Wrapper>
         </Container>
