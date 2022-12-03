@@ -99,7 +99,7 @@ const SignUp = (props: Props) => {
                 {
                     method: "post",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ username: registerNameRef.current!.value, email: registerEmailRef.current!.value, password: registerPassRef.current!.value })
+                    body: JSON.stringify({ username: registerNameRef.current!.value.toLowerCase(), email: registerEmailRef.current!.value.toLowerCase(), password: registerPassRef.current!.value })
                 })
                 .then(response => response.json()).then(data => {
                     if (data.status === "ok") {
@@ -116,7 +116,7 @@ const SignUp = (props: Props) => {
                 {
                     method: "post",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email: loginEmailRef.current!.value, password: loginPassRef.current!.value })
+                    body: JSON.stringify({ email: loginEmailRef.current!.value.toLowerCase(), password: loginPassRef.current!.value })
                 })
                 .then(response => response.json()).then(data => {
                     if (data.status === "ok") {
