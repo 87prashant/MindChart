@@ -29,7 +29,8 @@ interface Props {
     w: number;
     h: number;
   };
-  current: HTMLDivElement | null
+  current: HTMLDivElement | null;
+  accountInfoRef: any;
 }
 
 const Main = (props: Props) => {
@@ -40,7 +41,8 @@ const Main = (props: Props) => {
     handleHover,
     ref2,
     dimensions,
-    current
+    current,
+    accountInfoRef,
   } = props;
 
   useEffect(() => {
@@ -55,7 +57,11 @@ const Main = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedData, dimensions]);
 
-  return <StyledWrapper ref={ref2} ></StyledWrapper>;
+  function handleClick() {
+    accountInfoRef.current!.style.display = "none";
+  }
+
+  return <StyledWrapper onClick={handleClick} ref={ref2}></StyledWrapper>;
 };
 
 export default Main;

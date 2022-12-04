@@ -14,7 +14,6 @@ const Container = styled("div")({
 });
 
 const Info = styled("div")({
-  // whiteSpace: "nowrap"
   marginBottom: 8,
 });
 
@@ -38,18 +37,17 @@ interface Props {
 const AccountInfo = (props: Props) => {
   const { userInfo, setIsRegistered, accountInfoRef } = props;
 
-  function handleMouseOut() {
-    accountInfoRef.current!.style.display = "none";
-  }
-
   return (
-    <Container ref={accountInfoRef} onMouseLeave={handleMouseOut}>
+    <Container
+      ref={accountInfoRef}
+      onClick={(e) => e.stopPropagation()}
+    >
       <Info>{userInfo.email}</Info>
       <hr />
       <Button
         value="Log out"
         type="button"
-        onClick={() => setIsRegistered(false)}
+        onClick={() => {setIsRegistered(false); }}
       />
     </Container>
   );

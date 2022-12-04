@@ -16,7 +16,7 @@ const Container = styled("div")({
   padding: 4,
   maxWidth: 200,
   maxHeight: 200,
-  overflow: "hidden"
+  overflow: "hidden",
 });
 
 const demoData = [
@@ -173,21 +173,23 @@ function debounce(fn: any, ms: number) {
 }
 
 function App() {
-  const [isRegistered, setIsRegistered] = useState(false)
-  const [isDemoActive, setIsDemoActive] = useState(false)
+  const storedData: FormDataType[] = window.localStorage.getItem("savedData")
+    ? JSON.parse(window.localStorage.getItem("savedData")!)
+    : ([] as FormDataType[]);
+
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [isDemoActive, setIsDemoActive] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const storedData: FormDataType[] = window.localStorage.getItem("savedData") ?
-    JSON.parse(window.localStorage.getItem("savedData")!) : ([] as FormDataType[])
+  const [current, setCurrent] = useState<HTMLDivElement | null>(null);
+  // After clicking the edit button on the hoverModal it stores the data of that node. If
+  // it got edited then origin node should be deleted.
+  const [hackedNodeData, setHackedNodeData] = useState<FormDataType | null>(
+    null
+  );
   const [savedData, setSavedData] = useState(
     isDemoActive ? demoData : storedData
   );
-  // After clicking the edit button on the hoverModal it stores the data of that node. If
-  // it got edited then origin node should be deleted.
-  const [hackedNodeData, setHackedNodeData] = useState<FormDataType | null>(null)
   const [isChartAdded, setIsChartAdded] = useState(false);
-  const [current, setCurrent] = useState<HTMLDivElement | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
-  const ref2 = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({
     w: 0,
     h: 0,
@@ -199,6 +201,10 @@ function App() {
     priority: 20,
     description: "",
   });
+
+  const ref = useRef<HTMLDivElement>(null);
+  const ref2 = useRef<HTMLDivElement>(null);
+  const accountInfoRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setIsChartAdded(false);
@@ -235,8 +241,9 @@ function App() {
       return;
     }
     const r = e.srcElement.r.baseVal.value;
-    current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML = JSON.parse(e.srcElement.id).description;
-    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id
+    current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML =
+      JSON.parse(e.srcElement.id).description;
+    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
     let xPosition =
       Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
     let isUp = false;
@@ -271,16 +278,17 @@ function App() {
 
   function handleEdit(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
-    setHackedNodeData(JSON.parse(data))
+    setHackedNodeData(JSON.parse(data));
     current!.style.visibility = "hidden";
-    setFormData(() => JSON.parse(data))
-    setShowForm(true)
+    setFormData(() => JSON.parse(data));
+    setShowForm(true);
   }
 
   function handleDelete(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
     const newSavedData = (savedData as any).filter(
-      (d: FormDataType) => d === data);
+      (d: FormDataType) => d === data
+    );
     setSavedData([...newSavedData]);
     setIsChartAdded(false);
     current!.style.visibility = "hidden";
@@ -297,16 +305,14 @@ function App() {
         demoData={demoData}
         isRegistered={isRegistered}
         setIsRegistered={setIsRegistered}
+        accountInfoRef={accountInfoRef}
       />
       <Container
         ref={ref}
         onMouseOver={(e) => handleHover(e, "visible")}
         onMouseOut={(e) => handleHover(e, "hidden")}
       >
-        <HoverModal
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-        />
+        <HoverModal handleEdit={handleEdit} handleDelete={handleDelete} />
       </Container>
       <Form
         savedData={savedData}
@@ -328,6 +334,7 @@ function App() {
         dimensions={dimensions}
         current={current}
         ref2={ref2}
+        accountInfoRef={accountInfoRef}
       />
     </div>
   );

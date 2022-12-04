@@ -78,6 +78,7 @@ interface Props {
   demoData: FormDataType[];
   setIsRegistered: any;
   isRegistered: boolean;
+  accountInfoRef: any
 }
 
 const Header = (props: Props) => {
@@ -90,6 +91,7 @@ const Header = (props: Props) => {
     setIsChartAdded,
     setIsRegistered,
     isRegistered,
+    accountInfoRef
   } = props;
 
   const showForm = () => {
@@ -97,7 +99,6 @@ const Header = (props: Props) => {
   };
 
   const signUpFormRef = useRef<HTMLDivElement | null>(null);
-  const accountInfoRef = useRef<HTMLDivElement | null>(null);
   const [userInfo, setUserInfo] = useState({ username: "", email: "" });
 
   function handleClick() {
@@ -114,9 +115,12 @@ const Header = (props: Props) => {
   function openLoginPage() {
     signUpFormRef.current!.style.display = "block";
   }
+  function handleHeaderClick() {
+    accountInfoRef.current!.style.display = "none"
+  }
 
   return (
-    <StyledHeader>
+    <StyledHeader onClick={handleHeaderClick}>
       <HelpButton
         href="https://github.com/87prashant/MindChart"
         target="_blank"

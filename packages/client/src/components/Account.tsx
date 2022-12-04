@@ -25,7 +25,8 @@ const Account = (props: Props) => {
     accountInfoRef,
   } = props;
 
-  function handleClick() {
+  function handleClick(e: any) {
+    e.stopPropagation();
     accountInfoRef.current!.style.display = "block";
   }
 
