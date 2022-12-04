@@ -51,15 +51,15 @@ app.post("/login", async function (req, res) {
   if (!plainPassword || !email) {
     return res.json({ status: "error", error: "All fields are compulsory" });
   }
-  const user = await User.findOne({email}).lean()
-  if(!user) {
-    return res.json({status: "error", error: "User not found"})
+  const user = await User.findOne({ email }).lean();
+  if (!user) {
+    return res.json({ status: "error", error: "User not found" });
   }
-  if(await bcrypt.compare(plainPassword, user.password)){
-    const {username, email: userEmail} = user
-    return res.json({status: "ok", username, userEmail})
+  if (await bcrypt.compare(plainPassword, user.password)) {
+    const { username, email: userEmail } = user;
+    return res.json({ status: "ok", username, userEmail });
   }
-  return res.json({status: "error", error: "Incorrect Password"})
+  return res.json({ status: "error", error: "Incorrect Password" });
 });
 
 app.listen(8000);

@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
 import styled from "@emotion/styled";
 import { FormDataType } from "./Form";
-import SignUp from "./SignUp"
+import SignUp from "./SignUp";
 import Account from "./Account";
+import AccountInfo from "./AccountInfo";
 
 const StyledHeader = styled("div")({
   height: "70px",
@@ -11,7 +12,7 @@ const StyledHeader = styled("div")({
   justifyContent: "flex-end",
   alignItems: "center",
   background: "#F4EBD0",
-  userSelect: "none"
+  userSelect: "none",
 });
 
 const HelpButton = styled("a")({
@@ -66,7 +67,7 @@ const SignUpButton = styled("button")({
   borderRadius: "10px",
   backgroundColor: "white",
   fontWeight: "bolder",
-})
+});
 
 interface Props {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -88,25 +89,30 @@ const Header = (props: Props) => {
     demoData,
     setIsChartAdded,
     setIsRegistered,
-    isRegistered
+    isRegistered,
   } = props;
 
   const showForm = () => {
     setShowForm(true);
   };
 
-  const signUpFormRef = useRef<HTMLDivElement | null>(null)
-  const [userInfo, setUserInfo] = useState({ username: "", email: "" })
+  const signUpFormRef = useRef<HTMLDivElement | null>(null);
+  const accountInfoRef = useRef<HTMLDivElement | null>(null);
+  const [userInfo, setUserInfo] = useState({ username: "", email: "" });
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
-    const storedData: FormDataType[] = window.localStorage.getItem("savedData") ? JSON.parse(window.localStorage.getItem("savedData")!) : []
+    const storedData: FormDataType[] = window.localStorage.getItem("savedData")
+      ? JSON.parse(window.localStorage.getItem("savedData")!)
+      : [];
     //"!isDemoActive" because I am updating isDemoActive at the same time above
-    setSavedData((prev: FormDataType[]) => (!isDemoActive ? demoData : storedData));
+    setSavedData((prev: FormDataType[]) =>
+      !isDemoActive ? demoData : storedData
+    );
     setIsChartAdded((prev: boolean) => false);
   }
   function openLoginPage() {
-    signUpFormRef.current!.style.display = "block"
+    signUpFormRef.current!.style.display = "block";
   }
 
   return (
@@ -118,16 +124,30 @@ const Header = (props: Props) => {
         <img src="github_logo.png" alt="" width="25" height="25" />
         <span>Help in Development</span>
       </HelpButton>
-      <DemoButton
-        isDemoActive={isDemoActive}
-        onClick={handleClick}
-      >
+      <DemoButton isDemoActive={isDemoActive} onClick={handleClick}>
         Demo
       </DemoButton>
       <AddButton onClick={() => showForm()}>Add</AddButton>
-      {!isRegistered && <SignUpButton onClick={openLoginPage}>Register</SignUpButton>}
-      {!isRegistered && <SignUp signUpFormRef={signUpFormRef} setIsRegistered={setIsRegistered} setUserInfo={setUserInfo} />}
-      {isRegistered && <Account userInfo={userInfo}/>}
+      {!isRegistered && (
+        <SignUpButton onClick={openLoginPage}>Register</SignUpButton>
+      )}
+      {!isRegistered && (
+        <SignUp
+          signUpFormRef={signUpFormRef}
+          setIsRegistered={setIsRegistered}
+          setUserInfo={setUserInfo}
+        />
+      )}
+      {isRegistered && (
+        <div style={{ position: "relative" }}>
+          <Account accountInfoRef={accountInfoRef} userInfo={userInfo} />
+          <AccountInfo
+            accountInfoRef={accountInfoRef}
+            setIsRegistered={setIsRegistered}
+            userInfo={userInfo}
+          />
+        </div>
+      )}
     </StyledHeader>
   );
 };
