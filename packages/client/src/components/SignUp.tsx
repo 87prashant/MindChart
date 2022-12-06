@@ -23,7 +23,7 @@ const Wrapper = styled(StyledWrapper)({
 const FormContainer = styled("div")({
   gap: 15,
   display: "flex",
-  transition: "all 0.2s linear",
+  transition: "all 0.3s linear",
 });
 
 const RegisterForm = styled("form")({

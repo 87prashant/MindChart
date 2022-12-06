@@ -9,9 +9,8 @@ const UserSchema = new mongoose.Schema(
   {
     collection: "users",
   }
+);
 
-  );
-  
-  const model = mongoose.model("UserSchema", UserSchema)
+const model = mongoose.model("UserSchema", UserSchema);
 
-  module.exports = model
+module.exports = model;

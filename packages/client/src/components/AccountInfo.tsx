@@ -38,16 +38,13 @@ const AccountInfo = (props: Props) => {
   const { userInfo, setIsRegistered, accountInfoRef } = props;
 
   return (
-    <Container
-      ref={accountInfoRef}
-      onClick={(e) => e.stopPropagation()}
-    >
+    <Container ref={accountInfoRef} onClick={(e) => e.stopPropagation()}>
       <Info>{userInfo.email}</Info>
       <hr />
       <Button
         value="Log out"
         type="button"
-        onClick={() => {setIsRegistered(false); }}
+        onClick={() => setIsRegistered(false)}
       />
     </Container>
   );
