@@ -1,5 +1,8 @@
 
 #### `Trying to build something that could be used to visualize our thoughts more effectively.`
+![Screenshot 2022-12-12 220503](https://user-images.githubusercontent.com/106697681/207102372-f4e16f2d-706f-448b-be37-d45bf3e9f531.png)
+
+![Screenshot (18)](https://user-images.githubusercontent.com/106697681/207102393-f0061152-fffe-4624-9b72-cf864f9229aa.png)
 
 [![notion (1)](https://user-images.githubusercontent.com/106697681/195251468-8c27de82-7eb0-4996-aaeb-f34b8749557d.png)](https://alike-stag-3a4.notion.site/Mind-Chart-97668ec9dbbe49cda72c19f0259a2870) 
 
