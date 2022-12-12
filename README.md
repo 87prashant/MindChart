@@ -9,16 +9,18 @@
 This is a passion project. I am learning technology by implementing it. Anyone is invited to contribute with the mindset of learning by doing.
 
 
-Any contribution is appreciated. Currently working on frontend.
+Any contribution is appreciated.
 
 ### Local Setup (Windows)
-This is a monorepo, currently, I am working on the Frontend. So the below instructions are for the same.
 ```
 1. Clone the repo
 2. cd MindChart
 3. yarn
-4. cd packages/client
-5. yarn start
+4. Star the monogdb server at default port 27017
+5. cd packages/client
+6. yarn start (To start the frontend server)
+7. cd ../server
+8. yarn dev (To start the backend server)
 ```
 (Create an issue if these are not working for you)
 
@@ -29,4 +31,7 @@ This is a monorepo, currently, I am working on the Frontend. So the below instru
 3. EmotionJs
 4. D3js
 #### Backend
-TBD (maybe GraphQl, Relay, PostgreSQL, ExpressJs)
+1. ExpressJs
+2. MongoDB
+3. Vercel for deployment (free)
+
