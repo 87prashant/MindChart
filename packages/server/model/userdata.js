@@ -25,7 +25,7 @@ const UserDataSchema = new mongoose.Schema(
     description: { type: String },
   },
   {
-    collection: "usersdata",
+    collection: "userData",
   }
 );
 

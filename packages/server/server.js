@@ -5,7 +5,7 @@ const path = require("path");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const User = require("./model/user");
-require("dotenv").config({path: '../../.env'})
+require("dotenv").config({ path: "../../.env" })
 
 const app = express();
 
@@ -13,10 +13,9 @@ app.use(express.static(path.join(__dirname, "build")));
 app.use(bodyParser.json());
 app.use(cors());
 
-if(!process.env.MONGODB_URI)
-  throw Error("MONGODB_URI is empty!!!")
+if (!process.env.MONGODB_URI) throw Error("MONGODB_URI is empty!!!");
 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI)
 
 app.post("/register", async function (req, res) {
   const { username, email, password: plainPassword } = req.body;

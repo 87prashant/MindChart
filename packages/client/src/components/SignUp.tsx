@@ -100,7 +100,7 @@ const SignUp = (props: Props) => {
   function handleFormSubmit(e: any) {
     e.preventDefault();
     if (isRegister) {
-      fetch("/register", {
+      fetch(process.env.REACT_APP_REGISTER_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -119,7 +119,8 @@ const SignUp = (props: Props) => {
           }
         });
     } else {
-      fetch("/login", {
+      console.log(process.env.REACT_APP_LOGIN_API)
+      fetch(process.env.REACT_APP_LOGIN_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

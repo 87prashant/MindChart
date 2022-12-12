@@ -5175,6 +5175,11 @@
   "resolved" "https://registry.npmjs.org/dotenv/-/dotenv-10.0.0.tgz"
   "version" "10.0.0"
 
+"dotenv@^16.0.3":
+  "integrity" "sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ=="
+  "resolved" "https://registry.npmjs.org/dotenv/-/dotenv-16.0.3.tgz"
+  "version" "16.0.3"
+
 "duplexer@^0.1.2":
   "integrity" "sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg=="
   "resolved" "https://registry.npmjs.org/duplexer/-/duplexer-0.1.2.tgz"
@@ -7638,7 +7643,7 @@
   "resolved" "https://registry.npmjs.org/min-indent/-/min-indent-1.0.1.tgz"
   "version" "1.0.1"
 
-"mindchart-client@1.0.0", "mindchart-client@file:/mnt/c/Users/teoti/Desktop/Open source/MindChart/packages/client":
+"mindchart-client@1.0.0", "mindchart-client@file:C:\\Users\\teoti\\Desktop\\Open source\\MindChart\\packages\\client":
   "resolved" "file:packages/client"
   "version" "1.0.0"
   dependencies:
@@ -7660,10 +7665,11 @@
     "typescript" "^4.4.2"
     "web-vitals" "^2.1.0"
 
-"mindchart-server@file:/mnt/c/Users/teoti/Desktop/Open source/MindChart/packages/server":
+"mindchart-server@file:C:\\Users\\teoti\\Desktop\\Open source\\MindChart\\packages\\server":
   "resolved" "file:packages/server"
   "version" "1.0.0"
   dependencies:
+    "bcryptjs" "^2.4.3"
     "body-parser" "^1.20.1"
     "cors" "^2.8.5"
     "express" "^4.18.1"

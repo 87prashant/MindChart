@@ -2,7 +2,10 @@
   "name": "mindchart",
   "version": "1.0.0",
   "private": true,
-  "workspaces": ["packages/*"],
+  "proxy": "http://localhost:8000",
+  "workspaces": [
+    "packages/*"
+  ],
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
