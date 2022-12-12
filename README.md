@@ -19,11 +19,12 @@ Any contribution is appreciated.
 1. Clone the repo
 2. cd MindChart
 3. yarn
-4. Star the monogdb server at default port 27017
-5. cd packages/client
-6. yarn start (To start the frontend server)
-7. cd ../server
-8. yarn dev (To start the backend server)
+4. Create .env files from .env.local files (inside the 'root' directory and 'packages/client' directory)
+5. Star the monogdb server at default port 27017
+6. cd packages/client
+7. yarn start (To start the frontend server)
+8. cd ../server
+9. yarn dev (To start the backend server)
 ```
 (Create an issue if these are not working for you)
 
