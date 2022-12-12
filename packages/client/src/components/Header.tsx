@@ -25,10 +25,6 @@ const HelpButton = styled("a")({
   textDecoration: "none",
   backgroundColor: "white",
   color: "teal",
-  "& span": {
-    marginLeft: 10,
-    fontWeight: "bold",
-  },
   ":active": {
     color: "teal",
   },
@@ -126,7 +122,6 @@ const Header = (props: Props) => {
         target="_blank"
       >
         <img src="github_logo.png" alt="" width="25" height="25" />
-        <span>Help in Development</span>
       </HelpButton>
       <DemoButton isDemoActive={isDemoActive} onClick={handleClick}>
         Demo
