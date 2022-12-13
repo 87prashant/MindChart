@@ -119,7 +119,6 @@ const SignUp = (props: Props) => {
           }
         });
     } else {
-      console.log(process.env.REACT_APP_LOGIN_API)
       fetch(process.env.REACT_APP_LOGIN_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },

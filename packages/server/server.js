@@ -59,8 +59,8 @@ app.post("/login", async function (req, res) {
     return res.json({ status: "error", error: "User not found" });
   }
   if (await bcrypt.compare(plainPassword, user.password)) {
-    const { username, email: userEmail } = user;
-    return res.json({ status: "ok", username, userEmail });
+    const { username, email } = user;
+    return res.json({ status: "ok", username, email });
   }
   return res.json({ status: "error", error: "Incorrect Password" });
 });
