@@ -50,6 +50,7 @@ const Content = styled("div")({
 
 const HackDataDiv = styled("div")({
   position: "absolute",
+  userSelect: "none"
 });
 
 interface Props {
