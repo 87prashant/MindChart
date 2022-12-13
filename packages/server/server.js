@@ -5,8 +5,8 @@ const path = require("path");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const User = require("./model/user");
-const UserData = require("./model/userdata")
-require("dotenv").config({ path: "../../.env" })
+const UserData = require("./model/userdata");
+require("dotenv").config({ path: "../../.env" });
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(cors());
 
 if (!process.env.MONGODB_URI) throw Error("MONGODB_URI is empty!!!");
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI);
 
 app.post("/register", async function (req, res) {
   const { username, email, password: plainPassword } = req.body;
@@ -47,8 +47,8 @@ app.post("/register", async function (req, res) {
       });
     throw error;
   }
-  createUserData(email)
-  return res.json({ status: "ok", username, email });
+  createUserData(email);
+  return res.json({ status: "ok", userCredentials: { username, email } });
 });
 
 app.post("/login", async function (req, res) {
@@ -62,19 +62,23 @@ app.post("/login", async function (req, res) {
   }
   if (await bcrypt.compare(plainPassword, user.password)) {
     const { username, email } = user;
-    return res.json({ status: "ok", username, email });
+    const userData = getUserData(email);
+    return res.json({
+      status: "ok",
+      userCredentials: { username, email },
+      userData,
+    });
   }
-  getUserData(email)
   return res.json({ status: "error", error: "Incorrect Password" });
 });
 
 async function createUserData(email) {
-  await UserData.create([{email}])
+  const userData = await UserData.create({ email, data: [] });
+  console.log(userData);
 }
 
 async function getUserData(email) {
-  const userData = await UserData.findOne({email}).lean()
-  console.log(userData)
+  return await UserData.findOne({ email }).lean().data;
 }
 
 app.listen(8000);

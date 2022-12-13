@@ -111,9 +111,13 @@ const SignUp = (props: Props) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.status === "ok") {
+          const { status } = data;
+          if (status === "ok") {
+            const {
+              userCredentials: { username, email },
+            } = data;
             setIsRegistered(true);
-            setUserInfo(() => ({ username: data.username, email: data.email }));
+            setUserInfo(() => ({ username, email }));
           } else {
             setStatus(data.error);
           }
@@ -129,9 +133,14 @@ const SignUp = (props: Props) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.status === "ok") {
+          const { status } = data;
+          if (status === "ok") {
+            const {
+              userCredentials: { username, email },
+              userData,
+            } = data;
             setIsRegistered(true);
-            setUserInfo(() => ({ username: data.username, email: data.email }));
+            setUserInfo(() => ({ username, email }));
           } else {
             setStatus(data.error);
           }
