@@ -74,7 +74,8 @@ interface Props {
   demoData: FormDataType[];
   setIsRegistered: any;
   isRegistered: boolean;
-  accountInfoRef: any
+  accountInfoRef: any;
+  current: HTMLDivElement | null;
 }
 
 const Header = (props: Props) => {
@@ -87,7 +88,8 @@ const Header = (props: Props) => {
     setIsChartAdded,
     setIsRegistered,
     isRegistered,
-    accountInfoRef
+    accountInfoRef,
+    current,
   } = props;
 
   const showForm = () => {
@@ -112,7 +114,12 @@ const Header = (props: Props) => {
     signUpFormRef.current!.style.display = "block";
   }
   function handleHeaderClick() {
-    accountInfoRef.current!.style.display = "none"
+    if (accountInfoRef.current) {
+      accountInfoRef.current!.style.display = "none";
+    }
+    if (current) {
+      current!.style.visibility = "hidden";
+    }
   }
 
   return (

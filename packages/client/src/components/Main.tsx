@@ -23,7 +23,7 @@ interface Props {
   savedData: FormDataType[];
   isChartAdded: boolean;
   setIsChartAdded: any;
-  handleHover: any;
+  handleNodeClick: any;
   ref2: any;
   dimensions: {
     w: number;
@@ -38,7 +38,7 @@ const Main = (props: Props) => {
     savedData,
     isChartAdded,
     setIsChartAdded,
-    handleHover,
+    handleNodeClick,
     ref2,
     dimensions,
     current,
@@ -49,7 +49,7 @@ const Main = (props: Props) => {
     if (isChartAdded) return;
     setIsChartAdded(true);
     const { w, h } = dimensions;
-    const newProps = { w, h, savedData, handleHover, current };
+    const newProps = { w, h, savedData, handleNodeClick, current };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
     // const svg = ForceGraph(newProps) as unknown as HTMLDivElement;
     ref2.current!.innerHTML = "";
@@ -57,8 +57,13 @@ const Main = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedData, dimensions]);
 
-  function handleClick() {
-    accountInfoRef.current!.style.display = "none";
+  function handleClick(e: any) {
+    if (accountInfoRef.current) {
+      accountInfoRef.current.style.display = "none";
+    }
+    if (current) {
+      current!.style.visibility = "hidden";
+    }
   }
 
   return <StyledWrapper onClick={handleClick} ref={ref2}></StyledWrapper>;

@@ -194,7 +194,6 @@ function App() {
     w: 0,
     h: 0,
   });
-  // const [editingData, setEditingData] = useState<FormDataType | null>(null)
   const [formData, setFormData] = useState({
     categories: {},
     emotions: {},
@@ -229,17 +228,9 @@ function App() {
     setCurrent(() => ref.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
-
-  //handling both mouseover and mouseout of nodes and 'HoverModal' component
-  function handleHover(e: any, str: string | undefined) {
-    if (!e) {
-      current!.style.visibility = "hidden";
-      return;
-    }
-    if (str) {
-      current!.style.visibility = str === "visible" ? "visible" : "hidden";
-      return;
-    }
+  
+  function handleNodeClick(e: any) {
+    e.stopPropagation();
     const r = e.srcElement.r.baseVal.value;
     current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML =
       JSON.parse(e.srcElement.id).description;
@@ -286,9 +277,9 @@ function App() {
 
   function handleDelete(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
-    const newSavedData = (savedData as any).filter(
-      (d: FormDataType) => d === data
-    );
+    const newSavedData = (savedData as any).filter((d: FormDataType) => {
+      return JSON.stringify(d) !== data;
+    });
     setSavedData([...newSavedData]);
     setIsChartAdded(false);
     current!.style.visibility = "hidden";
@@ -306,12 +297,9 @@ function App() {
         isRegistered={isRegistered}
         setIsRegistered={setIsRegistered}
         accountInfoRef={accountInfoRef}
+        current={current}
       />
-      <Container
-        ref={ref}
-        onMouseOver={(e) => handleHover(e, "visible")}
-        onMouseOut={(e) => handleHover(e, "hidden")}
-      >
+      <Container ref={ref}>
         <HoverModal handleEdit={handleEdit} handleDelete={handleDelete} />
       </Container>
       <Form
@@ -330,7 +318,7 @@ function App() {
         savedData={savedData}
         isChartAdded={isChartAdded}
         setIsChartAdded={setIsChartAdded}
-        handleHover={handleHover}
+        handleNodeClick={handleNodeClick}
         dimensions={dimensions}
         current={current}
         ref2={ref2}

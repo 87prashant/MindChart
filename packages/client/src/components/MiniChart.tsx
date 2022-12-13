@@ -10,12 +10,12 @@ interface Props {
   w: number;
   h: number;
   savedData: FormDataType[];
-  handleHover: any;
   current: HTMLDivElement | null;
+  handleNodeClick: any;
 }
 
 const MiniChart = (props: Props) => {
-  const { w, h, savedData, handleHover, current } = props;
+  const { w, h, savedData, handleNodeClick, current } = props;
   const findGroupArray = (data: Emotion) => {
     let arr = [];
     for (let key in JSON.parse(JSON.stringify(data))) {
@@ -39,13 +39,13 @@ const MiniChart = (props: Props) => {
       emotions: JSON.parse(JSON.stringify(data.emotions)),
       priority: data.priority,
       description: data.description,
-    }
-  })
+    };
+  });
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
   const R = d3.map(nodesArray, (d) => d.priority); //radius array
   const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array
-  const mappedHackDataArray = d3.map(hackDataArray, (d) => JSON.stringify(d))
+  const mappedHackDataArray = d3.map(hackDataArray, (d) => JSON.stringify(d));
 
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
@@ -112,8 +112,7 @@ const MiniChart = (props: Props) => {
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)
-    .on("mouseover", (e) => handleHover(e))
-    .on("mouseout", () => handleHover());
+    .on("click", (e) => handleNodeClick(e));
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"
@@ -134,16 +133,16 @@ const MiniChart = (props: Props) => {
         d.x! < -w / 2 + R[i]
           ? -w / 2 + R[i]
           : d.x! > w / 2 - R[i]
-            ? w / 2 - R[i]
-            : d.x!
+          ? w / 2 - R[i]
+          : d.x!
       )
       .attr("cy", (d, i) =>
         // y axis boundary conditions
         d.y! < -h / 2 + R[i]
           ? -h / 2 + R[i]
           : d.y! > h / 2 - R[i]
-            ? h / 2 - R[i]
-            : d.y!
+          ? h / 2 - R[i]
+          : d.y!
       );
   }
 

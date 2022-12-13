@@ -4,13 +4,12 @@ import styled from "@emotion/styled";
 const Header = styled("div")({
   display: "flex",
   flexDirection: "row-reverse",
-  '& button + button': {
-    marginRight: 5
-  }
+  "& button + button": {
+    marginRight: 5,
+  },
 });
 
 const Button = styled("button")<{ name: string }>(({ name }) => ({
-  // marginRight: 5,
   border: "2px solid black",
   cursor: "pointer",
   backgroundColor: name === "delete" ? "red" : undefined,
@@ -49,20 +48,18 @@ const Content = styled("div")({
   },
 });
 
-const HackDataDiv = styled('div')({
+const HackDataDiv = styled("div")({
   position: "absolute",
-})
+});
 
 interface Props {
-  handleEdit: any
-  handleDelete: any
+  handleEdit: any;
+  handleDelete: any;
 }
 
 const HoverModal = (props: Props) => {
-  const {
-    handleEdit,
-    handleDelete
-  } = props;
+  const { handleEdit, handleDelete } = props;
+
   const ref = useRef<HTMLDivElement | null>(null);
   const hackDataRef = useRef<HTMLDivElement | null>(null);
 
