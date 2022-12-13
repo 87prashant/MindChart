@@ -5,6 +5,7 @@ const path = require("path");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const User = require("./model/user");
+const UserData = require("./model/userdata")
 require("dotenv").config({ path: "../../.env" })
 
 const app = express();
@@ -46,6 +47,7 @@ app.post("/register", async function (req, res) {
       });
     throw error;
   }
+  createUserData(email)
   return res.json({ status: "ok", username, email });
 });
 
@@ -62,7 +64,17 @@ app.post("/login", async function (req, res) {
     const { username, email } = user;
     return res.json({ status: "ok", username, email });
   }
+  getUserData(email)
   return res.json({ status: "error", error: "Incorrect Password" });
 });
+
+async function createUserData(email) {
+  await UserData.create([{email}])
+}
+
+async function getUserData(email) {
+  const userData = await UserData.findOne({email}).lean()
+  console.log(userData)
+}
 
 app.listen(8000);
