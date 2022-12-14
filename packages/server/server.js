@@ -18,6 +18,15 @@ if (!process.env.MONGODB_URI) throw Error("MONGODB_URI is empty!!!");
 
 mongoose.connect(process.env.MONGODB_URI);
 
+async function createUserData(email) {
+  const userData = await UserData.create({ email, data: [] });
+  console.log(userData);
+}
+
+async function getUserData(email) {
+  return await UserData.findOne({ email }).lean().data;
+}
+
 app.post("/register", async function (req, res) {
   const { username, email, password: plainPassword } = req.body;
   if (!plainPassword || !email || !username) {
@@ -72,13 +81,9 @@ app.post("/login", async function (req, res) {
   return res.json({ status: "error", error: "Incorrect Password" });
 });
 
-async function createUserData(email) {
-  const userData = await UserData.create({ email, data: [] });
-  console.log(userData);
-}
-
-async function getUserData(email) {
-  return await UserData.findOne({ email }).lean().data;
-}
+app.post("/addData", async function (req, res) {
+  const { email, formData } = req.body;
+  UserData.updateOne({ email }, { $addToSet: { data: formData } });
+});
 
 app.listen(8000);

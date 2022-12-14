@@ -228,7 +228,7 @@ function App() {
     setCurrent(() => ref.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
-  
+
   function handleNodeClick(e: any) {
     e.stopPropagation();
     const r = e.srcElement.r.baseVal.value;
