@@ -45,15 +45,17 @@ const DescriptionInput = styled("textarea")({
   marginBottom: 10,
 });
 
-export const SubmitButton = styled(Inputs)<{ isSame: boolean }>(({ isSame }) => ({
-  position: "absolute",
-  bottom: 50,
-  left: 20,
-  cursor: isSame ? "not-allowed" : "pointer",
-  fontWeight: "bold",
-  color: isSame ? "rgba(0, 0, 0, 0.3)" : "black",
-  border: isSame ? "2px solid rgba(0, 0, 0, 0.3)" : "2px solid black",
-}));
+export const SubmitButton = styled(Inputs)<{ isSame: boolean }>(
+  ({ isSame }) => ({
+    position: "absolute",
+    bottom: 50,
+    left: 20,
+    cursor: isSame ? "not-allowed" : "pointer",
+    fontWeight: "bold",
+    color: isSame ? "rgba(0, 0, 0, 0.3)" : "black",
+    border: isSame ? "2px solid rgba(0, 0, 0, 0.3)" : "2px solid black",
+  })
+);
 
 export const CancelButton = styled(Inputs)({
   position: "absolute",
@@ -61,17 +63,19 @@ export const CancelButton = styled(Inputs)({
   right: 20,
   cursor: "pointer",
   fontWeight: "bold",
-  backgroundColor: 'red'
+  backgroundColor: "red",
 });
 
-export const StyledDiv = styled("div")<{ showForm: boolean}>(({ showForm }) => ({
-  position: "fixed",
-  display: showForm ? "block" : "none",
-  top: 0,
-  height: "100%",
-  width: "100%",
-  backgroundColor: "rgba(0, 0, 0, 0.20)",
-}));
+export const StyledDiv = styled("div")<{ showForm: boolean }>(
+  ({ showForm }) => ({
+    position: "fixed",
+    display: showForm ? "block" : "none",
+    top: 0,
+    height: "100%",
+    width: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.20)",
+  })
+);
 
 const StyledErrors = styled("div")<{ isEarlySubmit: boolean }>(
   ({ isEarlySubmit }) => ({
@@ -116,6 +120,8 @@ interface Props {
   isDemoActive: boolean;
   hackedNodeData: FormDataType;
   setHackedNodeData: any;
+  userInfo: { username: string; email: string };
+  isRegistered: boolean;
 }
 
 export interface Emotion {
@@ -163,6 +169,8 @@ const Form: any = (props: Props) => {
     isDemoActive,
     hackedNodeData,
     setHackedNodeData,
+    userInfo: { email },
+    isRegistered,
   } = props;
   const [formErrors, setFormErrors] = useState({
     categoriesError: "",
@@ -172,7 +180,7 @@ const Form: any = (props: Props) => {
   const [isEarlySubmit, setIsEarlySubmit] = useState(false);
   useEffect(() => {
     validateFormData(formData, setFormErrors);
-    return () => { };
+    return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData]);
 
@@ -242,6 +250,21 @@ const Form: any = (props: Props) => {
     setSavedData(() => {
       return [...newSavedData, formData];
     });
+    if (isRegistered) {
+      fetch("./addData", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          formData,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const { requiredUserData } = data;
+          console.log(requiredUserData);
+        });
+    }
     setHackedNodeData(null);
     refreshFormData();
     refreshFormErrors();

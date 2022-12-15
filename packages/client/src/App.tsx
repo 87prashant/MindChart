@@ -189,6 +189,7 @@ function App() {
   const [savedData, setSavedData] = useState(
     isDemoActive ? demoData : storedData
   );
+  const [userInfo, setUserInfo] = useState({ username: "", email: "" });
   const [isChartAdded, setIsChartAdded] = useState(false);
   const [dimensions, setDimensions] = useState({
     w: 0,
@@ -298,6 +299,8 @@ function App() {
         setIsRegistered={setIsRegistered}
         accountInfoRef={accountInfoRef}
         current={current}
+        userInfo={userInfo}
+        setUserInfo={setUserInfo}
       />
       <Container ref={ref}>
         <HoverModal handleEdit={handleEdit} handleDelete={handleDelete} />
@@ -313,6 +316,8 @@ function App() {
         isDemoActive={isDemoActive}
         hackedNodeData={hackedNodeData}
         setHackedNodeData={setHackedNodeData}
+        userInfo={userInfo}
+        isRegistered={isRegistered}
       />
       <Main
         savedData={savedData}

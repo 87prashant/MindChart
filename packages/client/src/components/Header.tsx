@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import styled from "@emotion/styled";
 import { FormDataType } from "./Form";
 import SignUp from "./SignUp";
@@ -76,6 +76,8 @@ interface Props {
   isRegistered: boolean;
   accountInfoRef: any;
   current: HTMLDivElement | null;
+  userInfo: { username: string; email: string };
+  setUserInfo: any;
 }
 
 const Header = (props: Props) => {
@@ -90,6 +92,8 @@ const Header = (props: Props) => {
     isRegistered,
     accountInfoRef,
     current,
+    userInfo,
+    setUserInfo,
   } = props;
 
   const showForm = () => {
@@ -97,7 +101,6 @@ const Header = (props: Props) => {
   };
 
   const signUpFormRef = useRef<HTMLDivElement | null>(null);
-  const [userInfo, setUserInfo] = useState({ username: "", email: "" });
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));

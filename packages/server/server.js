@@ -83,7 +83,9 @@ app.post("/login", async function (req, res) {
 
 app.post("/addData", async function (req, res) {
   const { email, formData } = req.body;
-  UserData.updateOne({ email }, { $addToSet: { data: formData } });
+  await UserData.updateOne({ email }, { $addToSet: { data: formData } });
+  const requiredUserData = (await UserData.findOne({ email }).lean()).data;
+  return res.json({ status: "ok", requiredUserData });
 });
 
 app.listen(8000);
