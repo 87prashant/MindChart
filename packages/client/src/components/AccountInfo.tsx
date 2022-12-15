@@ -32,20 +32,30 @@ interface Props {
   };
   setIsRegistered: any;
   accountInfoRef: any;
+  setSavedData: any;
+  setIsChartAdded: any;
 }
 
 const AccountInfo = (props: Props) => {
-  const { userInfo, setIsRegistered, accountInfoRef } = props;
+  const {
+    userInfo,
+    setIsRegistered,
+    accountInfoRef,
+    setSavedData,
+    setIsChartAdded,
+  } = props;
+
+  function handleLogout() {
+    setIsRegistered(false);
+    setSavedData([]);
+    setIsChartAdded(false);
+  }
 
   return (
     <Container ref={accountInfoRef} onClick={(e) => e.stopPropagation()}>
       <Info>{userInfo.email}</Info>
       <hr />
-      <Button
-        value="Log out"
-        type="button"
-        onClick={() => setIsRegistered(false)}
-      />
+      <Button value="Log out" type="button" onClick={handleLogout} />
     </Container>
   );
 };

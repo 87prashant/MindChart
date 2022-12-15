@@ -158,6 +158,8 @@ const Header = (props: Props) => {
             accountInfoRef={accountInfoRef}
             setIsRegistered={setIsRegistered}
             userInfo={userInfo}
+            setSavedData={setSavedData}
+            setIsChartAdded={setIsChartAdded}
           />
         </div>
       )}
