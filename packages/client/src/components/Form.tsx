@@ -252,7 +252,7 @@ const Form: any = (props: Props) => {
       return [...newSavedData, formData];
     });
     if (isRegistered) {
-      fetch("./addData", {
+      fetch(process.env.REACT_APP_ADD_DATA_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
