@@ -111,11 +111,13 @@ const Header = (props: Props) => {
     setSavedData((prev: FormDataType[]) =>
       !isDemoActive ? demoData : storedData
     );
-    setIsChartAdded((prev: boolean) => false);
+    setIsChartAdded(false);
   }
+
   function openLoginPage() {
     signUpFormRef.current!.style.display = "block";
   }
+
   function handleHeaderClick() {
     if (accountInfoRef.current) {
       accountInfoRef.current!.style.display = "none";
@@ -145,6 +147,8 @@ const Header = (props: Props) => {
           signUpFormRef={signUpFormRef}
           setIsRegistered={setIsRegistered}
           setUserInfo={setUserInfo}
+          setSavedData={setSavedData}
+          setIsChartAdded={setIsChartAdded}
         />
       )}
       {isRegistered && (

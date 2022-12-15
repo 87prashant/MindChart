@@ -82,10 +82,18 @@ interface Props {
   signUpFormRef: any;
   setIsRegistered: any;
   setUserInfo: any;
+  setSavedData: any;
+  setIsChartAdded: any;
 }
 
 const SignUp = (props: Props) => {
-  const { signUpFormRef, setIsRegistered, setUserInfo } = props;
+  const {
+    signUpFormRef,
+    setIsRegistered,
+    setUserInfo,
+    setSavedData,
+    setIsChartAdded,
+  } = props;
 
   const [status, setStatus] = useState(null);
   const [isRegister, setIsRegister] = useState(true);
@@ -139,6 +147,8 @@ const SignUp = (props: Props) => {
               userCredentials: { username, email },
               userData,
             } = data;
+            setSavedData(() => userData);
+            setIsChartAdded(false);
             setIsRegistered(true);
             setUserInfo(() => ({ username, email }));
           } else {

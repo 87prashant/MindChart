@@ -149,6 +149,7 @@ export interface FormDataType {
   emotions: Emotion;
   priority: number;
   description: string;
+  _id?: string;
 }
 
 export interface FormErrorType {
@@ -261,8 +262,8 @@ const Form: any = (props: Props) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          const { requiredUserData } = data;
-          console.log(requiredUserData);
+          const { status } = data;
+          console.log(status);
         });
     }
     setHackedNodeData(null);
