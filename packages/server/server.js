@@ -24,7 +24,7 @@ async function createUserData(email) {
 }
 
 async function getUserData(email) {
-  return await UserData.findOne({ email }).lean().data;
+  return (await UserData.findOne({ email }).lean()).data;
 }
 
 app.post("/register", async function (req, res) {
@@ -71,7 +71,7 @@ app.post("/login", async function (req, res) {
   }
   if (await bcrypt.compare(plainPassword, user.password)) {
     const { username, email } = user;
-    const userData = getUserData(email);
+    const userData = await getUserData(email);
     return res.json({
       status: "ok",
       userCredentials: { username, email },
