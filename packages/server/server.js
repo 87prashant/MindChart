@@ -87,4 +87,26 @@ app.post("/addData", async function (req, res) {
   return res.json({ status: "ok" });
 });
 
+app.post("/deleteData", async function (req, res) {
+  const { email, toBeDeleted } = req.body;
+  try {
+    await UserData.updateOne(
+      { email },
+      {
+        $pull: {
+          data: {
+            categories: toBeDeleted.categories,
+            emotions: toBeDeleted.emotions,
+            priority: toBeDeleted.priority,
+            description: toBeDeleted.description,
+          },
+        },
+      }
+    );
+  } catch (error) {
+    throw error;
+  }
+  return res.json({ status: "ok" });
+});
+
 app.listen(8000);

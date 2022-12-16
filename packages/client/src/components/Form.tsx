@@ -250,7 +250,7 @@ const Form: any = (props: Props) => {
       };
     });
   };
-  
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData, setFormErrors)) {
@@ -274,10 +274,7 @@ const Form: any = (props: Props) => {
         }),
       })
         .then((response) => response.json())
-        .then((data) => {
-          const { status } = data;
-          console.log(status);
-        });
+        .then((data) => {});
     }
     setHackedNodeData(null);
     refreshFormData();

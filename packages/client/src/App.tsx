@@ -276,12 +276,33 @@ function App() {
     setShowForm(true);
   }
 
+  //TODO two source of truths: 1. database 2. savedData might be inconsistent, User database only
   function handleDelete(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
+    const { categories, emotions, description, priority } = JSON.parse(data);
     const newSavedData = (savedData as any).filter((d: FormDataType) => {
-      return JSON.stringify(d) !== data;
+      return (
+        d.categories !== categories &&
+        d.emotions !== emotions &&
+        d.description !== description &&
+        d.priority !== priority
+      );
     });
     setSavedData([...newSavedData]);
+    if (isRegistered) {
+      fetch("/deleteData", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: userInfo.email,
+          toBeDeleted: JSON.parse(data),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.status);
+        });
+    }
     setIsChartAdded(false);
     current!.style.visibility = "hidden";
   }

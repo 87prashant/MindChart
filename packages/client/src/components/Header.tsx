@@ -82,7 +82,7 @@ const PlusIcon = styled("span")({
 });
 
 const AddText = styled("span")({
-  margin: "0 10px 0 0"
+  margin: "0 10px 0 0",
 });
 
 interface Props {
