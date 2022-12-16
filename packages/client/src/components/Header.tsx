@@ -32,8 +32,11 @@ const HelpButton = styled("a")({
 
 const AddButton = styled("button")({
   margin: "0 20px",
-  padding: "10px",
+  padding: "1px 0 0 0",
   textDecoration: "none",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   cursor: "pointer",
   border: "solid black",
   borderRadius: "10px",
@@ -45,7 +48,7 @@ const DeleteAllData = styled(AddButton)({
   border: "none",
   backgroundColor: "inherit",
   fontSize: 11,
-  color: "red"
+  color: "red",
 });
 
 const DemoButton = styled("button")<{ isDemoActive: boolean }>(
@@ -68,8 +71,18 @@ const SignUpButton = styled("button")({
   cursor: "pointer",
   border: "solid black",
   borderRadius: "10px",
-  backgroundColor: "white",
+  backgroundColor: "teal",
   fontWeight: "bolder",
+});
+
+const PlusIcon = styled("span")({
+  margin: "4px 10px 4px 10px",
+  fontSize: 25,
+  color: "teal",
+});
+
+const AddText = styled("span")({
+  margin: "0 10px 0 0"
 });
 
 interface Props {
@@ -136,7 +149,7 @@ const Header = (props: Props) => {
 
   function handleDeleteAllData() {
     setSavedData([]);
-    setIsChartAdded(false)
+    setIsChartAdded(false);
   }
 
   return (
@@ -157,7 +170,10 @@ const Header = (props: Props) => {
           Demo
         </DemoButton>
       )}
-      <AddButton onClick={() => showForm()}>Add</AddButton>
+      <AddButton onClick={() => showForm()}>
+        <PlusIcon>+</PlusIcon>
+        <AddText>Add</AddText>
+      </AddButton>
       {!isRegistered && (
         <SignUpButton onClick={openLoginPage}>Register</SignUpButton>
       )}
