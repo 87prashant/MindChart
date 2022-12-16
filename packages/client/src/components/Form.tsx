@@ -45,15 +45,17 @@ const DescriptionInput = styled("textarea")({
   marginBottom: 10,
 });
 
-export const SubmitButton = styled(Inputs)<{ isSame: boolean }>(
-  ({ isSame }) => ({
+export const SubmitButton = styled(Inputs)<{ isFormDataDuplicate: boolean }>(
+  ({ isFormDataDuplicate }) => ({
     position: "absolute",
     bottom: 50,
     left: 20,
-    cursor: isSame ? "not-allowed" : "pointer",
+    cursor: isFormDataDuplicate ? "not-allowed" : "pointer",
     fontWeight: "bold",
-    color: isSame ? "rgba(0, 0, 0, 0.3)" : "black",
-    border: isSame ? "2px solid rgba(0, 0, 0, 0.3)" : "2px solid black",
+    color: isFormDataDuplicate ? "rgba(0, 0, 0, 0.3)" : "black",
+    border: isFormDataDuplicate
+      ? "2px solid rgba(0, 0, 0, 0.3)"
+      : "2px solid black",
   })
 );
 
@@ -173,18 +175,13 @@ const Form: any = (props: Props) => {
     userInfo: { email },
     isRegistered,
   } = props;
+
   const [formErrors, setFormErrors] = useState({
     categoriesError: "",
     emotionsError: "",
     descriptionError: "",
   });
   const [isEarlySubmit, setIsEarlySubmit] = useState(false);
-  useEffect(() => {
-    validateFormData(formData, setFormErrors);
-    return () => {};
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
-
   const refreshFormData = () => {
     setFormData(() => {
       return {
@@ -204,6 +201,26 @@ const Form: any = (props: Props) => {
       };
     });
   };
+  const [isFormDataDuplicate, setIsFormDataDuplicate] = useState(false);
+
+  useEffect(() => {
+    validateFormData(formData, setFormErrors);
+    if (hackedNodeData) {
+      setIsFormDataDuplicate(
+        JSON.stringify(hackedNodeData.categories) ===
+          JSON.stringify(formData.categories) &&
+          JSON.stringify(hackedNodeData.description) ===
+            JSON.stringify(formData.description) &&
+          JSON.stringify(hackedNodeData.emotions) ===
+            JSON.stringify(formData.emotions) &&
+          JSON.stringify(hackedNodeData.priority) ===
+            JSON.stringify(formData.priority)
+      );
+    }
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
+
   const handleCancel = () => {
     setShowForm(false);
     refreshFormData();
@@ -234,17 +251,22 @@ const Form: any = (props: Props) => {
     });
   };
 
-  //TODO: Maybe can be modified with the 'hackedNodeData'
-  const isSame = savedData.some(
-    (d) => JSON.stringify(d) === JSON.stringify(formData)
-  );
+  // //TODO: Maybe can be modified with the 'hackedNodeData'
+  // const isSame = savedData.some((d) => {
+  //   return (
+  //     JSON.stringify(d.categories) === JSON.stringify(formData.categories) &&
+  //     JSON.stringify(d.description) === JSON.stringify(formData.description) &&
+  //     JSON.stringify(d.emotions) === JSON.stringify(formData.emotions) &&
+  //     JSON.stringify(d.priority) === JSON.stringify(formData.priority)
+  //   );
+  // });
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData, setFormErrors)) {
       setIsEarlySubmit(true);
       return;
     }
-    if (isSame) return;
+    if (isFormDataDuplicate) return;
     const newSavedData = savedData.filter(
       (d) => JSON.stringify(d) !== JSON.stringify(hackedNodeData)
     );
@@ -327,7 +349,11 @@ const Form: any = (props: Props) => {
               value={formData.priority}
             />
           </StyledContainer>
-          <SubmitButton isSame={isSame} type="submit" value="Submit" />
+          <SubmitButton
+            isFormDataDuplicate={isFormDataDuplicate}
+            type="submit"
+            value="Submit"
+          />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
         {tips}

@@ -213,7 +213,7 @@ const SignUp = (props: Props) => {
         </FormContainer>
         <StyledSubmitButton
           onClick={(e) => handleFormSubmit(e)}
-          isSame={false}
+          isFormDataDuplicate={false}
           type="submit"
           value="Submit"
         />
