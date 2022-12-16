@@ -250,16 +250,7 @@ const Form: any = (props: Props) => {
       };
     });
   };
-
-  // //TODO: Maybe can be modified with the 'hackedNodeData'
-  // const isSame = savedData.some((d) => {
-  //   return (
-  //     JSON.stringify(d.categories) === JSON.stringify(formData.categories) &&
-  //     JSON.stringify(d.description) === JSON.stringify(formData.description) &&
-  //     JSON.stringify(d.emotions) === JSON.stringify(formData.emotions) &&
-  //     JSON.stringify(d.priority) === JSON.stringify(formData.priority)
-  //   );
-  // });
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateFormData(formData, setFormErrors)) {

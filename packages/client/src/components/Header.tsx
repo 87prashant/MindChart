@@ -41,6 +41,13 @@ const AddButton = styled("button")({
   fontWeight: "bolder",
 });
 
+const DeleteAllData = styled(AddButton)({
+  border: "none",
+  backgroundColor: "inherit",
+  fontSize: 11,
+  color: "red"
+});
+
 const DemoButton = styled("button")<{ isDemoActive: boolean }>(
   ({ isDemoActive }) => ({
     border: "none",
@@ -127,6 +134,11 @@ const Header = (props: Props) => {
     }
   }
 
+  function handleDeleteAllData() {
+    setSavedData([]);
+    setIsChartAdded(false)
+  }
+
   return (
     <StyledHeader onClick={handleHeaderClick}>
       <HelpButton
@@ -135,9 +147,16 @@ const Header = (props: Props) => {
       >
         <img src="github_logo.png" alt="" width="25" height="25" />
       </HelpButton>
-      <DemoButton isDemoActive={isDemoActive} onClick={handleClick}>
-        Demo
-      </DemoButton>
+      {!isRegistered && (
+        <DeleteAllData onClick={handleDeleteAllData}>
+          Delete All Data
+        </DeleteAllData>
+      )}
+      {!isRegistered && (
+        <DemoButton isDemoActive={isDemoActive} onClick={handleClick}>
+          Demo
+        </DemoButton>
+      )}
       <AddButton onClick={() => showForm()}>Add</AddButton>
       {!isRegistered && (
         <SignUpButton onClick={openLoginPage}>Register</SignUpButton>
