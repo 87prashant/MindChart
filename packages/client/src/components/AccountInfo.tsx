@@ -21,8 +21,11 @@ const Button = styled("input")({
   border: "none",
   backgroundColor: "inherit",
   cursor: "pointer",
-  color: "red",
   fontWeight: "bold",
+  transition: "all ease 100ms",
+  ":hover": {
+    color: "red",
+  },
 });
 
 interface Props {

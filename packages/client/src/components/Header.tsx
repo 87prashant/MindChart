@@ -24,10 +24,14 @@ const HelpButton = styled("a")({
   marginLeft: "20px",
   textDecoration: "none",
   backgroundColor: "white",
+  transition: "all ease 200ms",
   color: "teal",
   ":active": {
     color: "teal",
   },
+  ":hover": {
+    backgroundColor: "teal"
+  }
 });
 
 const AddButton = styled("button")({
@@ -38,17 +42,26 @@ const AddButton = styled("button")({
   justifyContent: "center",
   alignItems: "center",
   cursor: "pointer",
-  border: "solid black",
+  border: "none",
   borderRadius: "10px",
-  backgroundColor: "white",
+  backgroundColor: "	rgba(255,253,228, 1)",
+  transition: "all ease 300ms",
   fontWeight: "bolder",
+  ":hover": {
+    backgroundColor: "white",
+    border: "none",
+  },
 });
 
 const DeleteAllData = styled(AddButton)({
   border: "none",
   backgroundColor: "inherit",
   fontSize: 11,
-  color: "red",
+  textDecoration: "underline",
+  transition: "all ease 100ms",
+  ":hover": {
+    color: "red",
+  },
 });
 
 const DemoButton = styled("button")<{ isDemoActive: boolean }>(
