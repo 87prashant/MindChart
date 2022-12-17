@@ -127,7 +127,7 @@ const Header = (props: Props) => {
     const storedData: FormDataType[] = window.localStorage.getItem("savedData")
       ? JSON.parse(window.localStorage.getItem("savedData")!)
       : [];
-    //"!isDemoActive" because I am updating isDemoActive at the same time above
+    //"!isDemoActive" because I am updating isDemoActive at the same time above, maybe there is other right way to do it.
     setSavedData((prev: FormDataType[]) =>
       !isDemoActive ? demoData : storedData
     );

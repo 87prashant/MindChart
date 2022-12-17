@@ -258,9 +258,14 @@ const Form: any = (props: Props) => {
       return;
     }
     if (isFormDataDuplicate) return;
-    const newSavedData = savedData.filter(
-      (d) => JSON.stringify(d) !== JSON.stringify(hackedNodeData)
-    );
+    const newSavedData = savedData.filter((d) => {
+      return (
+        d.categories !== hackedNodeData.categories &&
+        d.description !== hackedNodeData.description &&
+        d.emotions !== hackedNodeData.emotions &&
+        d.priority !== hackedNodeData.priority
+      );
+    });
     setSavedData(() => {
       return [...newSavedData, formData];
     });
