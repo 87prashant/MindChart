@@ -67,8 +67,8 @@ export const CancelButton = styled(Inputs)({
   fontWeight: "bold",
   transition: "all ease 300ms",
   ":hover": {
-    backgroundColor: "red"
-  }
+    backgroundColor: "red",
+  },
 });
 
 export const StyledDiv = styled("div")<{ showForm: boolean }>(
@@ -261,17 +261,24 @@ const Form: any = (props: Props) => {
       return;
     }
     if (isFormDataDuplicate) return;
-    const newSavedData = savedData.filter((d) => {
-      return (
-        d.categories !== hackedNodeData.categories &&
-        d.description !== hackedNodeData.description &&
-        d.emotions !== hackedNodeData.emotions &&
-        d.priority !== hackedNodeData.priority
-      );
-    });
-    setSavedData(() => {
-      return [...newSavedData, formData];
-    });
+
+    if (hackedNodeData) {
+      const newSavedData = savedData.filter((d) => {
+        return (
+          d.categories !== hackedNodeData.categories &&
+          d.description !== hackedNodeData.description &&
+          d.emotions !== hackedNodeData.emotions &&
+          d.priority !== hackedNodeData.priority
+        );
+      });
+      setSavedData(() => {
+        return [...newSavedData, formData];
+      });
+    } else {
+      setSavedData((prev: FormDataType[]) => {
+        return [...prev, formData];
+      });
+    }
     if (isRegistered) {
       fetch(process.env.REACT_APP_ADD_DATA_API!, {
         method: "post",
