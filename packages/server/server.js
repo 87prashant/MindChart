@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 const User = require("./model/user");
 const UserData = require("./model/userdata");
 require("dotenv").config({ path: "../../.env" });
+const logger = require("./logger")
 
 const app = express();
 
@@ -20,7 +21,7 @@ mongoose.connect(process.env.MONGODB_URI);
 
 async function createUserData(email) {
   const userData = await UserData.create({ email, data: [] });
-  console.log(userData);
+  logger(`New user registered: \n${userData}`, "INFO");
 }
 
 async function getUserData(email) {
@@ -47,7 +48,7 @@ app.post("/register", async function (req, res) {
   const password = await bcrypt.hash(plainPassword, 10);
   try {
     const response = await User.create({ username, email, password });
-    console.log(response);
+    logger(`User logged in: \n${response}`, "INFO");
   } catch (error) {
     if (error.code === 11000)
       return res.json({
