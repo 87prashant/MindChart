@@ -1,5 +1,5 @@
 
-#### `Trying to build something that could be used to visualize our thoughts more effectively.`
+#### `Trying to build something that could be used to visualize our thoughts more effectively while learning.`
 ![Screenshot 2022-12-12 220503](https://user-images.githubusercontent.com/106697681/207102372-f4e16f2d-706f-448b-be37-d45bf3e9f531.png)
 
 ![Screenshot (18)](https://user-images.githubusercontent.com/106697681/207102393-f0061152-fffe-4624-9b72-cf864f9229aa.png)
@@ -20,12 +20,14 @@ Any contribution is appreciated.
 2. cd MindChart
 3. yarn
 4. Create .env files from .env.local files (inside the 'root' directory and 'packages/client' directory)
-5. Star the monogdb server at default port 27017
+5. Start the monogdb server at default port 27017
 6. cd packages/client
 7. yarn start (To start the frontend server)
-8. cd ../server
+8. (In the new terminal) cd packages/server
 9. yarn dev (To start the backend server)
 ```
+I am using VS code
+
 (Create an issue if these are not working for you)
 
 ### Tech Stack
