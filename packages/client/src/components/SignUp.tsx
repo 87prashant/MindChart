@@ -187,12 +187,14 @@ const SignUp = (props: Props) => {
               ref={registerEmailRef}
               type="email"
               placeholder="Email"
+              autoComplete="email"
             />
             <StyledInputName>Password</StyledInputName>
             <StyledInput
               ref={registerPassRef}
               type="password"
               placeholder="Password"
+              autoComplete="current-password"
             />
             <StyledStatus>{status}</StyledStatus>
             <Button onClick={handleUserChoice}>Login instead</Button>
@@ -200,12 +202,18 @@ const SignUp = (props: Props) => {
           <LoginForm>
             <StyledHeader>Log in</StyledHeader>
             <StyledInputName>Email</StyledInputName>
-            <StyledInput ref={loginEmailRef} type="email" placeholder="Email" />
+            <StyledInput
+              ref={loginEmailRef}
+              type="email"
+              placeholder="Email"
+              autoComplete="email"
+            />
             <StyledInputName>Password</StyledInputName>
             <StyledInput
               ref={loginPassRef}
               type="password"
               placeholder="Password"
+              autoComplete="current-password"
             />
             <StyledStatus>{status}</StyledStatus>
             <Button onClick={handleUserChoice}>Register</Button>
