@@ -7,7 +7,7 @@ const bcrypt = require("bcryptjs");
 const User = require("./model/user");
 const UserData = require("./model/userdata");
 require("dotenv").config({ path: "../../.env" });
-const logger = require("./logger")
+const logger = require("./logger");
 
 const app = express();
 
@@ -15,9 +15,17 @@ app.use(express.static(path.join(__dirname, "build")));
 app.use(bodyParser.json());
 app.use(cors());
 
-if (!process.env.MONGODB_URI) throw Error("MONGODB_URI is empty!!!");
+if (!process.env.MONGODB_URI) {
+  logger("MONGODB_URI is empty!!!", "ERROR");
+  return;
+}
 
-mongoose.connect(process.env.MONGODB_URI);
+try {
+  mongoose.connect(process.env.MONGODB_URI);
+} catch (error) {
+  logger(error, "ERROR");
+  return;
+}
 
 async function createUserData(email) {
   const userData = await UserData.create({ email, data: [] });
@@ -55,7 +63,8 @@ app.post("/register", async function (req, res) {
         status: "error",
         error: "Email is already registered",
       });
-    throw error;
+    logger(error, "ERROR");
+    return;
   }
   createUserData(email);
   return res.json({ status: "ok", userCredentials: { username, email } });
@@ -105,7 +114,8 @@ app.post("/deleteData", async function (req, res) {
       }
     );
   } catch (error) {
-    throw error;
+    logger(error, "ERROR");
+    return;
   }
   return res.json({ status: "ok" });
 });
