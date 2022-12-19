@@ -19,10 +19,15 @@ const Container = styled("div")({
   overflow: "hidden",
 });
 
-const demoData = [
+const demoData: FormDataType[] = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       neutral: 10,
@@ -34,6 +39,10 @@ const demoData = [
     categories: {
       creative: true,
       unknown: false,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
     },
     emotions: {
       neutral: 10,
@@ -45,6 +54,10 @@ const demoData = [
     categories: {
       creative: true,
       concrete: true,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       neutral: 10,
@@ -55,6 +68,11 @@ const demoData = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       neutral: 10,
@@ -65,6 +83,11 @@ const demoData = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       neutral: 10,
@@ -75,6 +98,11 @@ const demoData = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       joy: 10,
@@ -85,6 +113,11 @@ const demoData = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       anticipation: 10,
@@ -95,6 +128,11 @@ const demoData = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       fear: 10,
@@ -105,6 +143,11 @@ const demoData = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       fear: 10,
@@ -115,6 +158,11 @@ const demoData = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       sadness: 10,
@@ -125,6 +173,11 @@ const demoData = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       trust: 10,
@@ -134,7 +187,12 @@ const demoData = [
   },
   {
     categories: {
-      anticipation: true,
+      creative: false,
+      concrete: false,
+      abstract: false,
+      analytical: true,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       trust: 10,
@@ -151,6 +209,11 @@ const demoData = [
   {
     categories: {
       creative: true,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
     },
     emotions: {
       surprise: 10,
@@ -196,7 +259,14 @@ function App() {
     h: 0,
   });
   const [formData, setFormData] = useState({
-    categories: {},
+    categories: {
+      creative: false,
+      concrete: false,
+      abstract: false,
+      analytical: false,
+      critical: false,
+      unknown: false,
+    },
     emotions: {},
     priority: 20,
     description: "",

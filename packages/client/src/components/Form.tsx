@@ -141,12 +141,12 @@ export interface Emotion {
 }
 
 interface Thoughts {
-  creative?: boolean;
-  concrete?: boolean;
-  abstract?: boolean;
-  analytical?: boolean;
-  critical?: boolean;
-  unknown?: boolean;
+  creative: boolean;
+  concrete: boolean;
+  abstract: boolean;
+  analytical: boolean;
+  critical: boolean;
+  unknown: boolean;
 }
 
 export interface FormDataType {
@@ -188,7 +188,14 @@ const Form: any = (props: Props) => {
   const refreshFormData = () => {
     setFormData(() => {
       return {
-        categories: {},
+        categories: {
+          creative: false,
+          concrete: false,
+          abstract: false,
+          analytical: false,
+          critical: false,
+          unknown: false,
+        },
         emotions: {},
         priority: 20,
         description: "",
@@ -243,7 +250,7 @@ const Form: any = (props: Props) => {
           ...formData,
           categories: {
             ...formData.categories,
-            [id]: (e.target as HTMLInputElement).checked ? true : undefined,
+            [id]: (e.target as HTMLInputElement).checked ? true : false,
           },
         };
       }
