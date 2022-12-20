@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 const User = require("./model/user");
 const UserData = require("./model/userdata");
 const logger = require("./logger");
+const mailSender = require("./mailSender");
 
 const app = express();
 
@@ -51,11 +52,21 @@ app.post("/register", async function (req, res) {
     return res.json({
       status: "error",
       error: "Password should be at least 8 symbol long",
-    });
+    })
   }
   const password = await bcrypt.hash(plainPassword, 10);
   try {
     const response = await User.create({ username, email, password });
+    try {
+      mailSender({
+        to: email,
+        subject: "Registration Email",
+        body: username + ", you are registered!!",
+      });
+      logger("Mail sent", "INFO");
+    } catch (error) {
+      logger(error, "ERROR");
+    }
     logger(`User logged in: \n${response}`, "INFO");
   } catch (error) {
     if (error.code === 11000)
