@@ -30,6 +30,9 @@ I am using VS code
 
 (Create an issue if these are not working for you)
 
+##### Other
+You have to set the Email and Password to send emails in the root `env` file.
+
 ### Tech Stack
 #### Frontend
 1. React
