@@ -6,11 +6,11 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const User = require("./model/user");
 const UserData = require("./model/userdata");
-require("dotenv").config({ path: "../../.env" });
 const logger = require("./logger");
 
 const app = express();
 
+require("dotenv").config({ path: "../../.env" });
 app.use(express.static(path.join(__dirname, "build")));
 app.use(bodyParser.json());
 app.use(cors());

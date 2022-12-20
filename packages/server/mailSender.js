@@ -12,17 +12,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const email = {
-  from: "<From>",
-  to: "<To>",
-  subject: "Hello!",
-  text: "Hello, this is a test email from SMTP.",
-};
+const mailSender = () => {
+  const email = {
+    from: "<From>",
+    to: "teotiaprashant87@gmail.com",
+    subject: "Hello!",
+    text: "Hello, this is a test email from SMTP.",
+  };
+  transporter.sendMail(email, (error, info) => {
+    if (error) {
+      logger(error, "ERROR");
+    } else {
+      logger(info, "INFO");
+    }
+  });
+}
 
-transporter.sendMail(email, (error, info) => {
-  if (error) {
-   console.log(error, "ERROR");
-  } else {
-    console.log(info, "INFO");
-  }
-});
+mailSender();
