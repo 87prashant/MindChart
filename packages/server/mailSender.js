@@ -13,18 +13,18 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailSender = (data) => {
-  const { to, subject, body } = data;
+  const { to, subject, message } = data;
   const email = {
-    from: "87KumarPrashant@gmail.com ",
+    from: process.env.EMAIL_ADDRESS,
     to,
     subject,
-    body,
+    body: message
   };
   transporter.sendMail(email, (error, info) => {
     if (error) {
       logger(error, "ERROR");
     } else {
-      logger(info, "INFO");
+      logger(`Mail Sent... \n${JSON.stringify(info.envelope)}`, "INFO");
     }
   });
 };

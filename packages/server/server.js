@@ -52,22 +52,16 @@ app.post("/register", async function (req, res) {
     return res.json({
       status: "error",
       error: "Password should be at least 8 symbol long",
-    })
+    });
   }
   const password = await bcrypt.hash(plainPassword, 10);
   try {
     const response = await User.create({ username, email, password });
-    try {
-      mailSender({
-        to: email,
-        subject: "Registration Email",
-        body: username + ", you are registered!!",
-      });
-      logger("Mail sent", "INFO");
-    } catch (error) {
-      logger(error, "ERROR");
-    }
-    logger(`User logged in: \n${response}`, "INFO");
+    mailSender({
+      to: email,
+      subject: "Registration Email",
+      message: "you are registered!!",
+    });
   } catch (error) {
     if (error.code === 11000)
       return res.json({
@@ -93,6 +87,7 @@ app.post("/login", async function (req, res) {
   if (await bcrypt.compare(plainPassword, user.password)) {
     const { username, email } = user;
     const userData = await getUserData(email);
+    logger(`User logged in: \n${user}`, "INFO");
     return res.json({
       status: "ok",
       userCredentials: { username, email },
