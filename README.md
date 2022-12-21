@@ -26,7 +26,7 @@ Any contribution is appreciated.
 8. (In the new terminal) cd packages/server
 9. yarn dev (To start the backend server)
 ```
-I am using VS code
+I am using VS code, Powershell terminal, and yarn package manager.
 
 (Create an issue if these are not working for you)
 
