@@ -30,8 +30,8 @@ const HelpButton = styled("a")({
     color: "teal",
   },
   ":hover": {
-    backgroundColor: "teal"
-  }
+    backgroundColor: "teal",
+  },
 });
 
 const AddButton = styled("button")({

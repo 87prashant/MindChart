@@ -18,7 +18,7 @@ const mailSender = (data) => {
     from: process.env.EMAIL_ADDRESS,
     to,
     subject,
-    body: message
+    body: message,
   };
   transporter.sendMail(email, (error, info) => {
     if (error) {

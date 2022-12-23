@@ -1,4 +1,4 @@
-// For learning and Testing purpose 
+// For learning and Testing purpose
 
 import * as d3 from "d3";
 import miserable from "../miserable.json";
@@ -116,7 +116,7 @@ export default function ForceGraph(props: Props) {
   }));
   const newLinks = d3.map(links, (_, i) => ({
     source: LS[i],
-    target: LT[i]
+    target: LT[i],
   }));
 
   if (G && nodeGroups === undefined) nodeGroups = d3.sort(G);
@@ -215,5 +215,5 @@ export default function ForceGraph(props: Props) {
       .on("drag", dragged)
       .on("end", dragended);
   }
-  return svg.node()
+  return svg.node();
 }

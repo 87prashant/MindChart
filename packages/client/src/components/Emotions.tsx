@@ -54,7 +54,9 @@ const Emotions = (props: Props) => {
           type="checkbox"
           id={data}
           name="emotions"
-          checked={!!formData.emotions?.[data as keyof typeof formData.emotions]}
+          checked={
+            !!formData.emotions?.[data as keyof typeof formData.emotions]
+          }
           onChange={handleChange}
         />
         <label htmlFor={data}>

@@ -98,7 +98,7 @@ const IntensityForm = (props: Props) => {
       ...formData,
       emotions: {
         ...formData.emotions,
-        [id]: undefined
+        [id]: undefined,
       },
     }));
     setIntensityForm(null);
