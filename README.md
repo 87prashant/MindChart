@@ -9,7 +9,7 @@
 [You can read more about it and give your suggestions here](https://alike-stag-3a4.notion.site/Mind-Chart-97668ec9dbbe49cda72c19f0259a2870)
 
 
-This is a passion project. I am learning technology by implementing it. Anyone is invited to contribute with the mindset of learning by doing.
+This is a passion project. I am learning new technology by implementing it. Anyone is invited to contribute with the mindset of learning by doing.
 
 
 Any contribution is appreciated.
@@ -20,7 +20,7 @@ Any contribution is appreciated.
 2. cd MindChart
 3. yarn
 4. Create .env files from .env.local files (inside the 'root' directory and 'packages/client' directory)
-5. Start the monogdb server at default port 27017
+5. Start the mongodb server at default port 27017
 6. cd packages/client
 7. yarn start (To start the frontend server)
 8. (In the new terminal) cd packages/server
