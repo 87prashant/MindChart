@@ -18,7 +18,7 @@ const mailSender = async (data) => {
     from: process.env.EMAIL_ADDRESS,
     to,
     subject,
-    body: message,
+    html: message,
   };
   try {
     const result = await transporter.sendMail(email);
