@@ -8,6 +8,8 @@ const User = require("./model/user");
 const UserData = require("./model/userdata");
 const logger = require("./logger");
 const mailSender = require("./mailSender");
+const ReactDOMServer = require("react-dom/server");
+const RegistrationMail = require("./build/RegistrationMail");
 
 const app = express();
 
@@ -61,7 +63,7 @@ app.post("/register", async function (req, res) {
       await mailSender({
         to: email,
         subject: "Registration Mail",
-        message: `${username}, you are registered!!`,
+        message: RegistrationMail({username}),
       });
     } catch (error) {
       logger(error, "ERROR");
