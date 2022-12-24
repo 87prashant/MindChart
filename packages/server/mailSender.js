@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const mailSender = (data) => {
+const mailSender = async (data) => {
   const { to, subject, message } = data;
   const email = {
     from: process.env.EMAIL_ADDRESS,
@@ -20,13 +20,12 @@ const mailSender = (data) => {
     subject,
     body: message,
   };
-  transporter.sendMail(email, (error, info) => {
-    if (error) {
-      logger(error, "ERROR");
-    } else {
-      logger(`Mail Sent... \n${JSON.stringify(info.envelope)}`, "INFO");
-    }
-  });
+  try {
+    const result = await transporter.sendMail(email);
+    logger(`Mail Sent... \n${JSON.stringify(result.envelope)}`, "INFO");
+  } catch (error) {
+    logger(error, "ERROR");
+  }
 };
 
 module.exports = mailSender;
