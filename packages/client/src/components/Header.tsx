@@ -11,7 +11,7 @@ const StyledHeader = styled("div")({
   display: "flex",
   justifyContent: "flex-end",
   alignItems: "center",
-  background: "#F4EBD0",
+  backgroundColor: "#F4EBD0",
   userSelect: "none",
 });
 
@@ -60,6 +60,7 @@ const DeleteAllData = styled(AddButton)({
   textDecoration: "underline",
   transition: "all ease 100ms",
   ":hover": {
+    backgroundColor: "inherit",
     color: "red",
   },
 });

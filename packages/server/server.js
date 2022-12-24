@@ -56,7 +56,7 @@ app.post("/register", async function (req, res) {
   }
   const password = await bcrypt.hash(plainPassword, 10);
   try {
-    const response = await User.create({ username, email, password });
+    await User.create({ username, email, password });
     try {
       await mailSender({
         to: email,
@@ -64,9 +64,8 @@ app.post("/register", async function (req, res) {
         message: `${username}, you are registered!!`,
       });
     } catch (error) {
-      console.error(error);
+      logger(error, "ERROR");
     }
-    
   } catch (error) {
     if (error.code === 11000)
       return res.json({
