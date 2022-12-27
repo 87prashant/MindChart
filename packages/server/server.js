@@ -8,6 +8,7 @@ const User = require("./model/user");
 const UserData = require("./model/userdata");
 const logger = require("./logger");
 const mailSender = require("./mailSender");
+const React = require("react")
 const ReactDOMServer = require("react-dom/server");
 const RegistrationMail = require("./build/RegistrationMail");
 
@@ -57,28 +58,42 @@ app.post("/register", async function (req, res) {
     });
   }
   const password = await bcrypt.hash(plainPassword, 10);
-  try {
-    await User.create({ username, email, password });
+
+  const user = await User.findOne({ email }).lean();
+  if (user) {
+    return res.json({
+      status: "error",
+      error: "Email is already registered",
+    });
+  } else {
+    const message = ReactDOMServer.renderToString(
+      React.createElement(RegistrationMail, { username, email, password })
+    );
     try {
       await mailSender({
         to: email,
         subject: "Registration Mail",
-        message: RegistrationMail({username}),
+        message,
       });
     } catch (error) {
       logger(error, "ERROR");
+      return res.json({status: "error", error: "Server Error"})
     }
+  }
+  return res.json({ status: "ok", body: "Verify the Email" });
+});
+
+app.post("/verify-email", async function (req, res) {
+  const { username, email, password } = req.body;
+
+  try {
+    await User.create({ username, email, password });
   } catch (error) {
-    if (error.code === 11000)
-      return res.json({
-        status: "error",
-        error: "Email is already registered",
-      });
     logger(error, "ERROR");
-    return;
+    return res.json({ status: "error", error: "Server Error" });
   }
   createUserData(email);
-  return res.json({ status: "ok", userCredentials: { username, email } });
+  return res.json({ status: "ok" });
 });
 
 app.post("/login", async function (req, res) {

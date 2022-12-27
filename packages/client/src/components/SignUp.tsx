@@ -96,7 +96,7 @@ const SignUp = (props: Props) => {
   } = props;
 
   const [status, setStatus] = useState(null);
-  const [isRegister, setIsRegister] = useState(true);
+  const [isRegistering, setIsRegistering] = useState(true);
 
   const registerNameRef = useRef<HTMLInputElement | null>(null);
   const registerEmailRef = useRef<HTMLInputElement | null>(null);
@@ -107,7 +107,7 @@ const SignUp = (props: Props) => {
 
   function handleFormSubmit(e: any) {
     e.preventDefault();
-    if (isRegister) {
+    if (isRegistering) {
       fetch(process.env.REACT_APP_REGISTER_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -124,8 +124,9 @@ const SignUp = (props: Props) => {
             const {
               userCredentials: { username, email },
             } = data;
-            setIsRegistered(true);
+            // setIsRegistered(true);
             setUserInfo(() => ({ username, email }));
+            setStatus(data.body)
           } else {
             setStatus(data.error);
           }
@@ -163,9 +164,9 @@ const SignUp = (props: Props) => {
   }
 
   function handleUserChoice() {
-    setIsRegister(!isRegister);
+    setIsRegistering(!isRegistering);
     setStatus(null);
-    formContainerRef.current!.style.transform = isRegister
+    formContainerRef.current!.style.transform = isRegistering
       ? "translate(-232px)"
       : "";
   }
