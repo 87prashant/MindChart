@@ -66,14 +66,11 @@ app.post("/register", async function (req, res) {
       error: "Email is already registered",
     });
   } else {
-    const message = ReactDOMServer.renderToString(
-      React.createElement(RegistrationMail, { username, email, password })
-    );
     try {
       await mailSender({
         to: email,
         subject: "Registration Mail",
-        message,
+        message: new RegistrationMail({username, email, password})
       });
     } catch (error) {
       logger(error, "ERROR");

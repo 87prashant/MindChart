@@ -1,4 +1,5 @@
 const React = require("react");
+const Axios = require("axios")
 
 class RegistrationMail extends React.Component {
   constructor(props) {
@@ -10,9 +11,8 @@ class RegistrationMail extends React.Component {
 
   handleVerification = () => {
     const { username, email, password } = this.props;
-    app
-      .fetch("/verify-email", {
-        method: "post",
+    Axios
+      .post("/verify-email", {
         header: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username,
@@ -39,7 +39,7 @@ class RegistrationMail extends React.Component {
       <p>Hello ${username}, this is registration mail</p>
       ${
         result !== "Registered"
-          ? `<button onClick="${this.handleVerification.bind(this).toString()}">Verify</button>`
+          ? `<button onClick="${this.handleVerification}">Verify</button>`
           : `<p>You are verified!!</p>`
       }
     </div>
