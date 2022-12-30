@@ -67,10 +67,11 @@ app.post("/register", async function (req, res) {
     });
   } else {
     try {
+      const instance = RegistrationMail({username, email, password})
       await mailSender({
         to: email,
         subject: "Registration Mail",
-        message: new RegistrationMail({username, email, password})
+        message: instance 
       });
     } catch (error) {
       logger(error, "ERROR");

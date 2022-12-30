@@ -8,15 +8,15 @@ class RegistrationMail extends React.Component {
       result: "",
     };
   }
-
+  
   handleVerification = () => {
     const { username, email, password } = this.props;
     Axios
-      .post("/verify-email", {
-        header: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          email,
+    .post("/verify-email", {
+      header: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        email,
           password,
         }),
       })
@@ -30,11 +30,11 @@ class RegistrationMail extends React.Component {
         }
       });
   };
-
+  
   render() {
     const { username } = this.props;
     const { result } = this.state;
-    return `
+    return (
     <div>
       <p>Hello ${username}, this is registration mail</p>
       ${
@@ -43,8 +43,8 @@ class RegistrationMail extends React.Component {
           : `<p>You are verified!!</p>`
       }
     </div>
-  `;
+    );
   }
 }
 
-module.exports = RegistrationMail;
+module.exports = new RegistrationMail;
