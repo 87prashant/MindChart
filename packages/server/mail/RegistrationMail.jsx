@@ -1,50 +1,41 @@
-const React = require("react");
-const Axios = require("axios")
+import React, { useState } from 'react';
+import Axios from 'axios';
 
-class RegistrationMail extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      result: "",
-    };
-  }
+const RegistrationMail = (props) => {
+  const { username, email, password } = props;
+  const [result, setResult] = useState('');
   
-  handleVerification = () => {
-    const { username, email, password } = this.props;
+  const handleVerification = () => {
     Axios
-    .post("/verify-email", {
-      header: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username,
-        email,
+      .post('/verify-email', {
+        header: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username,
+          email,
           password,
         }),
       })
       .then((response) => response.json())
       .then((data) => {
         const { status } = data;
-        if (status === "ok") {
-          this.setState({ result: "Registered" });
+        if (status === 'ok') {
+          setResult('Registered');
         } else {
-          this.setState({ result: data.error });
+          setResult(data.error);
         }
       });
   };
   
-  render() {
-    const { username } = this.props;
-    const { result } = this.state;
-    return (
+  return (
     <div>
       <p>Hello ${username}, this is registration mail</p>
-      ${
-        result !== "Registered"
-          ? `<button onClick="${this.handleVerification}">Verify</button>`
+      {
+        result !== 'Registered'
+          ? `<button onClick="${handleVerification}">Verify</button>`
           : `<p>You are verified!!</p>`
       }
     </div>
-    );
-  }
-}
+  );
+};
 
-module.exports = new RegistrationMail;
+export default RegistrationMail;
