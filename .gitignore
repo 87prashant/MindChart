@@ -11,7 +11,7 @@ node_modules/
 
 # production
 packages/client/build
-packages/server/build
+packages/server/mail
 
 # misc
 .DS_Store
