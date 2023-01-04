@@ -41,7 +41,7 @@ const bodyContent = ({
   email,
   password
 }) => {
-  return ReactDOMServer.renderToStaticMarkup( /*#__PURE__*/React.createElement(RegistrationMail, {
+  return ReactDOMServer.renderToString( /*#__PURE__*/React.createElement(RegistrationMail, {
     username: username,
     email: email,
     password: password
