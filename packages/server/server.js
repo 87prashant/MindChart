@@ -9,6 +9,7 @@ const UserData = require("./model/userdata");
 const logger = require("./logger");
 const mailSender = require("./mailSender");
 const bodyContent = require("./build/RegistrationMail");
+const generateUniqueUrl = require("./build/generateUniqueUrl");
 
 const app = express();
 
@@ -40,6 +41,7 @@ async function getUserData(email) {
 
 app.post("/register", async function (req, res) {
   const { username, email, password: plainPassword } = req.body;
+
   if (!plainPassword || !email || !username) {
     return res.json({ status: "error", error: "All fields are compulsory" });
   }
@@ -55,40 +57,43 @@ app.post("/register", async function (req, res) {
       error: "Password should be at least 8 symbol long",
     });
   }
-  const password = await bcrypt.hash(plainPassword, 10);
 
   const user = await User.findOne({ email }).lean();
+
   if (user) {
     return res.json({
       status: "error",
       error: "Email is already registered",
     });
   } else {
+    const password = await bcrypt.hash(plainPassword, 10);
+    const uniqueUrlToken = generateUniqueUrl();
+    const uniqueUrl = `${process.env.ORIGIN}/verify-email/${uniqueUrlToken}`;
+
+    try {
+      await User.create({ username, email, password });
+      createUserData(email);
+    } catch (error) {
+      logger(error, "ERROR");
+      return res.json({ status: "error", error: "Server Error" });
+    }
+
     try {
       await mailSender({
         to: email,
         subject: "Verification Mail",
-        message: bodyContent({username, email, password}) 
+        message: bodyContent({ username, uniqueUrl }),
       });
     } catch (error) {
       logger(error, "ERROR");
-      return res.json({status: "error", error: "Server Error"})
+      return res.json({ status: "error", error: "Server Error" });
     }
   }
-  return res.json({ status: "ok", body: "Verify the Email" });
+  return res.json({ status: "error", body: "Verify the Email" });
 });
 
 app.post("/verify-email", async function (req, res) {
   const { username, email, password } = req.body;
-
-  try {
-    await User.create({ username, email, password });
-  } catch (error) {
-    logger(error, "ERROR");
-    return res.json({ status: "error", error: "Server Error" });
-  }
-  createUserData(email);
-  return res.json({ status: "ok" });
 });
 
 app.post("/login", async function (req, res) {
