@@ -10,6 +10,7 @@ const logger = require("./logger");
 const mailSender = require("./mailSender");
 const bodyContent = require("./build/RegistrationMail");
 const generateUniqueUrl = require("./build/generateUniqueUrl");
+const date = require("./date");
 
 const app = express();
 
@@ -59,12 +60,28 @@ app.post("/register", async function (req, res) {
   }
 
   const user = await User.findOne({ email }).lean();
+  const password = await bcrypt.hash(plainPassword, 10);
+  const verificationToken = generateUniqueUrl();
+  const uniqueUrl = `${process.env.ORIGIN}/verify-email/${verificationToken}`;
+  const createdAt = date().toString();
 
   if (user) {
-    return res.json({
-      status: "error",
-      error: "Email is already registered",
-    });
+    if (user.verificationToken) {
+      try {
+        await User.updateOne(
+          { email },
+          { $set: { username, password, createdAt, verificationToken } }
+        );
+      } catch (error) {
+        logger(error, "ERROR");
+        return res.json({ status: "error", error: "Server Error" });
+      }
+    } else {
+      return res.json({
+        status: "error",
+        error: "Email is already registered",
+      });
+    }
   } else {
     const password = await bcrypt.hash(plainPassword, 10);
     const uniqueUrlToken = generateUniqueUrl();
@@ -79,36 +96,53 @@ app.post("/register", async function (req, res) {
     }
 
     try {
-      await mailSender({
-        to: email,
-        subject: "Verification Mail",
-        message: bodyContent({ username, uniqueUrl }),
+      await User.create({
+        username,
+        email,
+        password,
+        createdAt,
+        verificationToken,
       });
+      createUserData(email);
     } catch (error) {
       logger(error, "ERROR");
       return res.json({ status: "error", error: "Server Error" });
     }
   }
-  return res.json({ status: "error", body: "Verify the Email" });
-});
 
-app.post("/verify-email", async function (req, res) {
-  const { username, email, password } = req.body;
+  
+  const html =  bodyContent({ username, uniqueUrl })
+  try {
+    await mailSender({
+      to: email,
+      subject: "Verification Mail",
+      message: html,
+    });
+  } catch (error) {
+    logger(error, "ERROR");
+    return res.json({ status: "error", error: "Server Error" });
+  }
+
+  return res.json({ status: "error", error: "Verify the Email" });
 });
 
 app.post("/login", async function (req, res) {
   const { email, password: plainPassword } = req.body;
+
   if (!plainPassword || !email) {
     return res.json({ status: "error", error: "All fields are compulsory" });
   }
+
   const user = await User.findOne({ email }).lean();
   if (!user) {
     return res.json({ status: "error", error: "User not found" });
   }
+  if (user.verificationToken) {
+    return res.json({ status: "error", error: "User not verified. Verify or Register again" });
+  }
   if (await bcrypt.compare(plainPassword, user.password)) {
     const { username, email } = user;
     const userData = await getUserData(email);
-    logger(`User logged in: \n${user}`, "INFO");
     return res.json({
       status: "ok",
       userCredentials: { username, email },
