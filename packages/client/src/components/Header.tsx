@@ -78,7 +78,7 @@ const DemoButton = styled("button")<{ isDemoActive: boolean }>(
   })
 );
 
-const SignUpButton = styled("button")({
+export const SignUpButton = styled("button")({
   margin: "0 20px",
   padding: "10px",
   textDecoration: "none",
