@@ -93,14 +93,14 @@ const MiniChart = (props: Props) => {
     .on("tick", ticked);
 
   // const link = svg
-  //   .append("g")
-  //   .attr("stroke", "#000000")
+  // .append("g")
+  // .attr("stroke", "#000000")
   //   // .attr("stroke-opacity", linkStrokeOpacity!)
   //   // .attr("stroke-width", linkStrokeWidth!)
   //   // .attr("stroke-linecap", linkStrokeLinecap!)
-  //   .selectAll("line")
-  //   .data(links)
-  //   .join("line");
+  // .selectAll("line")
+  // .data(links)
+  // .join("line");
 
   const node = svg
     .append("g")
