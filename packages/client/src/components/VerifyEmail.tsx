@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import CommonBackground from "./CommonBackground";
 import styled from "@emotion/styled";
@@ -30,10 +31,33 @@ const VerifyButton = styled(SignUpButton)({
   },
 });
 
-const VerifyEmail = () => {
-  const { token } = useParams();
-  function handleClick() {
+const Result = styled("div")({
+  color: "red",
+  textAlign: "center",
+});
 
+const VerifyEmail = () => {
+  const [result, setResult] = useState("");
+  const { email, verificationToken } = useParams();
+
+  function handleClick() {
+    fetch(process.env.REACT_APP_VERIFICATION_API!, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        verificationToken,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const { status } = data;
+        if (status === "ok") {
+          // redirect to page
+          return;
+        }
+        setResult(data.error);
+      });
   }
   return (
     <>
@@ -41,6 +65,7 @@ const VerifyEmail = () => {
       <Wrapper>
         <Heading>Hi, Verify by clicking the below button</Heading>
         <VerifyButton onClick={handleClick}>Verify and Login</VerifyButton>
+        <Result>{result}</Result>
       </Wrapper>
     </>
   );

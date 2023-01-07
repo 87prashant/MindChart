@@ -10,7 +10,6 @@ const logger = require("./logger");
 const mailSender = require("./mailSender");
 const bodyContent = require("./build/RegistrationMail");
 const generateUniqueUrl = require("./build/generateUniqueUrl");
-const date = require("./date");
 
 const app = express();
 
@@ -62,19 +61,19 @@ app.post("/register", async function (req, res) {
   const user = await User.findOne({ email }).lean();
   const password = await bcrypt.hash(plainPassword, 10);
   const verificationToken = generateUniqueUrl();
-  const uniqueUrl = `${process.env.ORIGIN}/verify-email/${verificationToken}`;
-  const createdAt = date().toString();
+  const createdAt = new Date();
+  const uniqueUrl = `${process.env.ORIGIN}/verify-email/${email}/${verificationToken}`;
 
   if (user) {
     if (user.verificationToken) {
       try {
         await User.updateOne(
           { email },
-          { $set: { username, password, createdAt, verificationToken } }
+          { $set: { username, password, verificationToken } }
         );
       } catch (error) {
         logger(error, "ERROR");
-        return res.json({ status: "error", error: "Server Error" });
+        return res.json({ status: "error", error: "Error on our end" });
       }
     } else {
       return res.json({
@@ -83,18 +82,6 @@ app.post("/register", async function (req, res) {
       });
     }
   } else {
-    const password = await bcrypt.hash(plainPassword, 10);
-    const uniqueUrlToken = generateUniqueUrl();
-    const uniqueUrl = `${process.env.ORIGIN}/verify-email/${uniqueUrlToken}`;
-
-    try {
-      await User.create({ username, email, password });
-      createUserData(email);
-    } catch (error) {
-      logger(error, "ERROR");
-      return res.json({ status: "error", error: "Server Error" });
-    }
-
     try {
       await User.create({
         username,
@@ -103,15 +90,13 @@ app.post("/register", async function (req, res) {
         createdAt,
         verificationToken,
       });
-      createUserData(email);
     } catch (error) {
       logger(error, "ERROR");
-      return res.json({ status: "error", error: "Server Error" });
+      return res.json({ status: "error", error: "Error on our end" });
     }
   }
 
-  
-  const html =  bodyContent({ username, uniqueUrl })
+  const html = bodyContent({ username, uniqueUrl });
   try {
     await mailSender({
       to: email,
@@ -120,10 +105,29 @@ app.post("/register", async function (req, res) {
     });
   } catch (error) {
     logger(error, "ERROR");
-    return res.json({ status: "error", error: "Server Error" });
+    return res.json({ status: "error", error: "Error on our end" });
   }
 
   return res.json({ status: "error", error: "Verify the Email" });
+});
+
+app.post("/verify-email", async function (req, res) {
+  const { email, verificationToken } = req.body;
+  const createdAt = new Date().toString();
+
+  const user = await User.findOne({ email }).lean();
+  if (!user) {
+    return res.json({
+      status: "error",
+      error: "You are not found, Register first",
+    });
+  }
+  if (user.verificationToken !== verificationToken) {
+    return res.json({ status: "error", error: "Invalid verification token, or you are already verified" });
+  }
+  await User.updateMany({ email }, { $unset: { verificationToken: "" } });
+
+  createUserData(email);
 });
 
 app.post("/login", async function (req, res) {
@@ -135,10 +139,16 @@ app.post("/login", async function (req, res) {
 
   const user = await User.findOne({ email }).lean();
   if (!user) {
-    return res.json({ status: "error", error: "User not found" });
+    return res.json({
+      status: "error",
+      error: "You are not found, Register first",
+    });
   }
   if (user.verificationToken) {
-    return res.json({ status: "error", error: "User not verified. Verify or Register again" });
+    return res.json({
+      status: "error",
+      error: "You are not verified. Verify or Register again",
+    });
   }
   if (await bcrypt.compare(plainPassword, user.password)) {
     const { username, email } = user;

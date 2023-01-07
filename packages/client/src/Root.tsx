@@ -5,7 +5,7 @@ import VerifyEmail from "./components/VerifyEmail";
 const Root = () => (
   <Routes>
     <Route path="/" element={<App />} />
-    <Route path="verify-email/:token" element={<VerifyEmail />} />
+    <Route path="verify-email/:email/:verificationToken" element={<VerifyEmail />} />
   </Routes>
 );
 export default Root;

@@ -6,7 +6,7 @@ const COLOR = {
 const logger = (message, level) => {
   const basicInfoString = `\x1b[1m${
     COLOR[level]
-  }${new Date().toLocaleString()}] [${level}] |\x1b[22m${COLOR[level]}`;
+  }[${new Date().toLocaleString()}] [${level}] |\x1b[22m${COLOR[level]}`;
   const formatResetString = "\x1b[0m";
 
   if (typeof message === "object") {
