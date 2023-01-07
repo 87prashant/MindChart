@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import Main from "../Main";
 import Header from "../Header";
@@ -235,15 +236,24 @@ function debounce(fn: any, ms: number) {
   };
 }
 
+type State = {
+    isRegistered: boolean;
+    username: string;
+    email: string;
+} | undefined
+
 function App() {
+  const state: State = useLocation().state
+  
   const storedData: FormDataType[] = window.localStorage.getItem("savedData")
     ? JSON.parse(window.localStorage.getItem("savedData")!)
     : ([] as FormDataType[]);
 
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(!!state);
   const [isDemoActive, setIsDemoActive] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
+
   // After clicking the edit button on the hoverModal it stores the data of that node. If
   // it got edited then origin node should be deleted.
   const [hackedNodeData, setHackedNodeData] = useState<FormDataType | null>(
@@ -252,7 +262,10 @@ function App() {
   const [savedData, setSavedData] = useState(
     isDemoActive ? demoData : storedData
   );
-  const [userInfo, setUserInfo] = useState({ username: "", email: "" });
+  const [userInfo, setUserInfo] = useState({
+    username: !!state ? state?.username : "",
+    email: !!state ? state?.email : "",
+  });
   const [isChartAdded, setIsChartAdded] = useState(false);
   const [dimensions, setDimensions] = useState({
     w: 0,

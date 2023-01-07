@@ -123,11 +123,14 @@ app.post("/verify-email", async function (req, res) {
     });
   }
   if (user.verificationToken !== verificationToken) {
-    return res.json({ status: "error", error: "Invalid verification token, or you are already verified" });
+    return res.json({
+      status: "error",
+      error: "Invalid verification token, or you are already verified",
+    });
   }
   await User.updateMany({ email }, { $unset: { verificationToken: "" } });
-
   createUserData(email);
+  return res.json({ status: "ok", username: user.username, email });
 });
 
 app.post("/login", async function (req, res) {

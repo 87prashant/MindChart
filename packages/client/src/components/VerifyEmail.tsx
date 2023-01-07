@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import CommonBackground from "./CommonBackground";
 import styled from "@emotion/styled";
 import { StyledWrapper } from "./Form";
@@ -34,11 +34,13 @@ const VerifyButton = styled(SignUpButton)({
 const Result = styled("div")({
   color: "red",
   textAlign: "center",
+  fontSize: 14,
 });
 
 const VerifyEmail = () => {
   const [result, setResult] = useState("");
   const { email, verificationToken } = useParams();
+  const navigate = useNavigate();
 
   function handleClick() {
     fetch(process.env.REACT_APP_VERIFICATION_API!, {
@@ -52,11 +54,12 @@ const VerifyEmail = () => {
       .then((response) => response.json())
       .then((data) => {
         const { status } = data;
-        if (status === "ok") {
-          // redirect to page
+        if (status === "error") {
+          setResult(data.error);
           return;
         }
-        setResult(data.error);
+        const { username, email } = data;
+        navigate("/", { state: { isRegistered: true, username, email } });
       });
   }
   return (
