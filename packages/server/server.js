@@ -1,3 +1,7 @@
+//TODO: Create enum for type of statuses of user
+//TODO: Create enum for type of errors generated
+//TODO: Create enum for general messages
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -8,8 +12,9 @@ const User = require("./model/user");
 const UserData = require("./model/userdata");
 const logger = require("./logger");
 const mailSender = require("./mailSender");
-const bodyContent = require("./build/RegistrationMail");
-const generateUniqueUrl = require("./build/generateUniqueUrl");
+const generateUniqueVerificationToken = require("./build/generateUniqueVerificationToken");
+const registrationMailString = require("./build/RegistrationMail");
+const forgetPasswordMailString = require("./build/ForgetPasswordMail");
 
 const app = express();
 
@@ -60,12 +65,12 @@ app.post("/register", async function (req, res) {
 
   const user = await User.findOne({ email }).lean();
   const password = await bcrypt.hash(plainPassword, 10);
-  const verificationToken = generateUniqueUrl();
+  const verificationToken = generateUniqueVerificationToken();
   const createdAt = new Date();
   const uniqueUrl = `${process.env.ORIGIN}/verify-email/${email}/${verificationToken}`;
 
   if (user) {
-    if (user.verificationToken) {
+    if (user.status === "Unverified") {
       try {
         await User.updateOne(
           { email },
@@ -96,7 +101,7 @@ app.post("/register", async function (req, res) {
     }
   }
 
-  const html = bodyContent({ username, uniqueUrl });
+  const html = registrationMailString({ username, uniqueUrl });
   try {
     await mailSender({
       to: email,
@@ -113,7 +118,6 @@ app.post("/register", async function (req, res) {
 
 app.post("/verify-email", async function (req, res) {
   const { email, verificationToken } = req.body;
-  const createdAt = new Date().toString();
 
   const user = await User.findOne({ email }).lean();
   if (!user) {
@@ -122,15 +126,65 @@ app.post("/verify-email", async function (req, res) {
       error: "You are not found, Register first",
     });
   }
+  if (user.status !== "Unverified") {
+    return res.json({ status: "error", error: "You are already Verified" });
+  }
   if (user.verificationToken !== verificationToken) {
     return res.json({
       status: "error",
       error: "Invalid verification token, or you are already verified",
     });
   }
-  await User.updateMany({ email }, { $unset: { verificationToken: "" } });
+  await User.updateMany(
+    { email },
+    { $unset: { verificationToken: "", status: "" } }
+  );
   createUserData(email);
   return res.json({ status: "ok", username: user.username, email });
+});
+
+app.post("/forget-password", async function (req, res) {
+  const { email } = req.body;
+
+  const user = await User.find({ email }).lean();
+  if (!user) {
+    return res.json({ status: "error", error: "You are not registered" });
+  }
+  if (user.status === "Unverified") {
+    return res.json({ status: "error", error: "You are not verified" });
+  }
+
+  const verificationToken = generateUniqueVerificationToken();
+  const uniqueUrl = `${process.env.ORIGIN}/forget-password-verify/${email}/${verificationToken}`;
+
+  try {
+    await User.updateMany(
+      { email },
+      {
+        $set: { status: "Forget_Password", verificationToken },
+      }
+    );
+  } catch (error) {
+    logger(error, "ERROR");
+    return res.json({ status: "error", error: "Error on our end" });
+  }
+
+  const html = forgetPasswordMailString({ username: user.username, uniqueUrl });
+  try {
+    await mailSender({
+      to: email,
+      subject: "Forget Password Mail",
+      message: html,
+    });
+  } catch (error) {
+    logger(error, "ERROR");
+    return res.json({ status: "error", error: "Error on our end" });
+  }
+
+  return res.json({
+    status: "error",
+    error: "Mail sent to generate new Password",
+  });
 });
 
 app.post("/login", async function (req, res) {
@@ -147,7 +201,7 @@ app.post("/login", async function (req, res) {
       error: "You are not found, Register first",
     });
   }
-  if (user.verificationToken) {
+  if (user.status === "Unverified") {
     return res.json({
       status: "error",
       error: "You are not verified. Verify or Register again",

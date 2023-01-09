@@ -9,7 +9,7 @@ const RegistrationMail = props => {
     href: uniqueUrl
   }, "Verify"));
 };
-const bodyContent = ({
+const registrationMailString = ({
   username,
   uniqueUrl
 }) => {
@@ -18,4 +18,4 @@ const bodyContent = ({
     uniqueUrl: uniqueUrl
   }));
 };
-module.exports = bodyContent;
+module.exports = registrationMailString;
