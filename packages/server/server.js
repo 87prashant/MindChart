@@ -146,7 +146,7 @@ app.post("/verify-email", async function (req, res) {
     { $unset: { verificationToken: "", status: "" } }
   );
   createUserData(email);
-  return res.json({ status: "ok", username: user.username, email });
+  return res.json({ status: "ok", username: user.username });
 });
 
 app.post("/forget-password", async function (req, res) {

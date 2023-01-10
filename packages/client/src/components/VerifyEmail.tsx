@@ -58,8 +58,7 @@ const VerifyEmail = () => {
           setResult(data.error);
           return;
         }
-        const { username, email } = data;
-        navigate("/", { state: { isRegistered: true, username, email } });
+        navigate("/", { state: { isRegistered: true, username: data.username, email } });
       });
   }
   return (

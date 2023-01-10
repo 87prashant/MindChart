@@ -45,12 +45,12 @@ const StyledHeader = styled(Header)({
   margin: "0px 0px 20px 0px",
 });
 
-const StyledInputName = styled(Header)({
+export const StyledInputName = styled(Header)({
   fontSize: 12,
   margin: 0,
 });
 
-const StyledInput = styled(Inputs)({
+export const StyledInput = styled(Inputs)({
   width: "100%",
   margin: "0px 0px 10px 0px",
 });
