@@ -23,15 +23,19 @@ const Wrapper = styled(StyledWrapper)({
 const FormContainer = styled("div")({
   gap: 15,
   display: "flex",
-  transition: "all 0.3s linear",
+  transition: "all 250ms linear",
 });
 
-const RegisterForm = styled("form")({
+const Form = styled("form")({
   minWidth: "100%",
 });
 
-const LoginForm = styled("form")({
-  minWidth: "100%",
+const RegisterForm = styled(Form)({});
+
+const LoginForm = styled(Form)({});
+
+const ForgetPasswordForm = styled(Form)({
+  paddingLeft: 1.5,
 });
 
 const StyledHeader = styled(Header)({
@@ -76,6 +80,10 @@ const Button = styled("div")({
   color: "teal",
   cursor: "pointer",
   fontSize: 13,
+  transition: "all 200ms ease",
+  ":hover": {
+    color: "green",
+  },
 });
 
 interface Props {
@@ -85,6 +93,13 @@ interface Props {
   setSavedData: any;
   setIsChartAdded: any;
 }
+
+const userChoiceList = {
+  LOGIN: "Login",
+  REGISTER: "Register",
+  FORGET_PASSWORD: "Forget_Password",
+};
+Object.freeze(userChoiceList);
 
 const SignUp = (props: Props) => {
   const {
@@ -96,18 +111,19 @@ const SignUp = (props: Props) => {
   } = props;
 
   const [status, setStatus] = useState(null);
-  const [isRegistering, setIsRegistering] = useState(true);
+  const [userChoice, setUserChoice] = useState(userChoiceList.REGISTER);
 
   const registerNameRef = useRef<HTMLInputElement | null>(null);
   const registerEmailRef = useRef<HTMLInputElement | null>(null);
   const registerPassRef = useRef<HTMLInputElement | null>(null);
   const loginEmailRef = useRef<HTMLInputElement | null>(null);
   const loginPassRef = useRef<HTMLInputElement | null>(null);
+  const forgetPasswordEmailRef = useRef<HTMLInputElement | null>(null);
   const formContainerRef = useRef<HTMLDivElement | null>(null);
 
   function handleFormSubmit(e: any) {
     e.preventDefault();
-    if (isRegistering) {
+    if (userChoice === userChoiceList.REGISTER) {
       fetch(process.env.REACT_APP_REGISTER_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -119,19 +135,11 @@ const SignUp = (props: Props) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          const { status } = data;
-          if (status === "ok") {
-            const {
-              userCredentials: { username, email },
-            } = data;
-            // setIsRegistered(true);
-            setUserInfo(() => ({ username, email }));
-            setStatus(data.body)
-          } else {
-            setStatus(data.error);
-          }
+          // always status error
+          const { error } = data;
+          setStatus(error);
         });
-    } else {
+    } else if (userChoice === userChoiceList.LOGIN) {
       fetch(process.env.REACT_APP_LOGIN_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -156,6 +164,20 @@ const SignUp = (props: Props) => {
             setStatus(data.error);
           }
         });
+    } else {
+      fetch(process.env.REACT_APP_FORGET_PASSWORD_API!, {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: forgetPasswordEmailRef.current!.value.toLowerCase(),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // always status error
+          const { error } = data;
+          setStatus(error);
+        });
     }
   }
 
@@ -163,12 +185,15 @@ const SignUp = (props: Props) => {
     signUpFormRef.current!.style.display = "none";
   }
 
-  function handleUserChoice() {
-    setIsRegistering(!isRegistering);
+  function handleUserChoice(choice: string) {
+    setUserChoice(choice);
     setStatus(null);
-    formContainerRef.current!.style.transform = isRegistering
-      ? "translate(-232px)"
-      : "";
+    formContainerRef.current!.style.transform =
+      choice === userChoiceList.REGISTER
+        ? ""
+        : choice === userChoiceList.LOGIN
+        ? "translate(-232px)"
+        : "translate(-464px)";
   }
 
   return (
@@ -198,7 +223,9 @@ const SignUp = (props: Props) => {
               autoComplete="current-password"
             />
             <StyledStatus>{status}</StyledStatus>
-            <Button onClick={handleUserChoice}>Login instead</Button>
+            <Button onClick={() => handleUserChoice(userChoiceList.LOGIN)}>
+              Login instead
+            </Button>
           </RegisterForm>
           <LoginForm>
             <StyledHeader>Log in</StyledHeader>
@@ -217,8 +244,29 @@ const SignUp = (props: Props) => {
               autoComplete="current-password"
             />
             <StyledStatus>{status}</StyledStatus>
-            <Button onClick={handleUserChoice}>Register</Button>
+            <Button onClick={() => handleUserChoice(userChoiceList.REGISTER)}>
+              Register
+            </Button>
+            <Button
+              onClick={() => handleUserChoice(userChoiceList.FORGET_PASSWORD)}
+            >
+              Forget Password
+            </Button>
           </LoginForm>
+          <ForgetPasswordForm>
+            <StyledHeader>Forget Password</StyledHeader>
+            <StyledInputName>Email</StyledInputName>
+            <StyledInput
+              ref={forgetPasswordEmailRef}
+              type="email"
+              placeholder="Email"
+              autoComplete="email"
+            />
+            <StyledStatus>{status}</StyledStatus>
+            <Button onClick={() => handleUserChoice(userChoiceList.LOGIN)}>
+              Login
+            </Button>
+          </ForgetPasswordForm>
         </FormContainer>
         <StyledSubmitButton
           onClick={(e) => handleFormSubmit(e)}

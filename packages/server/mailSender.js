@@ -24,7 +24,7 @@ const mailSender = async (data) => {
     const result = await transporter.sendMail(email);
     logger(`Mail Sent... \n${JSON.stringify(result.envelope)}`, "INFO");
   } catch (error) {
-    logger(error, "ERROR");
+    throw error
   }
 };
 

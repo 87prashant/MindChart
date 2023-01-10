@@ -1,6 +1,7 @@
 //TODO: Create enum for type of statuses of user
 //TODO: Create enum for type of errors generated
 //TODO: Create enum for general messages
+//TODO: Create just one API to add and delete or modify userdata
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -68,6 +69,7 @@ app.post("/register", async function (req, res) {
   const verificationToken = generateUniqueVerificationToken();
   const createdAt = new Date();
   const uniqueUrl = `${process.env.ORIGIN}/verify-email/${email}/${verificationToken}`;
+  const status = "Unverified";
 
   if (user) {
     if (user.status === "Unverified") {
@@ -93,6 +95,7 @@ app.post("/register", async function (req, res) {
         email,
         password,
         createdAt,
+        status,
         verificationToken,
       });
     } catch (error) {
@@ -110,7 +113,10 @@ app.post("/register", async function (req, res) {
     });
   } catch (error) {
     logger(error, "ERROR");
-    return res.json({ status: "error", error: "Error on our end" });
+    return res.json({
+      status: "error",
+      error: error.code === "EENVELOPE" ? "Invalid Email" : "Error on our end",
+    });
   }
 
   return res.json({ status: "error", error: "Verify the Email" });
@@ -145,8 +151,7 @@ app.post("/verify-email", async function (req, res) {
 
 app.post("/forget-password", async function (req, res) {
   const { email } = req.body;
-
-  const user = await User.find({ email }).lean();
+  const user = await User.findOne({ email }).lean();
   if (!user) {
     return res.json({ status: "error", error: "You are not registered" });
   }
@@ -157,18 +162,6 @@ app.post("/forget-password", async function (req, res) {
   const verificationToken = generateUniqueVerificationToken();
   const uniqueUrl = `${process.env.ORIGIN}/forget-password-verify/${email}/${verificationToken}`;
 
-  try {
-    await User.updateMany(
-      { email },
-      {
-        $set: { status: "Forget_Password", verificationToken },
-      }
-    );
-  } catch (error) {
-    logger(error, "ERROR");
-    return res.json({ status: "error", error: "Error on our end" });
-  }
-
   const html = forgetPasswordMailString({ username: user.username, uniqueUrl });
   try {
     await mailSender({
@@ -176,6 +169,21 @@ app.post("/forget-password", async function (req, res) {
       subject: "Forget Password Mail",
       message: html,
     });
+  } catch (error) {
+    logger(error, "ERROR");
+    return res.json({
+      status: "error",
+      error: error.code === "EENVELOPE" ? "Invalid Email" : "Error on our end",
+    });
+  }
+
+  try {
+    await User.updateMany(
+      { email },
+      {
+        $set: { status: "Forget_Password", verificationToken },
+      }
+    );
   } catch (error) {
     logger(error, "ERROR");
     return res.json({ status: "error", error: "Error on our end" });
