@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 import CommonBackground from "./CommonBackground";
 import { StyledWrapper } from "./Form";
 import { SignUpButton } from "./Header";
@@ -33,7 +34,7 @@ const VerifyButton = styled(SignUpButton)({
   },
 });
 
-const Result = styled("div")({
+const StyledStatus = styled("div")({
   color: "red",
   textAlign: "center",
   fontSize: 14,
@@ -50,7 +51,8 @@ const Input = styled(StyledInput)({
 });
 
 const ForgetPassword = () => {
-  const [result, setResult] = useState("");
+  const [status, setStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const passOneRef = useRef<HTMLInputElement | null>(null);
   const passTwoRef = useRef<HTMLInputElement | null>(null);
@@ -59,10 +61,13 @@ const ForgetPassword = () => {
   const navigate = useNavigate();
 
   function handleClick() {
+    setLoading(true);
+    setStatus(null);
     const passwordOne = passOneRef.current!.value;
     const passwordTwo = passTwoRef.current!.value;
     if (passwordOne !== passwordTwo) {
-      setResult("Password not matched");
+      setLoading(false);
+      setStatus("Password not matched");
       return;
     }
 
@@ -73,9 +78,10 @@ const ForgetPassword = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        setLoading(false);
         const { status } = data;
         if (status === "error") {
-          setResult(data.error);
+          setStatus(data.error);
           return;
         }
         navigate("/", {
@@ -103,7 +109,11 @@ const ForgetPassword = () => {
           placeholder="Enter Password again"
           autoComplete="current-password"
         />
-        <Result>{result}</Result>
+        {loading ? (
+          <ClipLoader color={"teal"} loading={loading} size={20} />
+        ) : (
+          <StyledStatus>{status}</StyledStatus>
+        )}
         <VerifyButton onClick={handleClick}>Change</VerifyButton>
       </Wrapper>
     </>

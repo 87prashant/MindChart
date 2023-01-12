@@ -151,6 +151,10 @@ app.post("/verify-email", async function (req, res) {
 
 app.post("/forget-password", async function (req, res) {
   const { email } = req.body;
+  if(!email.trim()){
+    return res.json({status: "error", error: "Email is empty"})
+  }
+  
   const user = await User.findOne({ email }).lean();
   if (!user) {
     return res.json({ status: "error", error: "You are not registered" });

@@ -4,6 +4,7 @@ import CommonBackground from "./CommonBackground";
 import styled from "@emotion/styled";
 import { StyledWrapper } from "./Form";
 import { SignUpButton } from "./Header";
+import { ClipLoader } from "react-spinners";
 
 const Wrapper = styled(StyledWrapper)({
   width: 380,
@@ -31,18 +32,21 @@ const VerifyButton = styled(SignUpButton)({
   },
 });
 
-const Result = styled("div")({
+const StyledStatus = styled("div")({
   color: "red",
   textAlign: "center",
   fontSize: 14,
 });
 
 const VerifyEmail = () => {
-  const [result, setResult] = useState("");
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { email, verificationToken } = useParams();
   const navigate = useNavigate();
 
   function handleClick() {
+    setLoading(true);
+    setStatus(null);
     fetch(process.env.REACT_APP_VERIFICATION_API!, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -53,12 +57,15 @@ const VerifyEmail = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        setLoading(false);
         const { status } = data;
         if (status === "error") {
-          setResult(data.error);
+          setStatus(data.error);
           return;
         }
-        navigate("/", { state: { isRegistered: true, username: data.username, email } });
+        navigate("/", {
+          state: { isRegistered: true, username: data.username, email },
+        });
       });
   }
   return (
@@ -67,7 +74,11 @@ const VerifyEmail = () => {
       <Wrapper>
         <Heading>Hi, Verify by clicking the below button</Heading>
         <VerifyButton onClick={handleClick}>Verify and Login</VerifyButton>
-        <Result>{result}</Result>
+        {loading ? (
+          <ClipLoader color={"teal"} loading={loading} size={20} />
+        ) : (
+          <StyledStatus>{status}</StyledStatus>
+        )}
       </Wrapper>
     </>
   );

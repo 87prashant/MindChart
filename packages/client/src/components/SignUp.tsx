@@ -8,6 +8,7 @@ import {
   SubmitButton,
   CancelButton,
 } from "./Form";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const Container = styled(StyledDiv)({
   display: "none",
@@ -112,6 +113,7 @@ const SignUp = (props: Props) => {
 
   const [status, setStatus] = useState(null);
   const [userChoice, setUserChoice] = useState(userChoiceList.REGISTER);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const registerNameRef = useRef<HTMLInputElement | null>(null);
   const registerEmailRef = useRef<HTMLInputElement | null>(null);
@@ -123,6 +125,8 @@ const SignUp = (props: Props) => {
 
   function handleFormSubmit(e: any) {
     e.preventDefault();
+    setLoading(true);
+    setStatus(null);
     if (userChoice === userChoiceList.REGISTER) {
       fetch(process.env.REACT_APP_REGISTER_API!, {
         method: "post",
@@ -135,6 +139,7 @@ const SignUp = (props: Props) => {
       })
         .then((response) => response.json())
         .then((data) => {
+          setLoading(false);
           // always status error
           const { error } = data;
           setStatus(error);
@@ -150,6 +155,7 @@ const SignUp = (props: Props) => {
       })
         .then((response) => response.json())
         .then((data) => {
+          setLoading(false);
           const { status } = data;
           if (status === "ok") {
             const {
@@ -176,6 +182,7 @@ const SignUp = (props: Props) => {
         .then((data) => {
           // always status error
           const { error } = data;
+          setLoading(false);
           setStatus(error);
         });
     }
@@ -222,7 +229,11 @@ const SignUp = (props: Props) => {
               placeholder="Password"
               autoComplete="current-password"
             />
-            <StyledStatus>{status}</StyledStatus>
+            {userChoice === userChoiceList.REGISTER && loading ? (
+              <ClipLoader color={"teal"} loading={loading} size={20} />
+            ) : (
+              <StyledStatus>{status}</StyledStatus>
+            )}
             <Button onClick={() => handleUserChoice(userChoiceList.LOGIN)}>
               Login instead
             </Button>
@@ -243,7 +254,11 @@ const SignUp = (props: Props) => {
               placeholder="Password"
               autoComplete="current-password"
             />
-            <StyledStatus>{status}</StyledStatus>
+            {userChoice === userChoiceList.LOGIN && loading ? (
+              <ClipLoader color={"teal"} loading={loading} size={20} />
+            ) : (
+              <StyledStatus>{status}</StyledStatus>
+            )}
             <Button onClick={() => handleUserChoice(userChoiceList.REGISTER)}>
               Register
             </Button>
@@ -262,7 +277,11 @@ const SignUp = (props: Props) => {
               placeholder="Email"
               autoComplete="email"
             />
-            <StyledStatus>{status}</StyledStatus>
+            {userChoice === userChoiceList.FORGET_PASSWORD && loading ? (
+              <ClipLoader color={"teal"} loading={loading} size={20} />
+            ) : (
+              <StyledStatus>{status}</StyledStatus>
+            )}
             <Button onClick={() => handleUserChoice(userChoiceList.LOGIN)}>
               Login
             </Button>
