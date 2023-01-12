@@ -129,7 +129,7 @@ app.post("/verify-email", async function (req, res) {
   if (!user) {
     return res.json({
       status: "error",
-      error: "You are not found, Register first",
+      error: "You are not Registered",
     });
   }
   if (user.status !== "Unverified") {
@@ -193,6 +193,53 @@ app.post("/forget-password", async function (req, res) {
     status: "error",
     error: "Mail sent to generate new Password",
   });
+});
+
+app.post("/forget-password-verify", async function (req, res) {
+  const { email, verificationToken, password: plainPassword } = req.body;
+
+  if (plainPassword.length < 8) {
+    return res.json({
+      status: "error",
+      error: "Password should be at least 8 symbol long",
+    });
+  }
+
+  const user = await User.findOne({ email }).lean();
+
+  if (!user) {
+    return res.json({
+      status: "error",
+      error: "You are not Registered",
+    });
+  }
+
+  if (!user.status) {
+    return res.json({
+      status: "error",
+      error: "You are not allowed",
+    });
+  } else if (user.status == "Unverified") {
+    return res.json({
+      status: "error",
+      error: "You are not verified",
+    });
+  } else {
+    if (user.verificationToken !== verificationToken) {
+      return res.json({
+        status: "error",
+        error: "Invalid verification token",
+      });
+    }
+    const password = await bcrypt.hash(plainPassword, 10);
+    await User.updateMany(
+      { email },
+      { $unset: { status: "", verificationToken: "" } }
+    );
+    // why not working in one query?
+    await User.updateMany({ email }, { $set: { password: password } });
+    return res.json({ status: "ok", username: user.username });
+  }
 });
 
 app.post("/login", async function (req, res) {
