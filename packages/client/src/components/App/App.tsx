@@ -1,3 +1,5 @@
+//TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
+
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
@@ -253,9 +255,8 @@ function App() {
   const [isDemoActive, setIsDemoActive] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
-
-  // After clicking the edit button on the hoverModal it stores the data of that node. If
-  // it got edited then origin node should be deleted.
+ 
+  //To store the formData to be deleted 
   const [hackedNodeData, setHackedNodeData] = useState<FormDataType | null>(
     null
   );
@@ -359,7 +360,6 @@ function App() {
     setShowForm(true);
   }
 
-  //TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
   function handleDelete(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
     const { categories, emotions, description, priority } = JSON.parse(data);
@@ -373,12 +373,13 @@ function App() {
     });
     setSavedData([...newSavedData]);
     if (isRegistered) {
-      fetch("/deleteData", {
+      fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: userInfo.email,
           toBeDeleted: JSON.parse(data),
+          operation: "Delete"
         }),
       })
         .then((response) => response.json())

@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import React, { useState, useEffect, useMemo } from "react";
 import Emotions from "./Emotions";
 import Categories from "./Categories";
-import { validateFormData } from "./FormValidation";
+import { validateFormData } from "./formValidation";
 import Tips from "./Tips";
 
 export const StyledWrapper = styled("div")({
@@ -217,14 +217,7 @@ const Form: any = (props: Props) => {
     validateFormData(formData, setFormErrors);
     if (hackedNodeData) {
       setIsFormDataDuplicate(
-        JSON.stringify(hackedNodeData.categories) ===
-          JSON.stringify(formData.categories) &&
-          JSON.stringify(hackedNodeData.description) ===
-            JSON.stringify(formData.description) &&
-          JSON.stringify(hackedNodeData.emotions) ===
-            JSON.stringify(formData.emotions) &&
-          JSON.stringify(hackedNodeData.priority) ===
-            JSON.stringify(formData.priority)
+        JSON.stringify(hackedNodeData) === JSON.stringify(formData)
       );
     }
     return () => {};
@@ -287,12 +280,14 @@ const Form: any = (props: Props) => {
       });
     }
     if (isRegistered) {
-      fetch(process.env.REACT_APP_ADD_DATA_API!, {
+      fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          formData,
+          toBeAdded: formData,
+          toBeDeleted: hackedNodeData,
+          operation: hackedNodeData ? "Update" : "Add"
         }),
       })
         .then((response) => response.json())

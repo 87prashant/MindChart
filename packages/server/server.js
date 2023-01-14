@@ -151,10 +151,10 @@ app.post("/verify-email", async function (req, res) {
 
 app.post("/forget-password", async function (req, res) {
   const { email } = req.body;
-  if(!email.trim()){
-    return res.json({status: "error", error: "Email is empty"})
+  if (!email.trim()) {
+    return res.json({ status: "error", error: "Email is empty" });
   }
-  
+
   const user = await User.findOne({ email }).lean();
   if (!user) {
     return res.json({ status: "error", error: "You are not registered" });
@@ -278,33 +278,43 @@ app.post("/login", async function (req, res) {
   return res.json({ status: "error", error: "Incorrect Password" });
 });
 
-app.post("/addData", async function (req, res) {
-  const { email, formData } = req.body;
-  await UserData.updateOne({ email }, { $addToSet: { data: formData } });
-  return res.json({ status: "ok" });
-});
+app.post("/modify-data", async function (req, res) {
+  //currently there is no immutable field in formData to find required formData. So need to send the two formData to distinguish between the oldFormData to be deleted and newFormData to be added
+  const {
+    email,
+    toBeAdded: newFormData,
+    toBeDeleted: oldFormData,
+    operation,
+  } = req.body;
 
-app.post("/deleteData", async function (req, res) {
-  const { email, toBeDeleted } = req.body;
-  try {
+  const addData = async () => {
+    await UserData.updateOne({ email }, { $addToSet: { data: newFormData } });
+  };
+
+  const deleteData = async () => {
     await UserData.updateOne(
       { email },
       {
         $pull: {
-          data: {
-            categories: toBeDeleted.categories,
-            emotions: toBeDeleted.emotions,
-            priority: toBeDeleted.priority,
-            description: toBeDeleted.description,
-          },
+          data: oldFormData,
         },
       }
     );
+  };
+
+  try {
+    if (operation === "Add") {
+      addData();
+    } else if (operation === "Delete") {
+      deleteData();
+    } else {
+      deleteData();
+      addData();
+    }
+    return res.json({ status: "ok" });
   } catch (error) {
     logger(error, "ERROR");
-    return;
   }
-  return res.json({ status: "ok" });
 });
 
 app.listen(8000);
