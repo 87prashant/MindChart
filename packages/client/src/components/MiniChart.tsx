@@ -92,16 +92,6 @@ const MiniChart = (props: Props) => {
     .force("center", d3.forceCenter())
     .on("tick", ticked);
 
-  // const link = svg
-  // .append("g")
-  // .attr("stroke", "#000000")
-  //   // .attr("stroke-opacity", linkStrokeOpacity!)
-  //   // .attr("stroke-width", linkStrokeWidth!)
-  //   // .attr("stroke-linecap", linkStrokeLinecap!)
-  // .selectAll("line")
-  // .data(links)
-  // .join("line");
-
   const node = svg
     .append("g")
     .attr("stroke", "#fff")
@@ -121,12 +111,6 @@ const MiniChart = (props: Props) => {
   }
 
   function ticked() {
-    // link
-    //   .attr("x1", (d) => (d.source as any).x)
-    //   .attr("y1", (d) => (d.source as any).y)
-    //   .attr("x2", (d) => (d.target as any).x)
-    //   .attr("y2", (d) => (d.target as any).y);
-
     node
       .attr("cx", (d, i) =>
         // x axis boundary conditions

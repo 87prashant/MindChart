@@ -1,4 +1,4 @@
-const {LogLevel, LogColor} = require("./constants")
+const { LogLevel, LogColor } = require("./constants");
 
 const giveColor = {
   [LogLevel.INFO]: LogColor.INFO_COLOR,

@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
-// import ForceGraph from "./ForceGraph";
 import { FormDataType } from "./Form";
 
 const StyledWrapper = styled("div")({
@@ -51,7 +50,6 @@ const Main = (props: Props) => {
     const { w, h } = dimensions;
     const newProps = { w, h, savedData, handleNodeClick, current };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
-    // const svg = ForceGraph(newProps) as unknown as HTMLDivElement;
     ref2.current!.innerHTML = "";
     ref2.current!.append(svg);
     // eslint-disable-next-line react-hooks/exhaustive-deps

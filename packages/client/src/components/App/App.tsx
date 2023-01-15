@@ -1,4 +1,5 @@
 //TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
+//TODO Add description on every useState, useRef, useMemo, etc.
 
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
@@ -9,6 +10,7 @@ import { FormDataType } from "../Form";
 import "../../App.css";
 import Form from "../Form";
 import HoverModal from "../HoverModal";
+import { DataOperation } from "../constants";
 
 const Container = styled("div")({
   border: "2px solid black",
@@ -379,7 +381,7 @@ function App() {
         body: JSON.stringify({
           email: userInfo.email,
           toBeDeleted: JSON.parse(data),
-          operation: "Delete"
+          operation: DataOperation.DELETE
         }),
       })
         .then((response) => response.json())

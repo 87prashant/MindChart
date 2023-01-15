@@ -6,6 +6,7 @@ import CommonBackground from "./CommonBackground";
 import { StyledWrapper } from "./Form";
 import { SignUpButton } from "./Header";
 import { StyledInput, StyledInputName } from "./SignUp";
+import { ResponseStatus, Errors } from "./constants";
 
 const Wrapper = styled(StyledWrapper)({
   width: 380,
@@ -67,7 +68,7 @@ const ForgetPassword = () => {
     const passwordTwo = passTwoRef.current!.value;
     if (passwordOne !== passwordTwo) {
       setLoading(false);
-      setStatus("Password not matched");
+      setStatus(Errors.UNMATCHED_PASSWORD);
       return;
     }
 
@@ -80,7 +81,7 @@ const ForgetPassword = () => {
       .then((data) => {
         setLoading(false);
         const { status } = data;
-        if (status === "error") {
+        if (status === ResponseStatus.ERROR) {
           setStatus(data.error);
           return;
         }

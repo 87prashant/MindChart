@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import React, { useState } from "react";
 import { FormDataType } from "./Form";
 import IntensityForm from "./IntensityForm";
+import { EmotionsList } from "./constants";
 
 const Wrapper = styled("div")({
   "& input": {
@@ -15,14 +16,14 @@ const Wrapper = styled("div")({
 });
 
 export const emotions = [
-  "neutral",
-  "fear",
-  "anger",
-  "sadness",
-  "surprise",
-  "joy",
-  "anticipation",
-  "trust",
+  EmotionsList.NEUTRAL,
+  EmotionsList.FEAR,
+  EmotionsList.ANGER,
+  EmotionsList.SADNESS,
+  EmotionsList.SURPRISE,
+  EmotionsList.JOY,
+  EmotionsList.ANTICIPATION,
+  EmotionsList.TRUST,
 ];
 
 interface Props {

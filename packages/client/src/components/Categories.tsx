@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import React from "react";
 import { FormDataType } from "./Form";
+import { CategoriesList } from "./constants";
 
 const Wrapper = styled("div")({
   "& input": {
@@ -21,12 +22,12 @@ interface Props {
 const Categories = (props: Props) => {
   const { formData, handleChange } = props;
   const categories = [
-    "creative",
-    "analytical",
-    "critical",
-    "concrete",
-    "abstract",
-    "unknown",
+    CategoriesList.CREATIVE,
+    CategoriesList.ANALYTICAL,
+    CategoriesList.CRITICAL,
+    CategoriesList.CONCRETE,
+    CategoriesList.ABSTRACT,
+    CategoriesList.UNKNOWN,
   ];
 
   const inputs = categories.map((data, index) => {

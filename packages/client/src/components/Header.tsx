@@ -4,6 +4,7 @@ import { FormDataType } from "./Form";
 import SignUp from "./SignUp";
 import Account from "./Account";
 import AccountInfo from "./AccountInfo";
+import { Misc } from "./constants";
 
 const StyledHeader = styled("div")({
   height: "70px",
@@ -168,10 +169,7 @@ const Header = (props: Props) => {
 
   return (
     <StyledHeader onClick={handleHeaderClick}>
-      <HelpButton
-        href="https://github.com/87prashant/MindChart"
-        target="_blank"
-      >
+      <HelpButton href={Misc.GITHUB_LINK} target="_blank">
         <img src="github_logo.png" alt="" width="25" height="25" />
       </HelpButton>
       {!isRegistered && (

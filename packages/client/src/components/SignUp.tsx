@@ -9,6 +9,7 @@ import {
   CancelButton,
 } from "./Form";
 import ClipLoader from "react-spinners/ClipLoader";
+import { ResponseStatus, UserChoiceList } from "./constants";
 
 const Container = styled(StyledDiv)({
   display: "none",
@@ -95,13 +96,6 @@ interface Props {
   setIsChartAdded: any;
 }
 
-const userChoiceList = {
-  LOGIN: "Login",
-  REGISTER: "Register",
-  FORGET_PASSWORD: "Forget_Password",
-};
-Object.freeze(userChoiceList);
-
 const SignUp = (props: Props) => {
   const {
     signUpFormRef,
@@ -112,7 +106,7 @@ const SignUp = (props: Props) => {
   } = props;
 
   const [status, setStatus] = useState(null);
-  const [userChoice, setUserChoice] = useState(userChoiceList.REGISTER);
+  const [userChoice, setUserChoice] = useState(UserChoiceList.REGISTER);
   const [loading, setLoading] = useState<boolean>(false);
 
   const registerNameRef = useRef<HTMLInputElement | null>(null);
@@ -127,7 +121,7 @@ const SignUp = (props: Props) => {
     e.preventDefault();
     setLoading(true);
     setStatus(null);
-    if (userChoice === userChoiceList.REGISTER) {
+    if (userChoice === UserChoiceList.REGISTER) {
       fetch(process.env.REACT_APP_REGISTER_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -144,7 +138,7 @@ const SignUp = (props: Props) => {
           const { error } = data;
           setStatus(error);
         });
-    } else if (userChoice === userChoiceList.LOGIN) {
+    } else if (userChoice === UserChoiceList.LOGIN) {
       fetch(process.env.REACT_APP_LOGIN_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -157,7 +151,7 @@ const SignUp = (props: Props) => {
         .then((data) => {
           setLoading(false);
           const { status } = data;
-          if (status === "ok") {
+          if (status === ResponseStatus.OK) {
             const {
               userCredentials: { username, email },
               userData,
@@ -196,9 +190,9 @@ const SignUp = (props: Props) => {
     setUserChoice(choice);
     setStatus(null);
     formContainerRef.current!.style.transform =
-      choice === userChoiceList.REGISTER
+      choice === UserChoiceList.REGISTER
         ? ""
-        : choice === userChoiceList.LOGIN
+        : choice === UserChoiceList.LOGIN
         ? "translate(-232px)"
         : "translate(-464px)";
   }
@@ -229,12 +223,12 @@ const SignUp = (props: Props) => {
               placeholder="Password"
               autoComplete="current-password"
             />
-            {userChoice === userChoiceList.REGISTER && loading ? (
+            {userChoice === UserChoiceList.REGISTER && loading ? (
               <ClipLoader color={"teal"} loading={loading} size={20} />
             ) : (
               <StyledStatus>{status}</StyledStatus>
             )}
-            <Button onClick={() => handleUserChoice(userChoiceList.LOGIN)}>
+            <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
               Login instead
             </Button>
           </RegisterForm>
@@ -254,16 +248,16 @@ const SignUp = (props: Props) => {
               placeholder="Password"
               autoComplete="current-password"
             />
-            {userChoice === userChoiceList.LOGIN && loading ? (
+            {userChoice === UserChoiceList.LOGIN && loading ? (
               <ClipLoader color={"teal"} loading={loading} size={20} />
             ) : (
               <StyledStatus>{status}</StyledStatus>
             )}
-            <Button onClick={() => handleUserChoice(userChoiceList.REGISTER)}>
+            <Button onClick={() => handleUserChoice(UserChoiceList.REGISTER)}>
               Register
             </Button>
             <Button
-              onClick={() => handleUserChoice(userChoiceList.FORGET_PASSWORD)}
+              onClick={() => handleUserChoice(UserChoiceList.FORGET_PASSWORD)}
             >
               Forget Password
             </Button>
@@ -277,12 +271,12 @@ const SignUp = (props: Props) => {
               placeholder="Email"
               autoComplete="email"
             />
-            {userChoice === userChoiceList.FORGET_PASSWORD && loading ? (
+            {userChoice === UserChoiceList.FORGET_PASSWORD && loading ? (
               <ClipLoader color={"teal"} loading={loading} size={20} />
             ) : (
               <StyledStatus>{status}</StyledStatus>
             )}
-            <Button onClick={() => handleUserChoice(userChoiceList.LOGIN)}>
+            <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
               Login
             </Button>
           </ForgetPasswordForm>

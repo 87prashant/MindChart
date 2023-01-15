@@ -4,6 +4,7 @@ import Emotions from "./Emotions";
 import Categories from "./Categories";
 import { validateFormData } from "./formValidation";
 import Tips from "./Tips";
+import { DataOperation } from "./constants";
 
 export const StyledWrapper = styled("div")({
   position: "fixed",
@@ -287,10 +288,11 @@ const Form: any = (props: Props) => {
           email,
           toBeAdded: formData,
           toBeDeleted: hackedNodeData,
-          operation: hackedNodeData ? "Update" : "Add"
+          operation: hackedNodeData ? DataOperation.UPDATE : DataOperation.ADD
         }),
       })
         .then((response) => response.json())
+        //do something if error comes for example delete the created data with showing th messages etc.
         .then((data) => {});
     }
     setHackedNodeData(null);

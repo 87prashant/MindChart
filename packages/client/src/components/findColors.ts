@@ -1,28 +1,29 @@
 // currently return color of max intensity emotion
 
 import { Emotion } from "./Form";
+import { EmotionsList, EmotionsColor } from "./constants";
 
 export const findColors = (emotions: Emotion) => {
   const findColor = (emotion: string) => {
     switch (emotion) {
-      case "neutral":
-        return "#808080";
-      case "fear":
-        return "#000000";
-      case "anger":
-        return "#FF0000";
-      case "sadness":
-        return "#0000FF";
-      case "surprise":
-        return "#A020F0";
-      case "joy":
-        return "#00FF00";
-      case "anticipation":
-        return "#FFFF00";
-      case "trust":
-        return "#FFFFFF";
+      case EmotionsList.NEUTRAL:
+        return EmotionsColor.NEUTRAL;
+      case EmotionsList.FEAR:
+        return EmotionsColor.FEAR;
+      case EmotionsList.ANGER:
+        return EmotionsColor.ANGER;
+      case EmotionsList.SADNESS:
+        return EmotionsColor.SADNESS;
+      case EmotionsList.SURPRISE:
+        return EmotionsColor.SURPRISE;
+      case EmotionsList.JOY:
+        return EmotionsColor.JOY;
+      case EmotionsList.ANTICIPATION:
+        return EmotionsColor.ANTICIPATION;
+      case EmotionsList.TRUST:
+        return EmotionsColor.TRUST;
       default:
-        return "#000000";
+        return EmotionsColor.DEFAULT;
     }
   };
   let max = Math.max(...(Object.values(emotions) as number[]));

@@ -5,7 +5,7 @@
  * 4. Log color: {@link LogColor}
  * 5. User Account Status: {@link AccountStatus}
  * 6. Response Status: {@link ResponseStatus}
- * 7. Data modify operation: {@link DataOperation}
+ * 7. Data operation: {@link DataOperation}
 */
 
 const Error = {

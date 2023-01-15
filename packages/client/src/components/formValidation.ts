@@ -1,4 +1,5 @@
 import { FormDataType, FormErrorType } from "./Form";
+import { Errors } from "./constants";
 
 export const validateFormData = (data: FormDataType, setFormErrors: any) => {
   let output = true;
@@ -6,7 +7,7 @@ export const validateFormData = (data: FormDataType, setFormErrors: any) => {
     setFormErrors((formErrors: FormErrorType) => {
       return {
         ...formErrors,
-        categoriesError: "* At least select one category",
+        categoriesError: `* ${Errors.CATEGORY_REQUIRED}`,
       };
     });
     output = false;
@@ -22,7 +23,7 @@ export const validateFormData = (data: FormDataType, setFormErrors: any) => {
     setFormErrors((formErrors: FormErrorType) => {
       return {
         ...formErrors,
-        emotionsError: "* At least select one emotion",
+        emotionsError: `* ${Errors.EMOTION_REQUIRED}`,
       };
     });
     output = false;
@@ -38,7 +39,7 @@ export const validateFormData = (data: FormDataType, setFormErrors: any) => {
     setFormErrors((formErrors: FormErrorType) => {
       return {
         ...formErrors,
-        descriptionError: "* Description can not be empty",
+        descriptionError: `* ${Errors.DESCRIPTION_REQUIRED}`,
       };
     });
     output = false;
