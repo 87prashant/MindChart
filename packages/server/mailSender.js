@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const logger = require("./logger");
 require("dotenv").config({ path: "../../.env" });
+const {LogLevel, Message} = require("./constants")
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -22,7 +23,7 @@ const mailSender = async (data) => {
   };
   try {
     const result = await transporter.sendMail(email);
-    logger(`Mail Sent... \n${JSON.stringify(result.envelope)}`, "INFO");
+    logger(`${Message.MAIL_SENT} \n${JSON.stringify(result.envelope)}`, LogLevel.INFO);
   } catch (error) {
     throw error
   }

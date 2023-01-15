@@ -13,9 +13,17 @@ const User = require("./model/user");
 const UserData = require("./model/userdata");
 const logger = require("./logger");
 const mailSender = require("./mailSender");
-const generateUniqueVerificationToken = require("./build/generateUniqueVerificationToken");
+const generateUniqueVerificationToken = require("./generateUniqueVerificationToken");
 const registrationMailString = require("./build/RegistrationMail");
 const forgetPasswordMailString = require("./build/ForgetPasswordMail");
+const {
+  Error,
+  Message,
+  LogLevel,
+  AccountStatus,
+  ResponseStatus,
+  DataOperation,
+} = require("./constants");
 
 const app = express();
 
@@ -24,23 +32,23 @@ app.use(express.static(path.join(__dirname, "build")));
 app.use(bodyParser.json());
 app.use(cors());
 
-const fiveMinutes = 1000 * 300
+const fiveMinutes = 1000 * 300;
 
 if (!process.env.MONGODB_URI) {
-  logger("MONGODB_URI is empty!!!", "ERROR");
+  logger(Error.EMPTY_MONGODB_URI, LogLevel.ERROR);
   return;
 }
 
 try {
   mongoose.connect(process.env.MONGODB_URI);
 } catch (error) {
-  logger(error, "ERROR");
+  logger(error, LogErrorLevel.ERROR);
   return;
 }
 
 async function createUserData(email) {
   const userData = await UserData.create({ email, data: [] });
-  logger(`New user registered: \n${userData}`, "INFO");
+  logger(`${Message.NEW_USER_ADDED}: \n${userData}`, LogLevel.INFO);
 }
 
 async function getUserData(email) {
@@ -51,11 +59,10 @@ function removeAccount(email) {
   setTimeout(async () => {
     try {
       await User.deleteOne({
-        $and: [{ email }, { status: "Unverified" }],
+        $and: [{ email }, { status: AccountStatus.UNVERIFIED }],
       });
-      console.log("removed");
     } catch (error) {
-      logger(error, "ERROR");
+      logger(error, LogLevel.ERROR);
     }
   }, fiveMinutes);
 }
@@ -73,7 +80,7 @@ function removeToken(email) {
         }
       );
     } catch (error) {
-      logger(error, "ERROR");
+      logger(error, LogLevel.ERROR);
     }
   }, fiveMinutes);
 }
@@ -82,18 +89,21 @@ app.post("/register", async function (req, res) {
   const { username, email, password: plainPassword } = req.body;
 
   if (!plainPassword || !email || !username) {
-    return res.json({ status: "error", error: "All fields are compulsory" });
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.ALL_FIELDS_COMPULSORY,
+    });
   }
   if (username.length < 5) {
     return res.json({
-      status: "error",
-      error: "Username should be at least 5 symbol long",
+      status: ResponseStatus.ERROR,
+      error: Error.SHORT_USERNAME,
     });
   }
   if (plainPassword.length < 8) {
     return res.json({
-      status: "error",
-      error: "Password should be at least 8 symbol long",
+      status: ResponseStatus.ERROR,
+      error: Error.SHORT_PASSWORD,
     });
   }
 
@@ -102,10 +112,10 @@ app.post("/register", async function (req, res) {
   const verificationToken = generateUniqueVerificationToken();
   const createdAt = new Date();
   const uniqueUrl = `${process.env.ORIGIN}/verify-email/${email}/${verificationToken}`;
-  const status = "Unverified";
+  const status = AccountStatus.UNVERIFIED;
 
   if (user) {
-    if (user.status === "Unverified") {
+    if (user.status === AccountStatus.UNVERIFIED) {
       try {
         await User.updateOne(
           { email },
@@ -113,13 +123,16 @@ app.post("/register", async function (req, res) {
         );
         removeAccount(email);
       } catch (error) {
-        logger(error, "ERROR");
-        return res.json({ status: "error", error: "Error on our end" });
+        logger(error, LogLevel.ERROR);
+        return res.json({
+          status: ResponseStatus.ERROR,
+          error: Error.SERVER_ERROR,
+        });
       }
     } else {
       return res.json({
-        status: "error",
-        error: "Email is already registered",
+        status: ResponseStatus.ERROR,
+        error: Error.ALREADY_REGISTERED,
       });
     }
   } else {
@@ -134,8 +147,11 @@ app.post("/register", async function (req, res) {
       });
       removeAccount(email);
     } catch (error) {
-      logger(error, "ERROR");
-      return res.json({ status: "error", error: "Error on our end" });
+      logger(error, LogLevel.ERROR);
+      return res.json({
+        status: ResponseStatus.ERROR,
+        error: Error.SERVER_ERROR,
+      });
     }
   }
 
@@ -143,18 +159,23 @@ app.post("/register", async function (req, res) {
   try {
     await mailSender({
       to: email,
-      subject: "Verification Mail",
+      subject: Message.VERIFICATION_MAIL,
       message: html,
     });
   } catch (error) {
-    logger(error, "ERROR");
+    logger(error, LogLevel.ERROR);
     return res.json({
-      status: "error",
-      error: error.code === "EENVELOPE" ? "Invalid Email" : "Error on our end",
+      status: ResponseStatus.ERROR,
+      //EENVELOPE not working. Why?
+      error:
+        error.code === "EENVELOPE" ? Error.INVALID_EMAIL : Error.SERVER_ERROR,
     });
   }
 
-  return res.json({ status: "error", error: "Verify the Email" });
+  return res.json({
+    status: ResponseStatus.ERROR,
+    error: Error.VERIFICATION_EMAIL,
+  });
 });
 
 app.post("/verify-email", async function (req, res) {
@@ -163,17 +184,20 @@ app.post("/verify-email", async function (req, res) {
   const user = await User.findOne({ email }).lean();
   if (!user) {
     return res.json({
-      status: "error",
-      error: "You are not Registered",
+      status: ResponseStatus.ERROR,
+      error: Error.NOT_REGISTERED,
     });
   }
-  if (user.status !== "Unverified") {
-    return res.json({ status: "error", error: "You are already Verified" });
+  if (user.status !== AccountStatus.UNVERIFIED) {
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.NOT_ALLOWED,
+    });
   }
   if (user.verificationToken !== verificationToken) {
     return res.json({
-      status: "error",
-      error: "Invalid verification token, or you are already verified",
+      status: ResponseStatus.ERROR,
+      error: Error.INVALID_TOKEN,
     });
   }
   await User.updateMany(
@@ -181,21 +205,27 @@ app.post("/verify-email", async function (req, res) {
     { $unset: { verificationToken: "", status: "" } }
   );
   createUserData(email);
-  return res.json({ status: "ok", username: user.username });
+  return res.json({ status: ResponseStatus.OK, username: user.username });
 });
 
 app.post("/forget-password", async function (req, res) {
   const { email } = req.body;
   if (!email.trim()) {
-    return res.json({ status: "error", error: "Email is empty" });
+    return res.json({ status: ResponseStatus.ERROR, error: Error.EMPTY_MAIL });
   }
 
   const user = await User.findOne({ email }).lean();
   if (!user) {
-    return res.json({ status: "error", error: "You are not registered" });
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.NOT_REGISTERED,
+    });
   }
-  if (user.status === "Unverified") {
-    return res.json({ status: "error", error: "You are not verified" });
+  if (user.status === AccountStatus.UNVERIFIED) {
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.NOT_VERIFIED,
+    });
   }
 
   const verificationToken = generateUniqueVerificationToken();
@@ -205,14 +235,15 @@ app.post("/forget-password", async function (req, res) {
   try {
     await mailSender({
       to: email,
-      subject: "Forget Password Mail",
+      subject: Message.FORGET_PASSWORD_MAIL,
       message: html,
     });
   } catch (error) {
-    logger(error, "ERROR");
+    logger(error, LogLevel.ERROR);
     return res.json({
-      status: "error",
-      error: error.code === "EENVELOPE" ? "Invalid Email" : "Error on our end",
+      status: ResponseStatus.ERROR,
+      error:
+        error.code === "EENVELOPE" ? Error.INVALID_EMAIL : Error.SERVER_ERROR,
     });
   }
 
@@ -220,18 +251,21 @@ app.post("/forget-password", async function (req, res) {
     await User.updateMany(
       { email },
       {
-        $set: { status: "Forget_Password", verificationToken },
+        $set: { status: AccountStatus.FORGET_PASSWORD, verificationToken },
       }
     );
     removeToken(email);
   } catch (error) {
-    logger(error, "ERROR");
-    return res.json({ status: "error", error: "Error on our end" });
+    logger(error, LogLevel.ERROR);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.SERVER_ERROR,
+    });
   }
 
   return res.json({
-    status: "error",
-    error: "Mail sent to generate new Password",
+    status: ResponseStatus.ERROR,
+    error: Error.FORGET_PASSWORD_MAIL,
   });
 });
 
@@ -240,8 +274,8 @@ app.post("/forget-password-verify", async function (req, res) {
 
   if (plainPassword.length < 8) {
     return res.json({
-      status: "error",
-      error: "Password should be at least 8 symbol long",
+      status: ResponseStatus.ERROR,
+      error: Error.SHORT_PASSWORD,
     });
   }
 
@@ -249,26 +283,26 @@ app.post("/forget-password-verify", async function (req, res) {
 
   if (!user) {
     return res.json({
-      status: "error",
-      error: "You are not Registered",
+      status: ResponseStatus.ERROR,
+      error: Error.NOT_REGISTERED,
     });
   }
 
   if (!user.status) {
     return res.json({
-      status: "error",
-      error: "You are not allowed",
+      status: ResponseStatus.ERROR,
+      error: Error.NOT_ALLOWED,
     });
-  } else if (user.status == "Unverified") {
+  } else if (user.status == AccountStatus.UNVERIFIED) {
     return res.json({
-      status: "error",
-      error: "You are not verified",
+      status: ResponseStatus.ERROR,
+      error: Error.NOT_VERIFIED,
     });
   } else {
     if (user.verificationToken !== verificationToken) {
       return res.json({
-        status: "error",
-        error: "Invalid verification token",
+        status: ResponseStatus.ERROR,
+        error: Error.INVALID_TOKEN,
       });
     }
     const password = await bcrypt.hash(plainPassword, 10);
@@ -278,7 +312,7 @@ app.post("/forget-password-verify", async function (req, res) {
     );
     // why not working in one query?
     await User.updateMany({ email }, { $set: { password: password } });
-    return res.json({ status: "ok", username: user.username });
+    return res.json({ status: ResponseStatus.OK, username: user.username });
   }
 });
 
@@ -286,32 +320,38 @@ app.post("/login", async function (req, res) {
   const { email, password: plainPassword } = req.body;
 
   if (!plainPassword || !email) {
-    return res.json({ status: "error", error: "All fields are compulsory" });
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.ALL_FIELDS_COMPULSORY,
+    });
   }
 
   const user = await User.findOne({ email }).lean();
   if (!user) {
     return res.json({
-      status: "error",
-      error: "You are not found, Register first",
+      status: ResponseStatus.ERROR,
+      error: Error.NOT_REGISTERED,
     });
   }
-  if (user.status === "Unverified") {
+  if (user.status === AccountStatus.UNVERIFIED) {
     return res.json({
-      status: "error",
-      error: "You are not verified. Verify or Register again",
+      status: ResponseStatus.ERROR,
+      error: Error.NOT_VERIFIED,
     });
   }
   if (await bcrypt.compare(plainPassword, user.password)) {
     const { username, email } = user;
     const userData = await getUserData(email);
     return res.json({
-      status: "ok",
+      status: ResponseStatus.OK,
       userCredentials: { username, email },
       userData,
     });
   }
-  return res.json({ status: "error", error: "Incorrect Password" });
+  return res.json({
+    status: ResponseStatus.ERROR,
+    error: Error.INCORRECT_PASSWORD,
+  });
 });
 
 app.post("/modify-data", async function (req, res) {
@@ -339,17 +379,17 @@ app.post("/modify-data", async function (req, res) {
   };
 
   try {
-    if (operation === "Add") {
+    if (operation === DataOperation.ADD) {
       addData();
-    } else if (operation === "Delete") {
+    } else if (operation === DataOperation.DELETE) {
       deleteData();
     } else {
       deleteData();
       addData();
     }
-    return res.json({ status: "ok" });
+    return res.json({ status: ResponseStatus.OK });
   } catch (error) {
-    logger(error, "ERROR");
+    logger(error, LogLevel.ERROR);
   }
 });
 
