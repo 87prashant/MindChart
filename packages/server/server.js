@@ -24,6 +24,8 @@ app.use(express.static(path.join(__dirname, "build")));
 app.use(bodyParser.json());
 app.use(cors());
 
+const fiveMinutes = 1000 * 300
+
 if (!process.env.MONGODB_URI) {
   logger("MONGODB_URI is empty!!!", "ERROR");
   return;
@@ -43,6 +45,37 @@ async function createUserData(email) {
 
 async function getUserData(email) {
   return (await UserData.findOne({ email }).lean()).data;
+}
+
+function removeAccount(email) {
+  setTimeout(async () => {
+    try {
+      await User.deleteOne({
+        $and: [{ email }, { status: "Unverified" }],
+      });
+      console.log("removed");
+    } catch (error) {
+      logger(error, "ERROR");
+    }
+  }, fiveMinutes);
+}
+
+function removeToken(email) {
+  setTimeout(async () => {
+    try {
+      await User.updateOne(
+        { email },
+        {
+          $unset: {
+            verificationToken: "",
+            status: "",
+          },
+        }
+      );
+    } catch (error) {
+      logger(error, "ERROR");
+    }
+  }, fiveMinutes);
 }
 
 app.post("/register", async function (req, res) {
@@ -78,6 +111,7 @@ app.post("/register", async function (req, res) {
           { email },
           { $set: { username, password, verificationToken } }
         );
+        removeAccount(email);
       } catch (error) {
         logger(error, "ERROR");
         return res.json({ status: "error", error: "Error on our end" });
@@ -98,6 +132,7 @@ app.post("/register", async function (req, res) {
         status,
         verificationToken,
       });
+      removeAccount(email);
     } catch (error) {
       logger(error, "ERROR");
       return res.json({ status: "error", error: "Error on our end" });
@@ -188,6 +223,7 @@ app.post("/forget-password", async function (req, res) {
         $set: { status: "Forget_Password", verificationToken },
       }
     );
+    removeToken(email);
   } catch (error) {
     logger(error, "ERROR");
     return res.json({ status: "error", error: "Error on our end" });
