@@ -86,7 +86,12 @@ const ForgetPassword = () => {
           return;
         }
         navigate("/", {
-          state: { isRegistered: true, username: data.username, email },
+          state: {
+            isRegistered: true,
+            username: data.username,
+            email,
+            userData: data.userData,
+          },
         });
       });
   }

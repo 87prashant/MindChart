@@ -1,8 +1,3 @@
-//TODO: Create enum for type of statuses of user
-//TODO: Create enum for type of errors generated
-//TODO: Create enum for general messages
-//TODO: Create just one API to add and delete or modify userdata
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -47,8 +42,8 @@ try {
 }
 
 async function createUserData(email) {
-  const userData = await UserData.create({ email, data: [] });
-  logger(`${Message.NEW_USER_ADDED}: \n${userData}`, LogLevel.INFO);
+  await UserData.create({ email, data: [] });
+  logger(Message.NEW_USER_ADDED, LogLevel.INFO);
 }
 
 async function getUserData(email) {
@@ -305,14 +300,20 @@ app.post("/forget-password-verify", async function (req, res) {
         error: Error.INVALID_TOKEN,
       });
     }
+
     const password = await bcrypt.hash(plainPassword, 10);
     await User.updateMany(
       { email },
       { $unset: { status: "", verificationToken: "" } }
     );
-    // why not working in one query?
-    await User.updateMany({ email }, { $set: { password: password } });
-    return res.json({ status: ResponseStatus.OK, username: user.username });
+    await User.updateMany({ email }, { $set: { password: password } }); // why not working in one query?
+    const userData = await getUserData(email);
+
+    return res.json({
+      status: ResponseStatus.OK,
+      username: user.username,
+      userData,
+    });
   }
 });
 

@@ -1,5 +1,6 @@
 //TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
 //TODO Add description on every useState, useRef, useMemo, etc.
+//TODO Find alternate way of using hackedNodeData
 
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
@@ -36,15 +37,18 @@ function debounce(fn: any, ms: number) {
   };
 }
 
-type State = {
-    isRegistered: boolean;
-    username: string;
-    email: string;
-} | undefined
+type State =
+  | {
+      isRegistered: boolean;
+      username: string;
+      email: string;
+      userData?: FormDataType[];
+    }
+  | undefined;
 
 function App() {
-  const state: State = useLocation().state
-  
+  const state: State = useLocation().state;
+
   const storedData: FormDataType[] = window.localStorage.getItem("savedData")
     ? JSON.parse(window.localStorage.getItem("savedData")!)
     : ([] as FormDataType[]);
@@ -53,14 +57,16 @@ function App() {
   const [isDemoActive, setIsDemoActive] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
- 
-  //To store the formData to be deleted 
+
+  //To store the formData to be deleted
   const [hackedNodeData, setHackedNodeData] = useState<FormDataType | null>(
     null
   );
   const [savedData, setSavedData] = useState(
-    isDemoActive ? demoData : storedData
+    state?.isRegistered ? state.userData! ?? [] : storedData
   );
+  
+
   const [userInfo, setUserInfo] = useState({
     username: !!state ? state?.username : "",
     email: !!state ? state?.email : "",
@@ -177,7 +183,7 @@ function App() {
         body: JSON.stringify({
           email: userInfo.email,
           toBeDeleted: JSON.parse(data),
-          operation: DataOperation.DELETE
+          operation: DataOperation.DELETE,
         }),
       })
         .then((response) => response.json())

@@ -304,7 +304,7 @@ const Form: any = (props: Props) => {
   };
 
   useEffect(() => {
-    if (!isDemoActive) {
+    if (!isDemoActive && !isRegistered) {
       window.localStorage.setItem("savedData", JSON.stringify(savedData));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
