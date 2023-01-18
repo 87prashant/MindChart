@@ -9,7 +9,7 @@ import {
   CancelButton,
 } from "./Form";
 import ClipLoader from "react-spinners/ClipLoader";
-import { ResponseStatus, UserChoiceList } from "./constants";
+import { ResponseStatus, UserChoiceList, Misc, Errors } from "./constants";
 
 const Container = styled(StyledDiv)({
   display: "none",
@@ -105,7 +105,7 @@ const SignUp = (props: Props) => {
     setIsChartAdded,
   } = props;
 
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState<String | null>(null);
   const [userChoice, setUserChoice] = useState(UserChoiceList.REGISTER);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -117,11 +117,22 @@ const SignUp = (props: Props) => {
   const forgetPasswordEmailRef = useRef<HTMLInputElement | null>(null);
   const formContainerRef = useRef<HTMLDivElement | null>(null);
 
+  function handleInvalidEmail() {
+    setLoading(false);
+    setStatus(Errors.INVALID_EMAIL);
+  }
+
   function handleFormSubmit(e: any) {
     e.preventDefault();
     setLoading(true);
     setStatus(null);
     if (userChoice === UserChoiceList.REGISTER) {
+      console.log(Misc.EMAIL_PATTERN.test(registerEmailRef.current!.value));
+      if (!Misc.EMAIL_PATTERN.test(registerEmailRef.current!.value)) {
+        handleInvalidEmail();
+        return;
+      }
+
       fetch(process.env.REACT_APP_REGISTER_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -139,6 +150,11 @@ const SignUp = (props: Props) => {
           setStatus(error);
         });
     } else if (userChoice === UserChoiceList.LOGIN) {
+      if (!Misc.EMAIL_PATTERN.test(loginEmailRef.current!.value)) {
+        handleInvalidEmail();
+        return;
+      }
+
       fetch(process.env.REACT_APP_LOGIN_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -165,6 +181,11 @@ const SignUp = (props: Props) => {
           }
         });
     } else {
+      if (!Misc.EMAIL_PATTERN.test(forgetPasswordEmailRef.current!.value)) {
+        handleInvalidEmail();
+        return;
+      }
+
       fetch(process.env.REACT_APP_FORGET_PASSWORD_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },

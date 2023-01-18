@@ -8,7 +8,7 @@
  * 7. Error Messages: {@link Errors}
  * 8. Option selected by user during registering on frontend {@link UserChoiceList}
  * 9. Misc: {@link Misc}
-*/
+ */
 
 const AccountStatus = {
   UNVERIFIED: "Unverified",
@@ -63,10 +63,12 @@ const Errors = {
   CATEGORY_REQUIRED: "At least select one category",
   EMOTION_REQUIRED: "At least select one emotion",
   DESCRIPTION_REQUIRED: "Description can not be empty",
+  INVALID_EMAIL: "Invalid Email",
 };
 
 const Misc = {
   GITHUB_LINK: "https://github.com/87prashant/MindChart",
+  EMAIL_PATTERN: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
 };
 
 const UserChoiceList = {
