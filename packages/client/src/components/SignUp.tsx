@@ -127,7 +127,6 @@ const SignUp = (props: Props) => {
     setLoading(true);
     setStatus(null);
     if (userChoice === UserChoiceList.REGISTER) {
-      console.log(Misc.EMAIL_PATTERN.test(registerEmailRef.current!.value));
       if (!Misc.EMAIL_PATTERN.test(registerEmailRef.current!.value)) {
         handleInvalidEmail();
         return;

@@ -64,7 +64,7 @@ const VerifyEmail = () => {
           return;
         }
         navigate("/", {
-          state: { isRegistered: true, username: data.username, email },
+          state: { isLoggedIn: true, username: data.username, email },
         });
       });
   }

@@ -127,7 +127,7 @@ interface Props {
   hackedNodeData: FormDataType;
   setHackedNodeData: any;
   userInfo: { username: string; email: string };
-  isRegistered: boolean;
+  isLoggedIn: boolean;
 }
 
 export interface Emotion {
@@ -177,7 +177,7 @@ const Form: any = (props: Props) => {
     hackedNodeData,
     setHackedNodeData,
     userInfo: { email },
-    isRegistered,
+    isLoggedIn,
   } = props;
 
   const [formErrors, setFormErrors] = useState({
@@ -280,7 +280,7 @@ const Form: any = (props: Props) => {
         return [...prev, formData];
       });
     }
-    if (isRegistered) {
+    if (isLoggedIn) {
       fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -304,7 +304,7 @@ const Form: any = (props: Props) => {
   };
 
   useEffect(() => {
-    if (!isDemoActive && !isRegistered) {
+    if (!isDemoActive && !isLoggedIn) {
       window.localStorage.setItem("savedData", JSON.stringify(savedData));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

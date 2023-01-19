@@ -108,7 +108,7 @@ interface Props {
   setIsChartAdded: any;
   demoData: FormDataType[];
   setIsRegistered: any;
-  isRegistered: boolean;
+  isLoggedIn: boolean;
   accountInfoRef: any;
   current: HTMLDivElement | null;
   userInfo: { username: string; email: string };
@@ -124,7 +124,7 @@ const Header = (props: Props) => {
     demoData,
     setIsChartAdded,
     setIsRegistered,
-    isRegistered,
+    isLoggedIn,
     accountInfoRef,
     current,
     userInfo,
@@ -172,12 +172,12 @@ const Header = (props: Props) => {
       <HelpButton href={Misc.GITHUB_LINK} target="_blank">
         <img src="github_logo.png" alt="" width="25" height="25" />
       </HelpButton>
-      {!isRegistered && (
+      {!isLoggedIn && (
         <DeleteAllData onClick={handleDeleteAllData}>
           Delete All Data
         </DeleteAllData>
       )}
-      {!isRegistered && (
+      {!isLoggedIn && (
         <DemoButton isDemoActive={isDemoActive} onClick={handleClick}>
           Demo
         </DemoButton>
@@ -186,10 +186,10 @@ const Header = (props: Props) => {
         <PlusIcon>+</PlusIcon>
         <AddText>Add</AddText>
       </AddButton>
-      {!isRegistered && (
+      {!isLoggedIn && (
         <SignUpButton onClick={openLoginPage}>Register</SignUpButton>
       )}
-      {!isRegistered && (
+      {!isLoggedIn && (
         <SignUp
           signUpFormRef={signUpFormRef}
           setIsRegistered={setIsRegistered}
@@ -198,7 +198,7 @@ const Header = (props: Props) => {
           setIsChartAdded={setIsChartAdded}
         />
       )}
-      {isRegistered && (
+      {isLoggedIn && (
         <div style={{ position: "relative" }}>
           <Account accountInfoRef={accountInfoRef} userInfo={userInfo} />
           <AccountInfo

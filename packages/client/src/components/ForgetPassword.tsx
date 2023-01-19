@@ -87,7 +87,7 @@ const ForgetPassword = () => {
         }
         navigate("/", {
           state: {
-            isRegistered: true,
+            isLoggedIn: true,
             username: data.username,
             email,
             userData: data.userData,

@@ -26,6 +26,7 @@ const Container = styled("div")({
   overflow: "hidden",
 });
 
+//To restrict re-rendering of the chart on zoom in and out
 function debounce(fn: any, ms: number) {
   let timer: any;
   return (_: any) => {
@@ -37,9 +38,10 @@ function debounce(fn: any, ms: number) {
   };
 }
 
+//It is passed in case routed from verification and forget-password page
 type State =
   | {
-      isRegistered: boolean;
+      isLoggedIn: boolean;
       username: string;
       email: string;
       userData?: FormDataType[];
@@ -48,24 +50,28 @@ type State =
 
 function App() {
   const state: State = useLocation().state;
-
-  const storedData: FormDataType[] = window.localStorage.getItem("savedData")
-    ? JSON.parse(window.localStorage.getItem("savedData")!)
-    : ([] as FormDataType[]);
-
-  const [isRegistered, setIsRegistered] = useState(!!state);
+  //To store if user is Logged in or not
+  const [isLoggedIn, setIsRegistered] = useState(!!state);
+  //To store if the demo mode is active or not
   const [isDemoActive, setIsDemoActive] = useState(false);
+  //To store if form should be visible to create new nodes or edit existing nodes
   const [showForm, setShowForm] = useState(false);
+  //
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
-
-  //To store the formData to be deleted
+  //To store the formData to be deleted after we delete or edit the node
   const [hackedNodeData, setHackedNodeData] = useState<FormDataType | null>(
     null
   );
+  //Return saved Data in case of not logged in
+  function getStoredData() {
+    return window.localStorage.getItem("savedData")
+      ? JSON.parse(window.localStorage.getItem("savedData")!)
+      : ([] as FormDataType[]);
+  }
+  //Store saved saved data return after fetching from database or localStorage
   const [savedData, setSavedData] = useState(
-    state?.isRegistered ? state.userData! ?? [] : storedData
+    state?.isLoggedIn ? state.userData ?? [] : getStoredData()
   );
-  
 
   const [userInfo, setUserInfo] = useState({
     username: !!state ? state?.username : "",
@@ -176,7 +182,7 @@ function App() {
       );
     });
     setSavedData([...newSavedData]);
-    if (isRegistered) {
+    if (isLoggedIn) {
       fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -204,7 +210,7 @@ function App() {
         setSavedData={setSavedData}
         setIsChartAdded={setIsChartAdded}
         demoData={demoData}
-        isRegistered={isRegistered}
+        isLoggedIn={isLoggedIn}
         setIsRegistered={setIsRegistered}
         accountInfoRef={accountInfoRef}
         current={current}
@@ -226,7 +232,7 @@ function App() {
         hackedNodeData={hackedNodeData}
         setHackedNodeData={setHackedNodeData}
         userInfo={userInfo}
-        isRegistered={isRegistered}
+        isLoggedIn={isLoggedIn}
       />
       <Main
         savedData={savedData}
