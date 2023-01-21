@@ -1,10 +1,10 @@
-import { NodeDataType, FormErrorType } from "./NodeForm";
+import { NodeDataType, NodeFormErrorType } from "./NodeForm";
 import { Errors } from "./constants";
 
-export const validateFormData = (data: NodeDataType, setNodeFormErrors: any) => {
+export const validateNodeData = (data: NodeDataType, setNodeFormErrors: any) => {
   let output = true;
   if (JSON.stringify(data.categories) === "{}") {
-    setNodeFormErrors((nodeFormErrors: FormErrorType) => {
+    setNodeFormErrors((nodeFormErrors: NodeFormErrorType) => {
       return {
         ...nodeFormErrors,
         categoriesError: `* ${Errors.CATEGORY_REQUIRED}`,
@@ -12,7 +12,7 @@ export const validateFormData = (data: NodeDataType, setNodeFormErrors: any) => 
     });
     output = false;
   } else {
-    setNodeFormErrors((nodeFormErrors: FormErrorType) => {
+    setNodeFormErrors((nodeFormErrors: NodeFormErrorType) => {
       return {
         ...nodeFormErrors,
         categoriesError: "",
@@ -20,7 +20,7 @@ export const validateFormData = (data: NodeDataType, setNodeFormErrors: any) => 
     });
   }
   if (JSON.stringify(data.emotions) === "{}") {
-    setNodeFormErrors((nodeFormErrors: FormErrorType) => {
+    setNodeFormErrors((nodeFormErrors: NodeFormErrorType) => {
       return {
         ...nodeFormErrors,
         emotionsError: `* ${Errors.EMOTION_REQUIRED}`,
@@ -28,7 +28,7 @@ export const validateFormData = (data: NodeDataType, setNodeFormErrors: any) => 
     });
     output = false;
   } else {
-    setNodeFormErrors((nodeFormErrors: FormErrorType) => {
+    setNodeFormErrors((nodeFormErrors: NodeFormErrorType) => {
       return {
         ...nodeFormErrors,
         emotionsError: "",
@@ -36,7 +36,7 @@ export const validateFormData = (data: NodeDataType, setNodeFormErrors: any) => 
     });
   }
   if (!data.description) {
-    setNodeFormErrors((nodeFormErrors: FormErrorType) => {
+    setNodeFormErrors((nodeFormErrors: NodeFormErrorType) => {
       return {
         ...nodeFormErrors,
         descriptionError: `* ${Errors.DESCRIPTION_REQUIRED}`,
@@ -44,7 +44,7 @@ export const validateFormData = (data: NodeDataType, setNodeFormErrors: any) => 
     });
     output = false;
   } else {
-    setNodeFormErrors((nodeFormErrors: FormErrorType) => {
+    setNodeFormErrors((nodeFormErrors: NodeFormErrorType) => {
       return {
         ...nodeFormErrors,
         descriptionError: "",

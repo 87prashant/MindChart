@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import React, { useState, useEffect, useMemo } from "react";
 import Emotions from "./Emotions";
 import Categories from "./Categories";
-import { validateFormData } from "./nodeFormValidation";
+import { validateNodeData } from "./nodeFormValidation";
 import Tips from "./Tips";
 import { DataOperation } from "./constants";
 
@@ -46,15 +46,15 @@ const DescriptionInput = styled("textarea")({
   marginBottom: 10,
 });
 
-export const SubmitButton = styled(Inputs)<{ isFormDataDuplicate: boolean }>(
-  ({ isFormDataDuplicate }) => ({
+export const SubmitButton = styled(Inputs)<{ isNodeDataDuplicate: boolean }>(
+  ({ isNodeDataDuplicate }) => ({
     position: "absolute",
     bottom: 50,
     left: 20,
-    cursor: isFormDataDuplicate ? "not-allowed" : "pointer",
+    cursor: isNodeDataDuplicate ? "not-allowed" : "pointer",
     fontWeight: "bold",
-    color: isFormDataDuplicate ? "rgba(0, 0, 0, 0.3)" : "black",
-    border: isFormDataDuplicate
+    color: isNodeDataDuplicate ? "rgba(0, 0, 0, 0.3)" : "black",
+    border: isNodeDataDuplicate
       ? "2px solid rgba(0, 0, 0, 0.3)"
       : "2px solid black",
   })
@@ -72,10 +72,10 @@ export const CancelButton = styled(Inputs)({
   },
 });
 
-export const StyledDiv = styled("div")<{ showForm: boolean }>(
-  ({ showForm }) => ({
+export const StyledDiv = styled("div")<{ showNodeForm: boolean }>(
+  ({ showNodeForm }) => ({
     position: "fixed",
-    display: showForm ? "block" : "none",
+    display: showNodeForm ? "block" : "none",
     top: 0,
     height: "100%",
     width: "100%",
@@ -116,8 +116,8 @@ const StyledSlider = styled("input")({
 });
 
 interface Props {
-  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
-  showForm: boolean;
+  setShowNodeForm: React.Dispatch<React.SetStateAction<boolean>>;
+  showNodeForm: boolean;
   savedData: NodeDataType[];
   setSavedData: any;
   setIsChartAdded: any;
@@ -158,16 +158,16 @@ export interface NodeDataType {
   _id?: string;
 }
 
-export interface FormErrorType {
+export interface NodeFormErrorType {
   categoriesError: string;
   emotionsError: string;
   descriptionError: string;
 }
 
-const Form: any = (props: Props) => {
+const NodeForm: any = (props: Props) => {
   const {
-    showForm,
-    setShowForm,
+    showNodeForm,
+    setShowNodeForm,
     setSavedData,
     setIsChartAdded,
     nodeData,
@@ -186,7 +186,7 @@ const Form: any = (props: Props) => {
     descriptionError: "",
   });
   const [isEarlySubmit, setIsEarlySubmit] = useState(false);
-  const refreshFormData = () => {
+  const refreshNodeData = () => {
     setNodeData(() => {
       return {
         categories: {
@@ -212,12 +212,12 @@ const Form: any = (props: Props) => {
       };
     });
   };
-  const [isFormDataDuplicate, setIsFormDataDuplicate] = useState(false);
+  const [isNodeDataDuplicate, setIsNodeDataDuplicate] = useState(false);
 
   useEffect(() => {
-    validateFormData(nodeData, setNodeFormErrors);
+    validateNodeData(nodeData, setNodeFormErrors);
     if (hackedNodeData) {
-      setIsFormDataDuplicate(
+      setIsNodeDataDuplicate(
         JSON.stringify(hackedNodeData) === JSON.stringify(nodeData)
       );
     }
@@ -226,8 +226,8 @@ const Form: any = (props: Props) => {
   }, [nodeData]);
 
   const handleCancel = () => {
-    setShowForm(false);
-    refreshFormData();
+    setShowNodeForm(false);
+    refreshNodeData();
     refreshFormErrors();
     setIsEarlySubmit(false);
   };
@@ -257,11 +257,11 @@ const Form: any = (props: Props) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateFormData(nodeData, setNodeFormErrors)) {
+    if (!validateNodeData(nodeData, setNodeFormErrors)) {
       setIsEarlySubmit(true);
       return;
     }
-    if (isFormDataDuplicate) return;
+    if (isNodeDataDuplicate) return;
 
     if (hackedNodeData) {
       const newSavedData = savedData.filter((d) => {
@@ -288,7 +288,7 @@ const Form: any = (props: Props) => {
           email,
           toBeAdded: nodeData,
           toBeDeleted: hackedNodeData,
-          operation: hackedNodeData ? DataOperation.UPDATE : DataOperation.ADD
+          operation: hackedNodeData ? DataOperation.UPDATE : DataOperation.ADD,
         }),
       })
         .then((response) => response.json())
@@ -296,9 +296,9 @@ const Form: any = (props: Props) => {
         .then((data) => {});
     }
     setHackedNodeData(null);
-    refreshFormData();
+    refreshNodeData();
     refreshFormErrors();
-    setShowForm(false);
+    setShowNodeForm(false);
     setIsChartAdded(false);
     setIsEarlySubmit(false);
   };
@@ -313,10 +313,10 @@ const Form: any = (props: Props) => {
   const tips = useMemo(() => {
     return <Tips />;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showForm]);
+  }, [showNodeForm]);
 
   return (
-    <StyledDiv showForm={showForm}>
+    <StyledDiv showNodeForm={showNodeForm}>
       <StyledWrapper>
         <form onSubmit={handleSubmit}>
           <StyledContainer>
@@ -357,7 +357,7 @@ const Form: any = (props: Props) => {
             />
           </StyledContainer>
           <SubmitButton
-            isFormDataDuplicate={isFormDataDuplicate}
+            isNodeDataDuplicate={isNodeDataDuplicate}
             type="submit"
             value="Submit"
           />
@@ -369,4 +369,4 @@ const Form: any = (props: Props) => {
   );
 };
 
-export default Form;
+export default NodeForm;

@@ -9,7 +9,7 @@ import Main from "../Main";
 import Header from "../Header";
 import { NodeDataType } from "../NodeForm";
 import "../../App.css";
-import Form from "../NodeForm";
+import NodeForm from "../NodeForm";
 import HoverModal from "../HoverModal";
 import { DataOperation } from "../constants";
 import { demoData } from "./DemoData";
@@ -61,7 +61,7 @@ function App() {
   //To store if the demo mode is active or not
   const [isDemoActive, setIsDemoActive] = useState(false);
   //To store if node form should be visible to create/edit nodes
-  const [showForm, setShowForm] = useState(false);
+  const [ showNodeForm,  setShowNodeForm] = useState(false);
   //
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
   //To store the nodeData to be deleted after we delete or edit the node
@@ -84,7 +84,7 @@ function App() {
     w: 0,
     h: 0,
   });
-  //store the node data 
+  //store the node form data when creating new node or editing existing data
   const [nodeData, setNodeData] = useState({
     categories: {
       creative: false,
@@ -170,7 +170,7 @@ function App() {
     setHackedNodeData(JSON.parse(data));
     current!.style.visibility = "hidden";
     setNodeData(() => JSON.parse(data));
-    setShowForm(true);
+     setShowNodeForm(true);
   }
 
   function handleDelete(hackDataRef: any) {
@@ -209,7 +209,7 @@ function App() {
       <Header
         setIsDemoActive={setIsDemoActive}
         isDemoActive={isDemoActive}
-        setShowForm={setShowForm}
+         setShowNodeForm={ setShowNodeForm}
         setSavedData={setSavedData}
         setIsChartAdded={setIsChartAdded}
         demoData={demoData}
@@ -223,11 +223,11 @@ function App() {
       <Container ref={ref}>
         <HoverModal handleEdit={handleEdit} handleDelete={handleDelete} />
       </Container>
-      <Form
+      <NodeForm
         savedData={savedData}
         setSavedData={setSavedData}
-        showForm={showForm}
-        setShowForm={setShowForm}
+         showNodeForm={ showNodeForm}
+         setShowNodeForm={ setShowNodeForm}
         setIsChartAdded={setIsChartAdded}
         nodeData={nodeData}
         setNodeData={setNodeData}

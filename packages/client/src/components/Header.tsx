@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import styled from "@emotion/styled";
 import { NodeDataType } from "./NodeForm";
-import SignUp from "./SignUp";
+import Authentication from "./AuthenticationForm";
 import Account from "./Account";
 import AccountInfo from "./AccountInfo";
 import { Misc } from "./constants";
@@ -79,7 +79,7 @@ const DemoButton = styled("button")<{ isDemoActive: boolean }>(
   })
 );
 
-export const SignUpButton = styled("button")({
+export const AuthenticationButton = styled("button")({
   margin: "0 20px",
   padding: "10px",
   textDecoration: "none",
@@ -101,7 +101,7 @@ const AddText = styled("span")({
 });
 
 interface Props {
-  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowNodeForm: React.Dispatch<React.SetStateAction<boolean>>;
   isDemoActive: boolean;
   setIsDemoActive: any;
   setSavedData: any;
@@ -117,7 +117,7 @@ interface Props {
 
 const Header = (props: Props) => {
   const {
-    setShowForm,
+    setShowNodeForm,
     isDemoActive,
     setIsDemoActive,
     setSavedData,
@@ -131,11 +131,11 @@ const Header = (props: Props) => {
     setUserInfo,
   } = props;
 
-  const showForm = () => {
-    setShowForm(true);
+  const showNodeForm = () => {
+    setShowNodeForm(true);
   };
 
-  const signUpFormRef = useRef<HTMLDivElement | null>(null);
+  const authenticationFormRef = useRef<HTMLDivElement | null>(null);
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
@@ -150,7 +150,7 @@ const Header = (props: Props) => {
   }
 
   function openLoginPage() {
-    signUpFormRef.current!.style.display = "block";
+    authenticationFormRef.current!.style.display = "block";
   }
 
   function handleHeaderClick() {
@@ -182,16 +182,16 @@ const Header = (props: Props) => {
           Demo
         </DemoButton>
       )}
-      <AddButton onClick={() => showForm()}>
+      <AddButton onClick={() => showNodeForm()}>
         <PlusIcon>+</PlusIcon>
         <AddText>Add</AddText>
       </AddButton>
       {!isLoggedIn && (
-        <SignUpButton onClick={openLoginPage}>Register</SignUpButton>
+        <AuthenticationButton onClick={openLoginPage}>Register</AuthenticationButton>
       )}
       {!isLoggedIn && (
-        <SignUp
-          signUpFormRef={signUpFormRef}
+        <Authentication
+          authenticationFormRef={authenticationFormRef}
           setIsRegistered={setIsRegistered}
           setUserInfo={setUserInfo}
           setSavedData={setSavedData}
