@@ -2,7 +2,7 @@
 
 import styled from "@emotion/styled";
 import React, { useState } from "react";
-import { FormDataType } from "./Form";
+import { NodeDataType } from "./NodeForm";
 
 const Container = styled("div")({
   position: "fixed",
@@ -79,35 +79,35 @@ const StyledSlider = styled("input")({
 interface Props {
   event: any;
   setIntensityForm: React.Dispatch<React.SetStateAction<JSX.Element | null>>;
-  formData: FormDataType;
-  setFormData: any;
+  nodeData: NodeDataType;
+  setNodeData: any;
 }
 
 const IntensityForm = (props: Props) => {
-  const { event, setIntensityForm, formData, setFormData } = props;
+  const { event, setIntensityForm, nodeData, setNodeData } = props;
   const { id }: { id: string } = event.target;
   const selectedEmotion =
-    formData.emotions[id as keyof typeof formData.emotions];
+    nodeData.emotions[id as keyof typeof nodeData.emotions];
   // to force update this component
   const [intensity, setIntensity] = useState(selectedEmotion || 40);
   const handleChange = (e: any) => {
     setIntensity(e.target.value);
   };
   const handleCancel = () => {
-    setFormData((formData: FormDataType) => ({
-      ...formData,
+    setNodeData((nodeData: NodeDataType) => ({
+      ...nodeData,
       emotions: {
-        ...formData.emotions,
+        ...nodeData.emotions,
         [id]: undefined,
       },
     }));
     setIntensityForm(null);
   };
   const handleDone = () => {
-    setFormData((formData: FormDataType) => ({
-      ...formData,
+    setNodeData((nodeData: NodeDataType) => ({
+      ...nodeData,
       emotions: {
-        ...formData.emotions,
+        ...nodeData.emotions,
         [id]: intensity,
       },
     }));

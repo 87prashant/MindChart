@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React, { useState } from "react";
-import { FormDataType } from "./Form";
+import { NodeDataType } from "./NodeForm";
 import IntensityForm from "./IntensityForm";
 import { EmotionsList } from "./constants";
 
@@ -27,12 +27,12 @@ export const emotions = [
 ];
 
 interface Props {
-  formData: FormDataType;
-  setFormData: any;
+  nodeData: NodeDataType;
+  setNodeData: any;
 }
 
 const Emotions = (props: Props) => {
-  const { formData, setFormData } = props;
+  const { nodeData, setNodeData } = props;
   const [intensityForm, setIntensityForm] = useState<null | JSX.Element>(null);
 
   const handleChange = (e: any) => {
@@ -40,8 +40,8 @@ const Emotions = (props: Props) => {
       return (
         <IntensityForm
           event={e}
-          formData={formData}
-          setFormData={setFormData}
+          nodeData={nodeData}
+          setNodeData={setNodeData}
           setIntensityForm={setIntensityForm}
         />
       );
@@ -56,7 +56,7 @@ const Emotions = (props: Props) => {
           id={data}
           name="emotions"
           checked={
-            !!formData.emotions?.[data as keyof typeof formData.emotions]
+            !!nodeData.emotions?.[data as keyof typeof nodeData.emotions]
           }
           onChange={handleChange}
         />

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
-import { FormDataType } from "./Form";
+import { NodeDataType } from "./NodeForm";
 
 const StyledWrapper = styled("div")({
   height: "calc(100vh - 70px)",
@@ -19,7 +19,7 @@ const StyledWrapper = styled("div")({
 });
 
 interface Props {
-  savedData: FormDataType[];
+  savedData: NodeDataType[];
   isChartAdded: boolean;
   setIsChartAdded: any;
   handleNodeClick: any;

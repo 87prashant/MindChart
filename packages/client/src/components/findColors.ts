@@ -1,6 +1,6 @@
 // currently return color of max intensity emotion
 
-import { Emotion } from "./Form";
+import { Emotion } from "./NodeForm";
 import { EmotionsList, EmotionsColor } from "./constants";
 
 export const findColors = (emotions: Emotion) => {

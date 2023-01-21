@@ -356,7 +356,7 @@ app.post("/login", async function (req, res) {
 });
 
 app.post("/modify-data", async function (req, res) {
-  //currently there is no immutable field in formData to find required formData. So need to send the two formData to distinguish between the oldFormData to be deleted and newFormData to be added
+  //currently there is no immutable field in nodeData to find required nodeData. So need to send the two nodeData to distinguish between the oldFormData to be deleted and newFormData to be added
   const {
     email,
     toBeAdded: newFormData,

@@ -1,6 +1,6 @@
-import { FormDataType } from "../Form";
+import { NodeDataType } from "../NodeForm";
 
-export const demoData: FormDataType[] = [
+export const demoData: NodeDataType[] = [
     {
       categories: {
         creative: true,

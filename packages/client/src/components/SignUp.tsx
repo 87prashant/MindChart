@@ -7,7 +7,7 @@ import {
   StyledDiv,
   SubmitButton,
   CancelButton,
-} from "./Form";
+} from "./NodeForm";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ResponseStatus, UserChoiceList, Misc, Errors } from "./constants";
 
@@ -115,7 +115,7 @@ const SignUp = (props: Props) => {
   const loginEmailRef = useRef<HTMLInputElement | null>(null);
   const loginPassRef = useRef<HTMLInputElement | null>(null);
   const forgetPasswordEmailRef = useRef<HTMLInputElement | null>(null);
-  const formContainerRef = useRef<HTMLDivElement | null>(null);
+  const nodeFormContainerRef = useRef<HTMLDivElement | null>(null);
 
   function handleInvalidEmail() {
     setLoading(false);
@@ -209,7 +209,7 @@ const SignUp = (props: Props) => {
   function handleUserChoice(choice: string) {
     setUserChoice(choice);
     setStatus(null);
-    formContainerRef.current!.style.transform =
+    nodeFormContainerRef.current!.style.transform =
       choice === UserChoiceList.REGISTER
         ? ""
         : choice === UserChoiceList.LOGIN
@@ -220,7 +220,7 @@ const SignUp = (props: Props) => {
   return (
     <Container showForm={false} ref={signUpFormRef}>
       <Wrapper>
-        <FormContainer ref={formContainerRef}>
+        <FormContainer ref={nodeFormContainerRef}>
           <RegisterForm>
             <StyledHeader>Create an account</StyledHeader>
             <StyledInputName>Name</StyledInputName>

@@ -4,12 +4,12 @@
 import * as d3 from "d3";
 import { emotions } from "./Emotions";
 import { findColors } from "./findColors";
-import { Emotion, FormDataType } from "./Form";
+import { Emotion, NodeDataType } from "./NodeForm";
 
 interface Props {
   w: number;
   h: number;
-  savedData: FormDataType[];
+  savedData: NodeDataType[];
   current: HTMLDivElement | null;
   handleNodeClick: any;
 }

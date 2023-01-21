@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import CommonBackground from "./CommonBackground";
-import { StyledWrapper } from "./Form";
+import { StyledWrapper } from "./NodeForm";
 import { SignUpButton } from "./Header";
 import { StyledInput, StyledInputName } from "./SignUp";
 import { ResponseStatus, Errors } from "./constants";

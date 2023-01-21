@@ -7,9 +7,9 @@ import { useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import Main from "../Main";
 import Header from "../Header";
-import { FormDataType } from "../Form";
+import { NodeDataType } from "../NodeForm";
 import "../../App.css";
-import Form from "../Form";
+import Form from "../NodeForm";
 import HoverModal from "../HoverModal";
 import { DataOperation } from "../constants";
 import { demoData } from "./DemoData";
@@ -37,52 +37,55 @@ function debounce(fn: any, ms: number) {
     }, ms);
   };
 }
+//Returns saved Data in case of not logged in
+function getStoredData() {
+  return window.localStorage.getItem("savedData")
+    ? JSON.parse(window.localStorage.getItem("savedData")!)
+    : ([] as NodeDataType[]);
+}
 
-//It is passed in case routed from verification and forget-password page
 type State =
-  | {
-      isLoggedIn: boolean;
-      username: string;
-      email: string;
-      userData?: FormDataType[];
-    }
-  | undefined;
+| {
+  isLoggedIn: boolean;
+  username: string;
+  email: string;
+  userData?: NodeDataType[];
+}
+| undefined;
 
 function App() {
+  //It is passed in case routed from verification and forget-password page
   const state: State = useLocation().state;
   //To store if user is Logged in or not
   const [isLoggedIn, setIsRegistered] = useState(!!state);
   //To store if the demo mode is active or not
   const [isDemoActive, setIsDemoActive] = useState(false);
-  //To store if form should be visible to create new nodes or edit existing nodes
+  //To store if node form should be visible to create/edit nodes
   const [showForm, setShowForm] = useState(false);
   //
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
-  //To store the formData to be deleted after we delete or edit the node
-  const [hackedNodeData, setHackedNodeData] = useState<FormDataType | null>(
+  //To store the nodeData to be deleted after we delete or edit the node
+  const [hackedNodeData, setHackedNodeData] = useState<NodeDataType | null>(
     null
   );
-  //Return saved Data in case of not logged in
-  function getStoredData() {
-    return window.localStorage.getItem("savedData")
-      ? JSON.parse(window.localStorage.getItem("savedData")!)
-      : ([] as FormDataType[]);
-  }
   //Store saved saved data return after fetching from database or localStorage
   const [savedData, setSavedData] = useState(
     state?.isLoggedIn ? state.userData ?? [] : getStoredData()
   );
-
+  //Store the info of Logged in user
   const [userInfo, setUserInfo] = useState({
     username: !!state ? state?.username : "",
     email: !!state ? state?.email : "",
   });
+  //Store if the chart is added—or updated—or not
   const [isChartAdded, setIsChartAdded] = useState(false);
+  //Store the dimensions of the window to update the chart on zoom in/out
   const [dimensions, setDimensions] = useState({
     w: 0,
     h: 0,
   });
-  const [formData, setFormData] = useState({
+  //store the node data 
+  const [nodeData, setNodeData] = useState({
     categories: {
       creative: false,
       concrete: false,
@@ -166,14 +169,14 @@ function App() {
     const data = hackDataRef.current!.innerHTML;
     setHackedNodeData(JSON.parse(data));
     current!.style.visibility = "hidden";
-    setFormData(() => JSON.parse(data));
+    setNodeData(() => JSON.parse(data));
     setShowForm(true);
   }
 
   function handleDelete(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
     const { categories, emotions, description, priority } = JSON.parse(data);
-    const newSavedData = (savedData as any).filter((d: FormDataType) => {
+    const newSavedData = (savedData as any).filter((d: NodeDataType) => {
       return (
         d.categories !== categories &&
         d.emotions !== emotions &&
@@ -226,8 +229,8 @@ function App() {
         showForm={showForm}
         setShowForm={setShowForm}
         setIsChartAdded={setIsChartAdded}
-        formData={formData}
-        setFormData={setFormData}
+        nodeData={nodeData}
+        setNodeData={setNodeData}
         isDemoActive={isDemoActive}
         hackedNodeData={hackedNodeData}
         setHackedNodeData={setHackedNodeData}

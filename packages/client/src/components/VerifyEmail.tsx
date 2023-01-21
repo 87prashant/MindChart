@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommonBackground from "./CommonBackground";
 import styled from "@emotion/styled";
-import { StyledWrapper } from "./Form";
+import { StyledWrapper } from "./NodeForm";
 import { SignUpButton } from "./Header";
 import { ClipLoader } from "react-spinners";
 

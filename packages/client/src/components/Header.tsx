@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import styled from "@emotion/styled";
-import { FormDataType } from "./Form";
+import { NodeDataType } from "./NodeForm";
 import SignUp from "./SignUp";
 import Account from "./Account";
 import AccountInfo from "./AccountInfo";
@@ -106,7 +106,7 @@ interface Props {
   setIsDemoActive: any;
   setSavedData: any;
   setIsChartAdded: any;
-  demoData: FormDataType[];
+  demoData: NodeDataType[];
   setIsRegistered: any;
   isLoggedIn: boolean;
   accountInfoRef: any;
@@ -139,11 +139,11 @@ const Header = (props: Props) => {
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
-    const storedData: FormDataType[] = window.localStorage.getItem("savedData")
+    const storedData: NodeDataType[] = window.localStorage.getItem("savedData")
       ? JSON.parse(window.localStorage.getItem("savedData")!)
       : [];
     //"!isDemoActive" because I am updating isDemoActive at the same time above. Maybe there is other right way to do it.
-    setSavedData((prev: FormDataType[]) =>
+    setSavedData((prev: NodeDataType[]) =>
       !isDemoActive ? demoData : storedData
     );
     setIsChartAdded(false);

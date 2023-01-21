@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React from "react";
-import { FormDataType } from "./Form";
+import { NodeDataType } from "./NodeForm";
 import { CategoriesList } from "./constants";
 
 const Wrapper = styled("div")({
@@ -15,12 +15,12 @@ const Wrapper = styled("div")({
 });
 
 interface Props {
-  formData: FormDataType;
+  nodeData: NodeDataType;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Categories = (props: Props) => {
-  const { formData, handleChange } = props;
+  const { nodeData, handleChange } = props;
   const categories = [
     CategoriesList.CREATIVE,
     CategoriesList.ANALYTICAL,
@@ -38,7 +38,7 @@ const Categories = (props: Props) => {
           id={data}
           name="categories"
           checked={
-            formData.categories?.[data as keyof typeof formData.categories]
+            nodeData.categories?.[data as keyof typeof nodeData.categories]
           }
           onChange={handleChange}
         />
