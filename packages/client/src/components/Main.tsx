@@ -23,7 +23,7 @@ interface Props {
   isChartAdded: boolean;
   setIsChartAdded: any;
   handleNodeClick: any;
-  ref2: any;
+  mainRef: any;
   dimensions: {
     w: number;
     h: number;
@@ -38,7 +38,7 @@ const Main = (props: Props) => {
     isChartAdded,
     setIsChartAdded,
     handleNodeClick,
-    ref2,
+    mainRef,
     dimensions,
     current,
     accountInfoRef,
@@ -50,8 +50,8 @@ const Main = (props: Props) => {
     const { w, h } = dimensions;
     const newProps = { w, h, savedData, handleNodeClick, current };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
-    ref2.current!.innerHTML = "";
-    ref2.current!.append(svg);
+    mainRef.current!.innerHTML = "";
+    mainRef.current!.append(svg);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedData, dimensions]);
 
@@ -64,7 +64,7 @@ const Main = (props: Props) => {
     }
   }
 
-  return <StyledWrapper onClick={handleClick} ref={ref2}></StyledWrapper>;
+  return <StyledWrapper onClick={handleClick} ref={mainRef}></StyledWrapper>;
 };
 
 export default Main;

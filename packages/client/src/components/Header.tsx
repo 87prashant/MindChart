@@ -101,7 +101,7 @@ const AddText = styled("span")({
 });
 
 interface Props {
-  setShowNodeForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowNodeForm: any;
   isDemoActive: boolean;
   setIsDemoActive: any;
   setSavedData: any;
@@ -187,7 +187,9 @@ const Header = (props: Props) => {
         <AddText>Add</AddText>
       </AddButton>
       {!isLoggedIn && (
-        <AuthenticationButton onClick={openLoginPage}>Register</AuthenticationButton>
+        <AuthenticationButton onClick={openLoginPage}>
+          Register
+        </AuthenticationButton>
       )}
       {!isLoggedIn && (
         <Authentication

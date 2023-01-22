@@ -45,13 +45,13 @@ function getStoredData() {
 }
 
 type State =
-| {
-  isLoggedIn: boolean;
-  username: string;
-  email: string;
-  userData?: NodeDataType[];
-}
-| undefined;
+  | {
+      isLoggedIn: boolean;
+      username: string;
+      email: string;
+      userData?: NodeDataType[];
+    }
+  | undefined;
 
 function App() {
   //It is passed in case routed from verification and forget-password page
@@ -61,29 +61,26 @@ function App() {
   //To store if the demo mode is active or not
   const [isDemoActive, setIsDemoActive] = useState(false);
   //To store if node form should be visible to create/edit nodes
-  const [ showNodeForm,  setShowNodeForm] = useState(false);
+  const [showNodeForm, setShowNodeForm] = useState(false);
   //
   const [current, setCurrent] = useState<HTMLDivElement | null>(null);
   //To store the nodeData to be deleted after we delete or edit the node
   const [hackedNodeData, setHackedNodeData] = useState<NodeDataType | null>(
     null
   );
-  //Store saved saved data return after fetching from database or localStorage
+  //Store saved data after fetching from database or localStorage
   const [savedData, setSavedData] = useState(
     state?.isLoggedIn ? state.userData ?? [] : getStoredData()
   );
-  //Store the info of Logged in user
+  //Store info of Logged in user
   const [userInfo, setUserInfo] = useState({
-    username: !!state ? state?.username : "",
-    email: !!state ? state?.email : "",
+    username: !!state ? state.username : "",
+    email: !!state ? state.email : "",
   });
-  //Store if the chart is added—or updated—or not
+  //Store if the chart is added/updated or not
   const [isChartAdded, setIsChartAdded] = useState(false);
   //Store the dimensions of the window to update the chart on zoom in/out
-  const [dimensions, setDimensions] = useState({
-    w: 0,
-    h: 0,
-  });
+  const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
   //store the node form data when creating new node or editing existing data
   const [nodeData, setNodeData] = useState({
     categories: {
@@ -99,34 +96,41 @@ function App() {
     description: "",
   });
 
-  const ref = useRef<HTMLDivElement>(null);
-  const ref2 = useRef<HTMLDivElement>(null);
+  //Hover modal reference
+  const hoverModalRef = useRef<HTMLDivElement>(null);
+  //Main/Chart Wrapper reference
+  const mainRef = useRef<HTMLDivElement>(null);
+  //Account Info modal reference
   const accountInfoRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    setIsChartAdded(false);
+    // setIsChartAdded(false);  //maybe not needed
     setDimensions({
-      w: ref2.current!.getBoundingClientRect().width,
-      h: ref2.current!.getBoundingClientRect().height,
+      w: mainRef.current!.getBoundingClientRect().width,
+      h: mainRef.current!.getBoundingClientRect().height,
     });
     const handleDebounceResize = debounce(function handleResize() {
       setIsChartAdded(false);
       setDimensions({
-        w: ref2.current!.getBoundingClientRect().width,
-        h: ref2.current!.getBoundingClientRect().height,
+        w: mainRef.current!.getBoundingClientRect().width,
+        h: mainRef.current!.getBoundingClientRect().height,
       });
     }, 300);
 
     window.addEventListener("resize", handleDebounceResize);
-    return ref.current!.removeEventListener("resize", handleDebounceResize);
+    return hoverModalRef.current!.removeEventListener(
+      "resize",
+      handleDebounceResize
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    setCurrent(() => ref.current);
+    setCurrent(() => hoverModalRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
+  //handles node click on chart
   function handleNodeClick(e: any) {
     e.stopPropagation();
     const r = e.srcElement.r.baseVal.value;
@@ -165,14 +169,16 @@ function App() {
     current!.style.visibility = "visible";
   }
 
+  //handles node edit
   function handleEdit(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
     setHackedNodeData(JSON.parse(data));
     current!.style.visibility = "hidden";
     setNodeData(() => JSON.parse(data));
-     setShowNodeForm(true);
+    setShowNodeForm(true);
   }
 
+  //handles node delete
   function handleDelete(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
     const { categories, emotions, description, priority } = JSON.parse(data);
@@ -209,7 +215,7 @@ function App() {
       <Header
         setIsDemoActive={setIsDemoActive}
         isDemoActive={isDemoActive}
-         setShowNodeForm={ setShowNodeForm}
+        setShowNodeForm={setShowNodeForm}
         setSavedData={setSavedData}
         setIsChartAdded={setIsChartAdded}
         demoData={demoData}
@@ -220,23 +226,25 @@ function App() {
         userInfo={userInfo}
         setUserInfo={setUserInfo}
       />
-      <Container ref={ref}>
+      <Container ref={hoverModalRef}>
         <HoverModal handleEdit={handleEdit} handleDelete={handleDelete} />
       </Container>
-      <NodeForm
-        savedData={savedData}
-        setSavedData={setSavedData}
-         showNodeForm={ showNodeForm}
-         setShowNodeForm={ setShowNodeForm}
-        setIsChartAdded={setIsChartAdded}
-        nodeData={nodeData}
-        setNodeData={setNodeData}
-        isDemoActive={isDemoActive}
-        hackedNodeData={hackedNodeData}
-        setHackedNodeData={setHackedNodeData}
-        userInfo={userInfo}
-        isLoggedIn={isLoggedIn}
-      />
+      {showNodeForm && (
+        <NodeForm
+          savedData={savedData}
+          setSavedData={setSavedData}
+          showNodeForm={showNodeForm}
+          setShowNodeForm={setShowNodeForm}
+          setIsChartAdded={setIsChartAdded}
+          nodeData={nodeData}
+          setNodeData={setNodeData}
+          isDemoActive={isDemoActive}
+          hackedNodeData={hackedNodeData}
+          setHackedNodeData={setHackedNodeData}
+          userInfo={userInfo}
+          isLoggedIn={isLoggedIn}
+        />
+      )}
       <Main
         savedData={savedData}
         isChartAdded={isChartAdded}
@@ -244,7 +252,7 @@ function App() {
         handleNodeClick={handleNodeClick}
         dimensions={dimensions}
         current={current}
-        ref2={ref2}
+        mainRef={mainRef}
         accountInfoRef={accountInfoRef}
       />
     </div>

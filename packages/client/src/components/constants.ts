@@ -68,7 +68,7 @@ const Errors = {
 
 const Misc = {
   GITHUB_LINK: "https://github.com/87prashant/MindChart",
-  EMAIL_PATTERN: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
+  EMAIL_PATTERN: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
 };
 
 const UserChoiceList = {

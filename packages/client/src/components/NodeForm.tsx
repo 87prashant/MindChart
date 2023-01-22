@@ -72,16 +72,13 @@ export const CancelButton = styled(Inputs)({
   },
 });
 
-export const StyledDiv = styled("div")<{ showNodeForm: boolean }>(
-  ({ showNodeForm }) => ({
+export const StyledDiv = styled("div")({
     position: "fixed",
-    display: showNodeForm ? "block" : "none",
     top: 0,
     height: "100%",
     width: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.20)",
   })
-);
 
 const StyledErrors = styled("div")<{ isEarlySubmit: boolean }>(
   ({ isEarlySubmit }) => ({
@@ -116,7 +113,7 @@ const StyledSlider = styled("input")({
 });
 
 interface Props {
-  setShowNodeForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowNodeForm: any;
   showNodeForm: boolean;
   savedData: NodeDataType[];
   setSavedData: any;
@@ -316,7 +313,7 @@ const NodeForm: any = (props: Props) => {
   }, [showNodeForm]);
 
   return (
-    <StyledDiv showNodeForm={showNodeForm}>
+    <StyledDiv>
       <StyledWrapper>
         <form onSubmit={handleSubmit}>
           <StyledContainer>

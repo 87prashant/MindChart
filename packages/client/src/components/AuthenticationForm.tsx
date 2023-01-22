@@ -218,7 +218,7 @@ const Authentication = (props: Props) => {
   }
 
   return (
-    <Container  showNodeForm={false} ref={authenticationFormRef}>
+    <Container ref={authenticationFormRef}>
       <Wrapper>
         <FormContainer ref={nodeFormContainerRef}>
           <RegisterForm>
