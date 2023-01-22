@@ -10,12 +10,12 @@ interface Props {
   w: number;
   h: number;
   savedData: NodeDataType[];
-  current: HTMLDivElement | null;
+  setShowNodeClickModal: any;
   handleNodeClick: any;
 }
 
 const MiniChart = (props: Props) => {
-  const { w, h, savedData, handleNodeClick, current } = props;
+  const { w, h, savedData, handleNodeClick, setShowNodeClickModal } = props;
   const findGroupArray = (data: Emotion) => {
     let arr: any = []; //give proper type
     for (let key in JSON.parse(JSON.stringify(data))) {
@@ -98,7 +98,7 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(nodes)
     .join("circle")
-    .attr("id", ({ index: i }) => mappedHackDataArray[i!]) // for HoverModel
+    .attr("id", ({ index: i }) => mappedHackDataArray[i!]) // for NodeClickModel
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)
@@ -143,14 +143,14 @@ const MiniChart = (props: Props) => {
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
       handleOtherNodes("fixOtherNodes");
-      current!.style.visibility = "hidden";
+      setShowNodeClickModal(false)
     }
 
     function dragged(event: any) {
       handleOtherNodes();
       event.subject.fx = event.sourceEvent.clientX - w / 2;
       event.subject.fy = event.sourceEvent.clientY - h / 2 - 70;
-      current!.style.visibility = "hidden";
+      setShowNodeClickModal(false)
     }
 
     function dragended(event: any) {

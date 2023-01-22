@@ -10,22 +10,21 @@ import Header from "../Header";
 import { NodeDataType } from "../NodeForm";
 import "../../App.css";
 import NodeForm from "../NodeForm";
-import HoverModal from "../HoverModal";
+import NodeClickModal from "../NodeClickModal";
 import { DataOperation } from "../constants";
 import { demoData } from "./demoData";
-import React from "react";
 
-const Container = styled("div")({
+const Container = styled("div")<{showNodeClickModal: boolean}>(({showNodeClickModal}) => ({
   border: "2px solid black",
   position: "absolute",
-  visibility: "hidden",
   backgroundColor: "rgba(225, 225, 225, 1)",
+  visibility: showNodeClickModal ? "visible" : "hidden",
   borderRadius: 7,
   padding: 4,
   maxWidth: 200,
   maxHeight: 200,
   overflow: "hidden",
-});
+}));
 
 //To restrict re-rendering of the chart on zoom in and out
 function debounce(fn: any, ms: number) {
@@ -58,32 +57,32 @@ type State =
 function App() {
   //It is passed in case routed from verification and forget-password page
   const state: State = useLocation().state;
-  //To store if user is Logged in or not
+  //Stores if user is Logged in or not
   const [isLoggedIn, setIsRegistered] = useState(!!state);
-  //To store if the demo mode is active or not
+  //Stores if the demo mode is active or not
   const [isDemoActive, setIsDemoActive] = useState(false);
-  //To store if node form should be visible to create/edit nodes
+  //Stores if node form should be visible to create/edit nodes
   const [showNodeForm, setShowNodeForm] = useState(false);
-  //
-  const [current, setCurrent] = useState<HTMLDivElement | null>(null);
-  //To store the nodeData to be deleted after we delete or edit the node
+  //Stores if to show the nodeClickModal or not
+  const [showNodeClickModal, setShowNodeClickModal] = useState(false);
+  //Stores the nodeData to be deleted after we delete or edit the node
   const [hackedNodeData, setHackedNodeData] = useState<NodeDataType | null>(
     null
   );
-  //Store saved data after fetching from database or localStorage
+  //Stores saved data after fetching from database or localStorage
   const [savedData, setSavedData] = useState(
     state?.isLoggedIn ? state.userData ?? [] : getStoredData()
   );
-  //Store info of Logged in user
+  //Stores info of Logged in user
   const [userInfo, setUserInfo] = useState({
     username: !!state ? state.username : "",
     email: !!state ? state.email : "",
   });
-  //Store if the chart is added/updated or not
+  //Stores if the chart is added/updated or not
   const [isChartAdded, setIsChartAdded] = useState(false);
-  //Store the dimensions of the window to update the chart on zoom in/out
+  //Stores the dimensions of the window to update the chart on zoom in/out
   const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
-  //store the node form data when creating new node or editing existing data
+  //Stores the node form data when creating new node or editing existing data
   const [nodeData, setNodeData] = useState({
     categories: {
       creative: false,
@@ -98,15 +97,14 @@ function App() {
     description: "",
   });
 
-  //Hover modal reference
-  const hoverModalRef = useRef<HTMLDivElement>(null);
-  //Main/Chart Wrapper reference
+  //NodeClickModal reference
+  const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
+  //Main reference
   const mainRef = useRef<HTMLDivElement>(null);
   //Account Info modal reference
   const accountInfoRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // setIsChartAdded(false);  //maybe not needed
     setDimensions({
       w: mainRef.current!.getBoundingClientRect().width,
       h: mainRef.current!.getBoundingClientRect().height,
@@ -118,26 +116,16 @@ function App() {
         h: mainRef.current!.getBoundingClientRect().height,
       });
     }, 300);
-
     window.addEventListener("resize", handleDebounceResize);
-    //why? check
-    return hoverModalRef.current!.removeEventListener(
-      "resize",
-      handleDebounceResize
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    setCurrent(() => hoverModalRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current]);
-
-  //handles node click
+  //Handles node click
   function handleNodeClick(e: any) {
     e.stopPropagation();
+    setShowNodeClickModal(true);
+    const current = nodeClickModalRef.current;
     const r = e.srcElement.r.baseVal.value;
-    current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML =
+    current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML! =
       JSON.parse(e.srcElement.id).description;
     current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
     let xPosition =
@@ -169,19 +157,18 @@ function App() {
       current!.offsetHeight;
     current!.style.left = xPosition + "px";
     current!.style.top = yPosition < 0 ? "0px" : yPosition + "px";
-    current!.style.visibility = "visible";
   }
 
-  //handles node edit
+  //Handles node edit
   function handleEdit(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
     setHackedNodeData(JSON.parse(data));
-    current!.style.visibility = "hidden";
     setNodeData(() => JSON.parse(data));
     setShowNodeForm(true);
+    setShowNodeClickModal(false);
   }
 
-  //handles node delete
+  //Handles node delete
   function handleDelete(hackDataRef: any) {
     const data = hackDataRef.current!.innerHTML;
     const { categories, emotions, description, priority } = JSON.parse(data);
@@ -210,7 +197,7 @@ function App() {
         });
     }
     setIsChartAdded(false);
-    current!.style.visibility = "hidden";
+    setShowNodeClickModal(false);
   }
 
   return (
@@ -225,12 +212,15 @@ function App() {
         isLoggedIn={isLoggedIn}
         setIsRegistered={setIsRegistered}
         accountInfoRef={accountInfoRef}
-        current={current}
+        setShowNodeClickModal={setShowNodeClickModal}
         userInfo={userInfo}
         setUserInfo={setUserInfo}
       />
-      <Container ref={hoverModalRef}>
-        <HoverModal handleEdit={handleEdit} handleDelete={handleDelete} />
+      <Container
+        showNodeClickModal={showNodeClickModal}
+        ref={nodeClickModalRef}
+      >
+        <NodeClickModal handleEdit={handleEdit} handleDelete={handleDelete} />
       </Container>
       {showNodeForm && (
         <NodeForm
@@ -254,7 +244,7 @@ function App() {
         setIsChartAdded={setIsChartAdded}
         handleNodeClick={handleNodeClick}
         dimensions={dimensions}
-        current={current}
+        setShowNodeClickModal={setShowNodeClickModal}
         mainRef={mainRef}
         accountInfoRef={accountInfoRef}
       />

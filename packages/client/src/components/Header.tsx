@@ -110,7 +110,7 @@ interface Props {
   setIsRegistered: any;
   isLoggedIn: boolean;
   accountInfoRef: any;
-  current: HTMLDivElement | null;
+  setShowNodeClickModal: any;
   userInfo: { username: string; email: string };
   setUserInfo: any;
 }
@@ -126,7 +126,7 @@ const Header = (props: Props) => {
     setIsRegistered,
     isLoggedIn,
     accountInfoRef,
-    current,
+    setShowNodeClickModal,
     userInfo,
     setUserInfo,
   } = props;
@@ -157,9 +157,7 @@ const Header = (props: Props) => {
     if (accountInfoRef.current) {
       accountInfoRef.current!.style.display = "none";
     }
-    if (current) {
-      current!.style.visibility = "hidden";
-    }
+    setShowNodeClickModal(false)
   }
 
   function handleDeleteAllData() {
