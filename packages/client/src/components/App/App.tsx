@@ -12,7 +12,8 @@ import "../../App.css";
 import NodeForm from "../NodeForm";
 import HoverModal from "../HoverModal";
 import { DataOperation } from "../constants";
-import { demoData } from "./DemoData";
+import { demoData } from "./demoData";
+import React from "react";
 
 const Container = styled("div")({
   border: "2px solid black",
@@ -37,6 +38,7 @@ function debounce(fn: any, ms: number) {
     }, ms);
   };
 }
+
 //Returns saved Data in case of not logged in
 function getStoredData() {
   return window.localStorage.getItem("savedData")
@@ -118,6 +120,7 @@ function App() {
     }, 300);
 
     window.addEventListener("resize", handleDebounceResize);
+    //why? check
     return hoverModalRef.current!.removeEventListener(
       "resize",
       handleDebounceResize
@@ -130,7 +133,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
 
-  //handles node click on chart
+  //handles node click
   function handleNodeClick(e: any) {
     e.stopPropagation();
     const r = e.srcElement.r.baseVal.value;

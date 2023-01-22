@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
+import React from "react";
 
 const StyledWrapper = styled("div")({
   height: "calc(100vh - 70px)",

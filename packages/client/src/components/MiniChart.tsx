@@ -17,7 +17,7 @@ interface Props {
 const MiniChart = (props: Props) => {
   const { w, h, savedData, handleNodeClick, current } = props;
   const findGroupArray = (data: Emotion) => {
-    let arr = [];
+    let arr: any = []; //give proper type
     for (let key in JSON.parse(JSON.stringify(data))) {
       arr.push(emotions.indexOf(key));
     }
@@ -51,7 +51,7 @@ const MiniChart = (props: Props) => {
     index: N[i],
   }));
 
-  let links = [];
+  let links: any = []; //give proper type
   for (let i = 0; i < nodesArray.length; i++) {
     const groups = nodesArray[i].group;
     for (let j = 0; j < groups.length; j++) {
@@ -98,7 +98,7 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(nodes)
     .join("circle")
-    .attr("id", ({ index: i }) => mappedHackDataArray[i!]) // for 'HoverModel'
+    .attr("id", ({ index: i }) => mappedHackDataArray[i!]) // for HoverModel
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)

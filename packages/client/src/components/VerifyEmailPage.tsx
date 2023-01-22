@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import { StyledWrapper } from "./NodeForm";
 import { AuthenticationButton } from "./Header";
 import { ClipLoader } from "react-spinners";
+import React from "react";
 
 const Wrapper = styled(StyledWrapper)({
   width: 380,
