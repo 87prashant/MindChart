@@ -2,6 +2,7 @@
 //TODO: Optimize the links
 
 import * as d3 from "d3";
+import { Misc } from "./constants";
 import { emotions } from "./Emotions";
 import { findColors } from "./findColors";
 import { Emotion, NodeDataType } from "./NodeForm";
@@ -149,7 +150,7 @@ const MiniChart = (props: Props) => {
     function dragged(event: any) {
       handleOtherNodes();
       event.subject.fx = event.sourceEvent.clientX - w / 2;
-      event.subject.fy = event.sourceEvent.clientY - h / 2 - 70;
+      event.subject.fy = event.sourceEvent.clientY - h / 2 - Misc.HEADER_HEIGHT;
       setShowNodeClickModal(false)
     }
 

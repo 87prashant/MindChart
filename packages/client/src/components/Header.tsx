@@ -7,7 +7,7 @@ import AccountInfo from "./AccountInfo";
 import { Misc } from "./constants";
 
 const StyledHeader = styled("div")({
-  height: "70px",
+  height: `${Misc.HEADER_HEIGHT}px`,
   width: "100%",
   display: "flex",
   justifyContent: "flex-end",

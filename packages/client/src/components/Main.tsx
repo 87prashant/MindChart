@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
-import React from "react";
+import { Misc } from "./constants";
 
 const StyledWrapper = styled("div")({
-  height: "calc(100vh - 70px)",
+  height: `calc(100vh - ${Misc.HEADER_HEIGHT}px)`,
   overflow: "hidden",
   backgroundColor: "rgba(0, 0, 0, 0.1)",
   "& svg": {

@@ -11,20 +11,22 @@ import { NodeDataType } from "../NodeForm";
 import "../../App.css";
 import NodeForm from "../NodeForm";
 import NodeClickModal from "../NodeClickModal";
-import { DataOperation } from "../constants";
+import { DataOperation, Misc } from "../constants";
 import { demoData } from "./demoData";
 
-const Container = styled("div")<{showNodeClickModal: boolean}>(({showNodeClickModal}) => ({
-  border: "2px solid black",
-  position: "absolute",
-  backgroundColor: "rgba(225, 225, 225, 1)",
-  visibility: showNodeClickModal ? "visible" : "hidden",
-  borderRadius: 7,
-  padding: 4,
-  maxWidth: 200,
-  maxHeight: 200,
-  overflow: "hidden",
-}));
+const Container = styled("div")<{ showNodeClickModal: boolean }>(
+  ({ showNodeClickModal }) => ({
+    border: "2px solid black",
+    position: "absolute",
+    backgroundColor: "rgba(225, 225, 225, 1)",
+    visibility: showNodeClickModal ? "visible" : "hidden",
+    borderRadius: 7,
+    padding: 4,
+    maxWidth: 200,
+    maxHeight: 200,
+    overflow: "hidden",
+  })
+);
 
 //To restrict re-rendering of the chart on zoom in and out
 function debounce(fn: any, ms: number) {
@@ -123,19 +125,25 @@ function App() {
   function handleNodeClick(e: any) {
     e.stopPropagation();
     setShowNodeClickModal(true);
+
     const current = nodeClickModalRef.current;
     const r = e.srcElement.r.baseVal.value;
+    //Add description of node to modal
     current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML! =
       JSON.parse(e.srcElement.id).description;
+    //Add hackedNodeData to modal
     current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
+
+    //X-position of nodeClickModal
     let xPosition =
       Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
     let isUp = false;
     if (
-      current!.offsetHeight > 70 + r &&
-      Math.round(
-        Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2
-      ) === r
+      current!.offsetHeight >
+      Misc.HEADER_HEIGHT +
+        Math.round(
+          Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2
+        ) //round off because it is not exactly equal
     ) {
       xPosition = xPosition + r * 2;
       isUp = true;
@@ -149,12 +157,15 @@ function App() {
         xPosition = xPosition - r * 4;
       }
     }
+
+    //Y-position of nodeClickModal
     const yPosition =
       Number(e.srcElement.cy.baseVal.valueAsString) +
       dimensions.h / 2 +
-      70 -
+      Misc.HEADER_HEIGHT -
       r -
       current!.offsetHeight;
+
     current!.style.left = xPosition + "px";
     current!.style.top = yPosition < 0 ? "0px" : yPosition + "px";
   }
