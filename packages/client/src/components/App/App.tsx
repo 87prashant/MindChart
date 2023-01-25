@@ -138,9 +138,9 @@ function App() {
     let isRight = false; //is the node located on the right side in a way that the modal needs to be moved to the left of the node
     if (
       current!.offsetHeight >
-        Math.round(
-          Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r
-        ) //round off because it is not exactly equal
+      Math.round(
+        Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r
+      ) //round off because it is not exactly equal
     ) {
       isTop = true;
     }
@@ -171,8 +171,7 @@ function App() {
           dimensions.w / 2 -
           current!.offsetWidth -
           r;
-      }
-      else{
+      } else {
         xPosition =
           Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
       }
@@ -185,10 +184,14 @@ function App() {
         Number(e.srcElement.cy.baseVal.valueAsString) +
         dimensions.h / 2 +
         Misc.HEADER_HEIGHT -
-        r;
+        current!.offsetHeight;
     } else {
       yPosition =
-        Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r + Misc.HEADER_HEIGHT - current!.offsetHeight;
+        Number(e.srcElement.cy.baseVal.valueAsString) +
+        dimensions.h / 2 -
+        r +
+        Misc.HEADER_HEIGHT -
+        current!.offsetHeight;
     }
     current!.style.left = xPosition + "px";
     current!.style.top = yPosition < 70 ? "70px" : yPosition + "px";
