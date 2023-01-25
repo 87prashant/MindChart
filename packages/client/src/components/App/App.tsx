@@ -138,8 +138,7 @@ function App() {
     let isRight = false; //is the node located on the right side in a way that the modal needs to be moved to the left of the node
     if (
       current!.offsetHeight >
-      Misc.HEADER_HEIGHT +
-        Math.round( 
+        Math.round(
           Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r
         ) //round off because it is not exactly equal
     ) {
@@ -173,17 +172,26 @@ function App() {
           current!.offsetWidth -
           r;
       }
-      xPosition =
-        Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
+      else{
+        xPosition =
+          Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
+      }
     }
 
     //Y-position of nodeClickModal
-    const yPosition =
-      Number(e.srcElement.cy.baseVal.valueAsString) +
-      dimensions.h / 2 -
-      r 
+    let yPosition;
+    if (isTop || isRight) {
+      yPosition =
+        Number(e.srcElement.cy.baseVal.valueAsString) +
+        dimensions.h / 2 +
+        Misc.HEADER_HEIGHT -
+        r;
+    } else {
+      yPosition =
+        Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r + Misc.HEADER_HEIGHT - current!.offsetHeight;
+    }
     current!.style.left = xPosition + "px";
-    current!.style.top = yPosition < 0 ? "0px" : yPosition + "px";
+    current!.style.top = yPosition < 70 ? "70px" : yPosition + "px";
   }
 
   //Handles node edit
