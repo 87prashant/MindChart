@@ -1,5 +1,4 @@
 //TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
-//TODO Add description on every useState, useRef, useMemo, etc.
 //TODO Find alternate way of using hackedNodeData
 
 import { useState, useEffect, useRef } from "react";
@@ -206,26 +205,23 @@ function App() {
     setShowNodeClickModal(false);
   }
 
+  console.log(savedData);
+
   //Handles node delete
   function handleDelete(hackDataRef: any) {
-    const data = hackDataRef.current!.innerHTML;
-    const { categories, emotions, description, priority } = JSON.parse(data);
-    const newSavedData = (savedData as any).filter((d: NodeDataType) => {
-      return (
-        d.categories !== categories &&
-        d.emotions !== emotions &&
-        d.description !== description &&
-        d.priority !== priority
-      );
-    });
+    const hackedData = hackDataRef.current!.innerHTML;
+    const newSavedData = savedData.filter(
+      (d: NodeDataType) => JSON.stringify(d) !== hackedData
+    );
     setSavedData([...newSavedData]);
+
     if (isLoggedIn) {
       fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: userInfo.email,
-          toBeDeleted: JSON.parse(data),
+          toBeDeleted: JSON.parse(hackedData),
           operation: DataOperation.DELETE,
         }),
       })
@@ -234,6 +230,7 @@ function App() {
           console.log(data.status);
         });
     }
+
     setIsChartAdded(false);
     setShowNodeClickModal(false);
   }
