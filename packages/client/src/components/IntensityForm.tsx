@@ -23,11 +23,10 @@ const FormWrapper = styled("div")({
   width: 200,
   margin: "auto",
   position: "fixed",
-  border: "2px solid black",
   padding: 15,
   borderRadius: 8,
   backgroundColor: "rgba(225, 225, 225, 1)",
-  boxShadow: "10px 10px 8px #888888",
+  boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)",
 });
 
 const StyledDiv = styled("div")({

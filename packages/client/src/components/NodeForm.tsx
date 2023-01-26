@@ -12,14 +12,13 @@ export const StyledWrapper = styled("div")({
   bottom: 0,
   right: 0,
   left: 0,
-  backgroundColor: "rgba(225, 225, 225, 1)",
-  border: "2px solid black",
+  backgroundColor: "rgba(242, 242, 242, 1)",
   width: "700px",
   height: "480px",
   margin: "auto",
   padding: 15,
   borderRadius: 8,
-  boxShadow: "10px 10px 8px rgba(0, 0, 0, 0.3)",
+  boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)",
   userSelect: "none",
 });
 
@@ -94,14 +93,13 @@ const StyledErrors = styled("div")<{ isEarlySubmit: boolean }>(
 const StyledContainer = styled("div")({
   height: 350,
   padding: "10px 20px",
-  backgroundColor: "rgba(242, 242, 242, 1)",
+  backgroundColor: "white",
   borderRadius: 8,
   overflowY: "scroll",
   "::-webkit-scrollbar": {
     width: 12,
   },
   "::-webkit-scrollbar-track": {
-    boxShadow: "inset 0 0 5px grey",
     borderRadius: 8,
   },
   "::-webkit-scrollbar-thumb": {

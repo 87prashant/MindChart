@@ -18,7 +18,6 @@ const Container = styled(StyledDiv)({
 const Wrapper = styled(StyledWrapper)({
   width: 250,
   height: 320,
-  border: "2px solid black",
   overflow: "hidden",
 });
 
@@ -71,12 +70,13 @@ const StyledCancelButton = styled(CancelButton)({
 
 const StyledStatus = styled("div")({
   fontSize: 11,
+  height: 20,
   color: "red",
   fontWeight: "bold",
 });
 
 const Button = styled("div")({
-  textDecoration: "underline",
+  textDecoration: "none",
   border: "none",
   backgroundColor: "inherit",
   color: "teal",
@@ -84,8 +84,13 @@ const Button = styled("div")({
   fontSize: 13,
   transition: "all 200ms ease",
   ":hover": {
-    color: "green",
+    textDecoration: "underline",
   },
+});
+
+const HorizontalRule = styled("hr")({
+  borderTop: "1px",
+  borderColor: "rgba(192, 192, 192)",
 });
 
 interface Props {
@@ -219,8 +224,8 @@ const AuthenticationForm = (props: Props) => {
       choice === UserChoiceList.REGISTER
         ? ""
         : choice === UserChoiceList.LOGIN
-        ? "translate(-232px)"
-        : "translate(-464px)";
+        ? "translate(-236px)"
+        : "translate(-472px)";
   }
 
   return (
@@ -250,10 +255,13 @@ const AuthenticationForm = (props: Props) => {
               autoComplete="current-password"
             />
             {userChoice === UserChoiceList.REGISTER && loading ? (
-              <ClipLoader color={"teal"} loading={loading} size={20} />
+              <StyledStatus>
+                <ClipLoader color={"teal"} loading={loading} size={15} />
+              </StyledStatus>
             ) : (
               <StyledStatus>{status}</StyledStatus>
             )}
+            <HorizontalRule />
             <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
               Login instead
             </Button>
@@ -275,10 +283,13 @@ const AuthenticationForm = (props: Props) => {
               autoComplete="current-password"
             />
             {userChoice === UserChoiceList.LOGIN && loading ? (
-              <ClipLoader color={"teal"} loading={loading} size={20} />
+              <StyledStatus>
+                <ClipLoader color={"teal"} loading={loading} size={15} />
+              </StyledStatus>
             ) : (
               <StyledStatus>{status}</StyledStatus>
             )}
+            <HorizontalRule />
             <Button onClick={() => handleUserChoice(UserChoiceList.REGISTER)}>
               Register
             </Button>
@@ -298,10 +309,13 @@ const AuthenticationForm = (props: Props) => {
               autoComplete="email"
             />
             {userChoice === UserChoiceList.FORGET_PASSWORD && loading ? (
-              <ClipLoader color={"teal"} loading={loading} size={20} />
+              <StyledStatus>
+                <ClipLoader color={"teal"} loading={loading} size={15} />
+              </StyledStatus>
             ) : (
               <StyledStatus>{status}</StyledStatus>
             )}
+            <HorizontalRule />
             <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
               Login
             </Button>
