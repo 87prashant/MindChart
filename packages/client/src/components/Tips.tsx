@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React from "react";
+import { TipsArray } from "./constants";
 
 const StyledWrapper = styled("div")({
   position: "absolute",
@@ -9,12 +9,6 @@ const StyledWrapper = styled("div")({
   textAlign: "center",
   fontSize: 13,
 });
-
-const TipsArray = [
-  "Larger size means high priority",
-  "Color of entity represent highest its intensity emotion",
-  "Similar emotion entities are closer to each other",
-];
 
 const Tips = () => {
   function giveRandomTip() {

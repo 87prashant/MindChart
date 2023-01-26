@@ -26,6 +26,7 @@ export const findColors = (emotions: Emotion) => {
         return EmotionsColor.DEFAULT;
     }
   };
+  
   let max = Math.max(...(Object.values(emotions) as number[]));
   let emotion = Object.keys(emotions).find(
     (key) => +emotions[key as keyof Emotion]! === max

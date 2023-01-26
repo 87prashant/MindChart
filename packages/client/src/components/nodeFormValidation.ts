@@ -3,6 +3,7 @@ import { Errors } from "./constants";
 
 export const validateNodeData = (data: NodeDataType, setNodeFormErrors: any) => {
   let output = true;
+
   if (JSON.stringify(data.categories) === "{}") {
     setNodeFormErrors((nodeFormErrors: NodeFormErrorType) => {
       return {
@@ -51,5 +52,6 @@ export const validateNodeData = (data: NodeDataType, setNodeFormErrors: any) => 
       };
     });
   }
+  
   return output;
 };

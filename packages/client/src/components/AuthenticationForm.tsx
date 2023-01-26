@@ -96,7 +96,7 @@ const Button = styled("div")({
   },
 });
 
-const HorizontalRule = styled("hr")({
+export const HorizontalRule = styled("hr")({
   borderTop: "1px",
   borderColor: "rgba(192, 192, 192)",
 });

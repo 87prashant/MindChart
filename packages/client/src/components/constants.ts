@@ -7,7 +7,8 @@
  * 6. Emotions Colors: {@link EmotionsColor}
  * 7. Error Messages: {@link Errors}
  * 8. Option selected by user during registering on frontend {@link UserChoiceList}
- * 9. Misc: {@link Misc}
+ * 9. Tips array {@link TipsArray}
+ * 10. Misc: {@link Misc}
  */
 
 const AccountStatus = {
@@ -66,17 +67,24 @@ const Errors = {
   INVALID_EMAIL: "Invalid Email",
 };
 
+const UserChoiceList = {
+  LOGIN: "Login",
+  REGISTER: "Register",
+  FORGET_PASSWORD: "Forget_Password",
+};
+
+const TipsArray = [
+  "Larger size means high priority",
+  "Color of node represents its highest intensity emotion",
+  "Similar emotion nodes are closer to each other",
+]; 
+
 const Misc = {
   GITHUB_LINK: "https://github.com/87prashant/MindChart",
   EMAIL_PATTERN: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
   HEADER_HEIGHT: 70
 };
 
-const UserChoiceList = {
-  LOGIN: "Login",
-  REGISTER: "Register",
-  FORGET_PASSWORD: "Forget_Password",
-};
 
 export {
   AccountStatus,
@@ -87,5 +95,6 @@ export {
   EmotionsColor,
   Errors,
   UserChoiceList,
+  TipsArray,
   Misc,
 };

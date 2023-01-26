@@ -5,7 +5,6 @@ import styled from "@emotion/styled";
 import { StyledWrapper } from "./NodeForm";
 import { AuthenticationButton } from "./Header";
 import { ClipLoader } from "react-spinners";
-import React from "react";
 
 const Wrapper = styled(StyledWrapper)({
   width: 380,
@@ -50,12 +49,15 @@ const StyledStatus = styled("div")({
 const VerifyEmailPage = () => {
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const { email, verificationToken } = useParams();
+
   const navigate = useNavigate();
 
   function handleClick() {
     setLoading(true);
     setStatus(null);
+
     fetch(process.env.REACT_APP_VERIFICATION_API!, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -77,6 +79,7 @@ const VerifyEmailPage = () => {
         });
       });
   }
+
   return (
     <>
       <CommonBackground />

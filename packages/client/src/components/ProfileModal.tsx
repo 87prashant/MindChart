@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { HorizontalRule } from "./AuthenticationForm";
 
 const Container = styled("div")({
   position: "absolute",
@@ -56,7 +57,7 @@ const ProfileModal = (props: Props) => {
   return (
     <Container onClick={(e) => e.stopPropagation()}>
       <Info>{userInfo.email}</Info>
-      <hr />
+      <HorizontalRule />
       <Button value="Log out" type="button" onClick={handleLogout} />
     </Container>
   );

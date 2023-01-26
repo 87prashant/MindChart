@@ -133,12 +133,9 @@ const Header = (props: Props) => {
     setUserInfo,
   } = props;
 
-  const showNodeForm = () => {
-    setShowNodeForm(true);
-  };
-
   const [showAuthenticationForm, setShowAuthenticationForm] = useState(false);
-
+  
+  
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
     const storedData: NodeDataType[] = window.localStorage.getItem("savedData")
@@ -160,6 +157,11 @@ const Header = (props: Props) => {
     setSavedData([]);
     setIsChartAdded(false);
   }
+
+  const showNodeForm = () => {
+    setShowNodeForm(true);
+  };
+  
   return (
     <StyledHeader onClick={handleHeaderClick}>
       <HelpButton href={Misc.GITHUB_LINK} target="_blank">

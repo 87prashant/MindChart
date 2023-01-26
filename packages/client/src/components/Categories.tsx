@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import React from "react";
 import { NodeDataType } from "./NodeForm";
 import { CategoriesList } from "./constants";
 
@@ -48,7 +47,7 @@ const Categories = (props: Props) => {
       </div>
     );
   });
-  
+
   return <Wrapper>{inputs}</Wrapper>;
 };
 

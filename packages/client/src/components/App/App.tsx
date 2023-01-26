@@ -100,6 +100,7 @@ function App() {
     description: "",
   });
 
+  console.log(nodeData)
   //NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
   //Main reference

@@ -177,12 +177,13 @@ const NodeForm: any = (props: Props) => {
     userInfo: { email },
     isLoggedIn,
   } = props;
-
+  
   const [nodeFormErrors, setNodeFormErrors] = useState({
     categoriesError: "",
     emotionsError: "",
     descriptionError: "",
   });
+  const [isNodeDataDuplicate, setIsNodeDataDuplicate] = useState(false);
   const [isEarlySubmit, setIsEarlySubmit] = useState(false);
   const refreshNodeData = () => {
     setNodeData(() => {
@@ -210,7 +211,6 @@ const NodeForm: any = (props: Props) => {
       };
     });
   };
-  const [isNodeDataDuplicate, setIsNodeDataDuplicate] = useState(false);
 
   useEffect(() => {
     validateNodeData(nodeData, setNodeFormErrors);
@@ -229,6 +229,7 @@ const NodeForm: any = (props: Props) => {
     refreshFormErrors();
     setIsEarlySubmit(false);
   };
+
   const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -237,6 +238,7 @@ const NodeForm: any = (props: Props) => {
   ) => {
     setNodeData((nodeData: NodeDataType) => {
       const { type, value, name, id } = e.target;
+
       if (type === "checkbox") {
         return {
           ...nodeData,
@@ -259,6 +261,7 @@ const NodeForm: any = (props: Props) => {
       setIsEarlySubmit(true);
       return;
     }
+
     if (isNodeDataDuplicate) return;
 
     if (hackedNodeData) {
@@ -278,6 +281,7 @@ const NodeForm: any = (props: Props) => {
         return [...prev, nodeData];
       });
     }
+
     if (isLoggedIn) {
       fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
         method: "post",
