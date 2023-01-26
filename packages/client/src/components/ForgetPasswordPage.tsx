@@ -10,12 +10,8 @@ import { ResponseStatus, Errors } from "./constants";
 import React from "react";
 
 const Wrapper = styled(StyledWrapper)({
-  width: 380,
-  height: 300,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  flexDirection: "column",
+  width: 280,
+  height: 270,
   backgroundColor: "white",
 });
 
@@ -24,10 +20,13 @@ const Heading = styled("div")({
   fontWeight: "bolder",
   fontSize: 18,
   marginBottom: 20,
+  textAlign: "center",
 });
 
-const VerifyButton = styled(AuthenticationButton)({
-  marginTop: 25,
+const ChangeButton = styled(AuthenticationButton)({
+  margin: 0,
+  marginTop: 5,
+  width: "100%",
   border: "none",
   color: "white",
   transition: "all 200ms ease",
@@ -39,17 +38,19 @@ const VerifyButton = styled(AuthenticationButton)({
 const StyledStatus = styled("div")({
   color: "red",
   textAlign: "center",
-  fontSize: 14,
+  fontSize: 12,
+  opacity: "0.7",
+  height: 20,
 });
 
 const InputName = styled(StyledInputName)({
   marginBottom: 5,
-  fontSize: 15,
+  fontSize: 13,
 });
 
 const Input = styled(StyledInput)({
-  width: 200,
-  padding: 4,
+  // width: 200,
+  padding: 5,
 });
 
 const ForgetPasswordPage = () => {
@@ -117,11 +118,13 @@ const ForgetPasswordPage = () => {
           autoComplete="current-password"
         />
         {loading ? (
-          <ClipLoader color={"teal"} loading={loading} size={20} />
+          <StyledStatus>
+            <ClipLoader color={"teal"} loading={loading} size={20} />
+          </StyledStatus>
         ) : (
           <StyledStatus>{status}</StyledStatus>
         )}
-        <VerifyButton onClick={handleClick}>Change</VerifyButton>
+        <ChangeButton onClick={handleClick}>Change</ChangeButton>
       </Wrapper>
     </>
   );

@@ -30,7 +30,7 @@ interface Props {
     h: number;
   };
   setShowNodeClickModal: any;
-  accountInfoRef: any;
+  setShowProfileModal: any;
 }
 
 const Main = (props: Props) => {
@@ -42,14 +42,20 @@ const Main = (props: Props) => {
     mainRef,
     dimensions,
     setShowNodeClickModal,
-    accountInfoRef,
+    setShowProfileModal,
   } = props;
 
   useEffect(() => {
     if (isChartAdded) return;
     setIsChartAdded(true);
     const { w, h } = dimensions;
-    const newProps = { w, h, savedData, handleNodeClick, setShowNodeClickModal };
+    const newProps = {
+      w,
+      h,
+      savedData,
+      handleNodeClick,
+      setShowNodeClickModal,
+    };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
     mainRef.current!.innerHTML = "";
     mainRef.current!.append(svg);
@@ -57,10 +63,8 @@ const Main = (props: Props) => {
   }, [savedData, dimensions]);
 
   function handleClick(e: any) {
-    if (accountInfoRef.current) {
-      accountInfoRef.current.style.display = "none";
-    }
-    setShowNodeClickModal(false)
+    setShowProfileModal(false);
+    setShowNodeClickModal(false);
   }
 
   return <StyledWrapper onClick={handleClick} ref={mainRef}></StyledWrapper>;

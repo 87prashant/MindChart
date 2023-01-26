@@ -83,6 +83,8 @@ function App() {
   const [isChartAdded, setIsChartAdded] = useState(false);
   //Stores the dimensions of the window to update the chart on zoom in/out
   const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
+  //Store whether to show the profile modal or not
+  const [showProfileModal, setShowProfileModal] = useState(false);
   //Stores the node form data when creating new node or editing existing data
   const [nodeData, setNodeData] = useState({
     categories: {
@@ -102,8 +104,6 @@ function App() {
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
   //Main reference
   const mainRef = useRef<HTMLDivElement>(null);
-  //Account Info modal reference
-  const accountInfoRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setDimensions({
@@ -192,20 +192,19 @@ function App() {
         Misc.HEADER_HEIGHT -
         current!.offsetHeight;
     }
+
     current!.style.left = xPosition + "px";
     current!.style.top = yPosition < 70 ? "70px" : yPosition + "px";
   }
 
   //Handles node edit
   function handleEdit(hackDataRef: any) {
-    const data = hackDataRef.current!.innerHTML;
-    setHackedNodeData(JSON.parse(data));
-    setNodeData(() => JSON.parse(data));
+    const hackedData = hackDataRef.current!.innerHTML;
+    setHackedNodeData(JSON.parse(hackedData));
+    setNodeData(() => JSON.parse(hackedData));
     setShowNodeForm(true);
     setShowNodeClickModal(false);
   }
-
-  console.log(savedData);
 
   //Handles node delete
   function handleDelete(hackDataRef: any) {
@@ -246,7 +245,8 @@ function App() {
         demoData={demoData}
         isLoggedIn={isLoggedIn}
         setIsRegistered={setIsRegistered}
-        accountInfoRef={accountInfoRef}
+        setShowProfileModal={setShowProfileModal}
+        showProfileModal={showProfileModal}
         setShowNodeClickModal={setShowNodeClickModal}
         userInfo={userInfo}
         setUserInfo={setUserInfo}
@@ -281,7 +281,7 @@ function App() {
         dimensions={dimensions}
         setShowNodeClickModal={setShowNodeClickModal}
         mainRef={mainRef}
-        accountInfoRef={accountInfoRef}
+        setShowProfileModal={setShowProfileModal}
       />
     </div>
   );

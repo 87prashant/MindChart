@@ -15,18 +15,22 @@ const Wrapper = styled(StyledWrapper)({
   alignItems: "center",
   flexDirection: "column",
   backgroundColor: "white",
+  padding: 0,
 });
 
 const Heading = styled("div")({
   color: "teal",
   fontWeight: "bolder",
   fontSize: 18,
+  marginBottom: 20,
 });
 
 const VerifyButton = styled(AuthenticationButton)({
-  marginTop: 25,
+  marginBottom: 5,
   border: "none",
   color: "white",
+  position: "relative",
+  top: 15,
   transition: "all 200ms ease",
   ":hover": {
     backgroundColor: "rgba(67, 160, 71, 1)",
@@ -35,8 +39,12 @@ const VerifyButton = styled(AuthenticationButton)({
 
 const StyledStatus = styled("div")({
   color: "red",
+  opacity: "0.8",
   textAlign: "center",
-  fontSize: 14,
+  fontSize: 12,
+  height: 20,
+  position: "relative",
+  top: 15,
 });
 
 const VerifyEmailPage = () => {
@@ -76,7 +84,9 @@ const VerifyEmailPage = () => {
         <Heading>Hi, Verify by clicking the below button</Heading>
         <VerifyButton onClick={handleClick}>Verify and Login</VerifyButton>
         {loading ? (
-          <ClipLoader color={"teal"} loading={loading} size={20} />
+          <StyledStatus>
+            <ClipLoader color={"teal"} loading={loading} size={20} />
+          </StyledStatus>
         ) : (
           <StyledStatus>{status}</StyledStatus>
         )}

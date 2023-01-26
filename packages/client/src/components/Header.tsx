@@ -1,9 +1,9 @@
-import React, { useRef } from "react";
+import { useState } from "react";
 import styled from "@emotion/styled";
 import { NodeDataType } from "./NodeForm";
-import Authentication from "./AuthenticationForm";
-import Account from "./Account";
-import AccountInfo from "./AccountInfo";
+import AuthenticationForm from "./AuthenticationForm";
+import ProfileButton from "./ProfileButton";
+import ProfileModal from "./ProfileModal";
 import { Misc } from "./constants";
 
 const StyledHeader = styled("div")({
@@ -109,7 +109,8 @@ interface Props {
   demoData: NodeDataType[];
   setIsRegistered: any;
   isLoggedIn: boolean;
-  accountInfoRef: any;
+  setShowProfileModal: any;
+  showProfileModal: boolean;
   setShowNodeClickModal: any;
   userInfo: { username: string; email: string };
   setUserInfo: any;
@@ -125,8 +126,9 @@ const Header = (props: Props) => {
     setIsChartAdded,
     setIsRegistered,
     isLoggedIn,
-    accountInfoRef,
+    setShowProfileModal,
     setShowNodeClickModal,
+    showProfileModal,
     userInfo,
     setUserInfo,
   } = props;
@@ -135,7 +137,7 @@ const Header = (props: Props) => {
     setShowNodeForm(true);
   };
 
-  const authenticationFormRef = useRef<HTMLDivElement | null>(null);
+  const [showAuthenticationForm, setShowAuthenticationForm] = useState(false);
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
@@ -149,22 +151,16 @@ const Header = (props: Props) => {
     setIsChartAdded(false);
   }
 
-  function openLoginPage() {
-    authenticationFormRef.current!.style.display = "block";
-  }
-
   function handleHeaderClick() {
-    if (accountInfoRef.current) {
-      accountInfoRef.current!.style.display = "none";
-    }
-    setShowNodeClickModal(false)
+    setShowProfileModal(false);
+    setShowNodeClickModal(false);
   }
 
   function handleDeleteAllData() {
     setSavedData([]);
     setIsChartAdded(false);
   }
-
+  console.log(showAuthenticationForm);
   return (
     <StyledHeader onClick={handleHeaderClick}>
       <HelpButton href={Misc.GITHUB_LINK} target="_blank">
@@ -185,13 +181,13 @@ const Header = (props: Props) => {
         <AddText>Add</AddText>
       </AddButton>
       {!isLoggedIn && (
-        <AuthenticationButton onClick={openLoginPage}>
+        <AuthenticationButton onClick={() => setShowAuthenticationForm(true)}>
           Register
         </AuthenticationButton>
       )}
-      {!isLoggedIn && (
-        <Authentication
-          authenticationFormRef={authenticationFormRef}
+      {!isLoggedIn && showAuthenticationForm && (
+        <AuthenticationForm
+          setShowAuthenticationForm={setShowAuthenticationForm}
           setIsRegistered={setIsRegistered}
           setUserInfo={setUserInfo}
           setSavedData={setSavedData}
@@ -199,16 +195,19 @@ const Header = (props: Props) => {
         />
       )}
       {isLoggedIn && (
-        <div style={{ position: "relative" }}>
-          <Account accountInfoRef={accountInfoRef} userInfo={userInfo} />
-          <AccountInfo
-            accountInfoRef={accountInfoRef}
-            setIsRegistered={setIsRegistered}
-            userInfo={userInfo}
-            setSavedData={setSavedData}
-            setIsChartAdded={setIsChartAdded}
-          />
-        </div>
+        <ProfileButton
+          setShowProfileModal={setShowProfileModal}
+          userInfo={userInfo}
+        />
+      )}
+      {isLoggedIn && showProfileModal && (
+        <ProfileModal
+          setIsRegistered={setIsRegistered}
+          userInfo={userInfo}
+          setSavedData={setSavedData}
+          setIsChartAdded={setIsChartAdded}
+          setShowProfileModal={setShowProfileModal}
+        />
       )}
     </StyledHeader>
   );

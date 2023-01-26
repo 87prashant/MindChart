@@ -57,6 +57,9 @@ export const SubmitButton = styled(Inputs)<{ isNodeDataDuplicate: boolean }>(
     border: isNodeDataDuplicate
       ? "2px solid rgba(0, 0, 0, 0.3)"
       : "2px solid black",
+    ":hover": {
+      backgroundColor: "rgb(192, 192, 192, 0.1)",
+    },
   })
 );
 
@@ -68,17 +71,17 @@ export const CancelButton = styled(Inputs)({
   fontWeight: "bold",
   transition: "all ease 300ms",
   ":hover": {
-    backgroundColor: "red",
+    backgroundColor: "rgb(192, 192, 192, 0.1)",
   },
 });
 
 export const StyledDiv = styled("div")({
-    position: "fixed",
-    top: 0,
-    height: "100%",
-    width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.20)",
-  })
+  position: "fixed",
+  top: 0,
+  height: "100%",
+  width: "100%",
+  backdropFilter: "blur(10px)",
+});
 
 const StyledErrors = styled("div")<{ isEarlySubmit: boolean }>(
   ({ isEarlySubmit }) => ({

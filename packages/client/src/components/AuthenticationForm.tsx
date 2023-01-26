@@ -12,7 +12,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { ResponseStatus, UserChoiceList, Misc, Errors } from "./constants";
 
 const Container = styled(StyledDiv)({
-  display: "none",
+  backdropFilter: "blur(10px)",
 });
 
 const Wrapper = styled(StyledWrapper)({
@@ -89,24 +89,27 @@ const Button = styled("div")({
 });
 
 interface Props {
-  authenticationFormRef: any;
+  setShowAuthenticationForm: any;
   setIsRegistered: any;
   setUserInfo: any;
   setSavedData: any;
   setIsChartAdded: any;
 }
 
-const Authentication = (props: Props) => {
+const AuthenticationForm = (props: Props) => {
   const {
-    authenticationFormRef,
+    setShowAuthenticationForm,
     setIsRegistered,
     setUserInfo,
     setSavedData,
     setIsChartAdded,
   } = props;
 
+  //Store the status from backend
   const [status, setStatus] = useState<String | null>(null);
+  //Store the choice of user ( login/register/forget password )
   const [userChoice, setUserChoice] = useState(UserChoiceList.REGISTER);
+  //Store if the response from backend has come or not
   const [loading, setLoading] = useState<boolean>(false);
 
   const registerNameRef = useRef<HTMLInputElement | null>(null);
@@ -115,7 +118,7 @@ const Authentication = (props: Props) => {
   const loginEmailRef = useRef<HTMLInputElement | null>(null);
   const loginPassRef = useRef<HTMLInputElement | null>(null);
   const forgetPasswordEmailRef = useRef<HTMLInputElement | null>(null);
-  const nodeFormContainerRef = useRef<HTMLDivElement | null>(null);
+  const formContainerRef = useRef<HTMLDivElement | null>(null); //added because not able to add transform style outside the component
 
   function handleInvalidEmail() {
     setLoading(false);
@@ -126,6 +129,8 @@ const Authentication = (props: Props) => {
     e.preventDefault();
     setLoading(true);
     setStatus(null);
+
+    //Register
     if (userChoice === UserChoiceList.REGISTER) {
       if (!Misc.EMAIL_PATTERN.test(registerEmailRef.current!.value)) {
         handleInvalidEmail();
@@ -148,7 +153,9 @@ const Authentication = (props: Props) => {
           const { error } = data;
           setStatus(error);
         });
-    } else if (userChoice === UserChoiceList.LOGIN) {
+    }
+    //Login
+    else if (userChoice === UserChoiceList.LOGIN) {
       if (!Misc.EMAIL_PATTERN.test(loginEmailRef.current!.value)) {
         handleInvalidEmail();
         return;
@@ -171,6 +178,7 @@ const Authentication = (props: Props) => {
               userCredentials: { username, email },
               userData,
             } = data;
+            setShowAuthenticationForm(false);
             setSavedData(() => userData);
             setIsChartAdded(false);
             setIsRegistered(true);
@@ -179,7 +187,9 @@ const Authentication = (props: Props) => {
             setStatus(data.error);
           }
         });
-    } else {
+    }
+    //Forget Password
+    else {
       if (!Misc.EMAIL_PATTERN.test(forgetPasswordEmailRef.current!.value)) {
         handleInvalidEmail();
         return;
@@ -202,14 +212,10 @@ const Authentication = (props: Props) => {
     }
   }
 
-  function handleCancel() {
-    authenticationFormRef.current!.style.display = "none";
-  }
-
   function handleUserChoice(choice: string) {
     setUserChoice(choice);
     setStatus(null);
-    nodeFormContainerRef.current!.style.transform =
+    formContainerRef.current!.style.transform =
       choice === UserChoiceList.REGISTER
         ? ""
         : choice === UserChoiceList.LOGIN
@@ -218,9 +224,9 @@ const Authentication = (props: Props) => {
   }
 
   return (
-    <Container ref={authenticationFormRef}>
+    <Container>
       <Wrapper>
-        <FormContainer ref={nodeFormContainerRef}>
+        <FormContainer ref={formContainerRef}>
           <RegisterForm>
             <StyledHeader>Create an account</StyledHeader>
             <StyledInputName>Name</StyledInputName>
@@ -310,11 +316,11 @@ const Authentication = (props: Props) => {
         <StyledCancelButton
           type="button"
           value="Cancel"
-          onClick={handleCancel}
+          onClick={() => setShowAuthenticationForm(false)}
         />
       </Wrapper>
     </Container>
   );
 };
 
-export default Authentication;
+export default AuthenticationForm;
