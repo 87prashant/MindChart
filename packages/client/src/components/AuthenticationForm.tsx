@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styled from "@emotion/styled";
 import {
   Header,
@@ -21,11 +21,19 @@ const Wrapper = styled(StyledWrapper)({
   overflow: "hidden",
 });
 
-const FormContainer = styled("div")({
-  gap: 15,
-  display: "flex",
-  transition: "all 250ms linear",
-});
+const FormContainer = styled("div")<{ userChoice: String }>(
+  ({ userChoice }) => ({
+    gap: 15,
+    display: "flex",
+    transition: "all 250ms linear",
+    transform:
+      userChoice === UserChoiceList.REGISTER
+        ? ""
+        : userChoice === UserChoiceList.LOGIN
+        ? "translate(-236px)"
+        : "translate(-472px)",
+  })
+);
 
 const Form = styled("form")({
   minWidth: "100%",
@@ -123,7 +131,6 @@ const AuthenticationForm = (props: Props) => {
   const loginEmailRef = useRef<HTMLInputElement | null>(null);
   const loginPassRef = useRef<HTMLInputElement | null>(null);
   const forgetPasswordEmailRef = useRef<HTMLInputElement | null>(null);
-  const formContainerRef = useRef<HTMLDivElement | null>(null); //added because not able to add transform style outside the component
 
   function handleInvalidEmail() {
     setLoading(false);
@@ -220,18 +227,12 @@ const AuthenticationForm = (props: Props) => {
   function handleUserChoice(choice: string) {
     setUserChoice(choice);
     setStatus(null);
-    formContainerRef.current!.style.transform =
-      choice === UserChoiceList.REGISTER
-        ? ""
-        : choice === UserChoiceList.LOGIN
-        ? "translate(-236px)"
-        : "translate(-472px)";
   }
 
   return (
     <Container>
       <Wrapper>
-        <FormContainer ref={formContainerRef}>
+        <FormContainer userChoice={userChoice}>
           <RegisterForm>
             <StyledHeader>Create an account</StyledHeader>
             <StyledInputName>Name</StyledInputName>

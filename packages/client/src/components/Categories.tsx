@@ -16,7 +16,7 @@ const Wrapper = styled("div")({
 
 interface Props {
   nodeData: NodeDataType;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: any;
 }
 
 const Categories = (props: Props) => {
@@ -48,6 +48,7 @@ const Categories = (props: Props) => {
       </div>
     );
   });
+  
   return <Wrapper>{inputs}</Wrapper>;
 };
 

@@ -57,7 +57,7 @@ export const SubmitButton = styled(Inputs)<{ isNodeDataDuplicate: boolean }>(
       ? "2px solid rgba(0, 0, 0, 0.3)"
       : "2px solid black",
     ":hover": {
-      backgroundColor: "rgb(192, 192, 192, 0.1)",
+      backgroundColor: "rgb(192, 192, 192, 0.7)",
     },
   })
 );
@@ -70,7 +70,7 @@ export const CancelButton = styled(Inputs)({
   fontWeight: "bold",
   transition: "all ease 300ms",
   ":hover": {
-    backgroundColor: "rgb(192, 192, 192, 0.1)",
+    backgroundColor: "rgb(192, 192, 192, 0.7)",
   },
 });
 

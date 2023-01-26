@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { useState } from "react";
+import { useState } from "react";
 import { NodeDataType } from "./NodeForm";
 import IntensityForm from "./IntensityForm";
 import { EmotionsList } from "./constants";
@@ -69,7 +69,7 @@ const Emotions = (props: Props) => {
 
   return (
     <>
-      {intensityForm && intensityForm}
+      {intensityForm}
       <Wrapper>{inputs}</Wrapper>
     </>
   );

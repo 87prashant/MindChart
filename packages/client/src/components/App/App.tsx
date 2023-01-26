@@ -226,7 +226,7 @@ function App() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data.status);
+          //if status is error, inform the user 
         });
     }
 

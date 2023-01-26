@@ -1,7 +1,7 @@
 //TODO: what to do when component unmount?
 
 import styled from "@emotion/styled";
-import React, { useState } from "react";
+import { useState } from "react";
 import { NodeDataType } from "./NodeForm";
 
 const Container = styled("div")({
@@ -11,7 +11,7 @@ const Container = styled("div")({
   height: "100vh",
   width: "100vw",
   zIndex: 2,
-  backgroundColor: "rgba(0, 0, 0, 0.20)",
+  backdropFilter: "blur(3px)",
 });
 
 const FormWrapper = styled("div")({
@@ -23,9 +23,9 @@ const FormWrapper = styled("div")({
   width: 200,
   margin: "auto",
   position: "fixed",
-  padding: 15,
+  padding: 10,
   borderRadius: 8,
-  backgroundColor: "rgba(225, 225, 225, 1)",
+  backgroundColor: "rgba(242, 242, 242, 1)",
   boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)",
 });
 
@@ -33,6 +33,7 @@ const StyledDiv = styled("div")({
   backgroundColor: "rgba(242, 242, 242, 1)",
   borderRadius: 8,
   padding: "5px 10px",
+  marginBottom: 10,
 });
 
 const Header = styled("div")({
@@ -60,6 +61,10 @@ const DoneButton = styled("button")({
   cursor: "pointer",
   marginLeft: "auto",
   fontWeight: "bold",
+  width: 80,
+  ":hover": {
+    backgroundColor: "rgb(192, 192, 192, 0.7)",
+  },
 });
 
 const CancelButton = styled("button")({
@@ -68,6 +73,10 @@ const CancelButton = styled("button")({
   borderRadius: 8,
   cursor: "pointer",
   fontWeight: "bold",
+  width: 80,
+  ":hover": {
+    backgroundColor: "rgb(192, 192, 192, 0.7)",
+  },
 });
 
 const StyledSlider = styled("input")({
@@ -77,21 +86,24 @@ const StyledSlider = styled("input")({
 
 interface Props {
   event: any;
-  setIntensityForm: React.Dispatch<React.SetStateAction<JSX.Element | null>>;
+  setIntensityForm: any;
   nodeData: NodeDataType;
   setNodeData: any;
 }
 
 const IntensityForm = (props: Props) => {
   const { event, setIntensityForm, nodeData, setNodeData } = props;
+
   const { id }: { id: string } = event.target;
   const selectedEmotion =
     nodeData.emotions[id as keyof typeof nodeData.emotions];
-  // to force update this component
+
   const [intensity, setIntensity] = useState(selectedEmotion || 40);
+
   const handleChange = (e: any) => {
     setIntensity(e.target.value);
   };
+
   const handleCancel = () => {
     setNodeData((nodeData: NodeDataType) => ({
       ...nodeData,
@@ -102,8 +114,9 @@ const IntensityForm = (props: Props) => {
     }));
     setIntensityForm(null);
   };
+  
   const handleDone = () => {
-    setNodeData((nodeData: NodeDataType) => ({
+    setNodeData((nodeData: any) => ({
       ...nodeData,
       emotions: {
         ...nodeData.emotions,

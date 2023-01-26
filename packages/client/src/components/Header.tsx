@@ -160,7 +160,6 @@ const Header = (props: Props) => {
     setSavedData([]);
     setIsChartAdded(false);
   }
-  console.log(showAuthenticationForm);
   return (
     <StyledHeader onClick={handleHeaderClick}>
       <HelpButton href={Misc.GITHUB_LINK} target="_blank">
