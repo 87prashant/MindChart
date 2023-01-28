@@ -100,7 +100,6 @@ function App() {
     description: "",
   });
 
-  console.log(nodeData)
   //NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
   //Main reference
@@ -134,13 +133,11 @@ function App() {
     //Add hackedNodeData to modal
     current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
 
-    let isTop = false; //is node located on the top in such a way that modal needs to be moved to the right or left of the node
-    let isRight = false; //is the node located on the right side in a way that the modal needs to be moved to the left of the node
+    let isTop = false; //is node located on a position so that modal needs to be moved to the right of the node
+    let isRight = false; //is the node located on a position so that the modal needs to be moved to the left of the node
     if (
       current!.offsetHeight >
-      Math.round(
-        Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r
-      ) //round off because it is not exactly equal
+      Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r
     ) {
       isTop = true;
     }
@@ -227,7 +224,7 @@ function App() {
       })
         .then((response) => response.json())
         .then((data) => {
-          //if status is error, inform the user 
+          //if status is error, inform the user
         });
     }
 

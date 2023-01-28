@@ -86,13 +86,13 @@ const VerifyEmailPage = () => {
       <Wrapper>
         <Heading>Hi, Verify by clicking the below button</Heading>
         <VerifyButton onClick={handleClick}>Verify and Login</VerifyButton>
-        {loading ? (
-          <StyledStatus>
+        <StyledStatus>
+          {loading ? (
             <ClipLoader color={"teal"} loading={loading} size={20} />
-          </StyledStatus>
-        ) : (
-          <StyledStatus>{status}</StyledStatus>
-        )}
+          ) : (
+            status
+          )}
+        </StyledStatus>
       </Wrapper>
     </>
   );

@@ -135,7 +135,6 @@ const Header = (props: Props) => {
 
   const [showAuthenticationForm, setShowAuthenticationForm] = useState(false);
   
-  
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
     const storedData: NodeDataType[] = window.localStorage.getItem("savedData")
@@ -161,7 +160,7 @@ const Header = (props: Props) => {
   const showNodeForm = () => {
     setShowNodeForm(true);
   };
-  
+
   return (
     <StyledHeader onClick={handleHeaderClick}>
       <HelpButton href={Misc.GITHUB_LINK} target="_blank">

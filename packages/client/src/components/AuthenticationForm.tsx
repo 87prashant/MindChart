@@ -255,13 +255,13 @@ const AuthenticationForm = (props: Props) => {
               placeholder="Password"
               autoComplete="current-password"
             />
-            {userChoice === UserChoiceList.REGISTER && loading ? (
-              <StyledStatus>
+            <StyledStatus>
+              {userChoice === UserChoiceList.REGISTER && loading ? (
                 <ClipLoader color={"teal"} loading={loading} size={15} />
-              </StyledStatus>
-            ) : (
-              <StyledStatus>{status}</StyledStatus>
-            )}
+              ) : (
+                status
+              )}
+            </StyledStatus>
             <HorizontalRule />
             <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
               Login instead
@@ -283,13 +283,13 @@ const AuthenticationForm = (props: Props) => {
               placeholder="Password"
               autoComplete="current-password"
             />
-            {userChoice === UserChoiceList.LOGIN && loading ? (
-              <StyledStatus>
+            <StyledStatus>
+              {userChoice === UserChoiceList.LOGIN && loading ? (
                 <ClipLoader color={"teal"} loading={loading} size={15} />
-              </StyledStatus>
-            ) : (
-              <StyledStatus>{status}</StyledStatus>
-            )}
+              ) : (
+                status
+              )}
+            </StyledStatus>
             <HorizontalRule />
             <Button onClick={() => handleUserChoice(UserChoiceList.REGISTER)}>
               Register
@@ -309,13 +309,13 @@ const AuthenticationForm = (props: Props) => {
               placeholder="Email"
               autoComplete="email"
             />
-            {userChoice === UserChoiceList.FORGET_PASSWORD && loading ? (
-              <StyledStatus>
+            <StyledStatus>
+              {userChoice === UserChoiceList.FORGET_PASSWORD && loading ? (
                 <ClipLoader color={"teal"} loading={loading} size={15} />
-              </StyledStatus>
-            ) : (
-              <StyledStatus>{status}</StyledStatus>
-            )}
+              ) : (
+                status
+              )}
+            </StyledStatus>
             <HorizontalRule />
             <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
               Login

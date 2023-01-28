@@ -85,7 +85,6 @@ const Misc = {
   HEADER_HEIGHT: 70
 };
 
-
 export {
   AccountStatus,
   ResponseStatus,

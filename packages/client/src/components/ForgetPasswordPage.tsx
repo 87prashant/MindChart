@@ -117,13 +117,13 @@ const ForgetPasswordPage = () => {
           placeholder="Enter Password again"
           autoComplete="current-password"
         />
-        {loading ? (
-          <StyledStatus>
+        <StyledStatus>
+          {loading ? (
             <ClipLoader color={"teal"} loading={loading} size={20} />
-          </StyledStatus>
-        ) : (
-          <StyledStatus>{status}</StyledStatus>
-        )}
+          ) : (
+            status
+          )}
+        </StyledStatus>
         <ChangeButton onClick={handleClick}>Change</ChangeButton>
       </Wrapper>
     </>
