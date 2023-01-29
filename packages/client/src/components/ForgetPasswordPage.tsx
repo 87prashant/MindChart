@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
 import CommonBackground from "./CommonBackground";
 import { StyledWrapper } from "./NodeForm";
 import { AuthenticationButton } from "./Header";
 import { StyledInput, StyledInputName } from "./AuthenticationForm";
 import { ResponseStatus, Errors } from "./constants";
+import LoadingAnimation from "./Animations/LoadingAnimation";
 
 const Wrapper = styled(StyledWrapper)({
   width: 280,
@@ -15,7 +15,7 @@ const Wrapper = styled(StyledWrapper)({
 });
 
 const Heading = styled("div")({
-  color: "teal",
+  color: "green",
   fontWeight: "bolder",
   fontSize: 18,
   marginBottom: 20,
@@ -116,11 +116,7 @@ const ForgetPasswordPage = () => {
           autoComplete="current-password"
         />
         <StyledStatus>
-          {loading ? (
-            <ClipLoader color={"teal"} loading={loading} size={20} />
-          ) : (
-            status
-          )}
+          {loading ? <LoadingAnimation size={4} /> : status}
         </StyledStatus>
         <ChangeButton onClick={handleClick}>Change</ChangeButton>
       </Wrapper>

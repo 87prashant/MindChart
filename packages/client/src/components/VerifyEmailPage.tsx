@@ -4,7 +4,7 @@ import CommonBackground from "./CommonBackground";
 import styled from "@emotion/styled";
 import { StyledWrapper } from "./NodeForm";
 import { AuthenticationButton } from "./Header";
-import { ClipLoader } from "react-spinners";
+import LoadingAnimation from "./Animations/LoadingAnimation";
 
 const Wrapper = styled(StyledWrapper)({
   width: 380,
@@ -18,7 +18,7 @@ const Wrapper = styled(StyledWrapper)({
 });
 
 const Heading = styled("div")({
-  color: "teal",
+  color: "green",
   fontWeight: "bolder",
   fontSize: 18,
   marginBottom: 20,
@@ -87,11 +87,7 @@ const VerifyEmailPage = () => {
         <Heading>Hi, Verify by clicking the below button</Heading>
         <VerifyButton onClick={handleClick}>Verify and Login</VerifyButton>
         <StyledStatus>
-          {loading ? (
-            <ClipLoader color={"teal"} loading={loading} size={20} />
-          ) : (
-            status
-          )}
+          {loading ? <LoadingAnimation size={4} /> : status}
         </StyledStatus>
       </Wrapper>
     </>

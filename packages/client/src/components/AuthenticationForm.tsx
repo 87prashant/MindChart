@@ -8,8 +8,8 @@ import {
   SubmitButton,
   CancelButton,
 } from "./NodeForm";
-import ClipLoader from "react-spinners/ClipLoader";
 import { ResponseStatus, UserChoiceList, Misc, Errors } from "./constants";
+import LoadingAnimation from "./Animations/LoadingAnimation";
 
 const Container = styled(StyledDiv)({
   backdropFilter: "blur(10px)",
@@ -49,7 +49,7 @@ const ForgetPasswordForm = styled(Form)({
 
 const StyledHeader = styled(Header)({
   fontSize: 18,
-  color: "teal",
+  color: "green",
   textAlign: "center",
   margin: "0px 0px 20px 0px",
 });
@@ -234,7 +234,7 @@ const AuthenticationForm = (props: Props) => {
       <Wrapper>
         <FormContainer userChoice={userChoice}>
           <RegisterForm>
-            <StyledHeader>Create an account</StyledHeader>
+            <StyledHeader>Create an Account</StyledHeader>
             <StyledInputName>Name</StyledInputName>
             <StyledInput
               ref={registerNameRef}
@@ -257,7 +257,7 @@ const AuthenticationForm = (props: Props) => {
             />
             <StyledStatus>
               {userChoice === UserChoiceList.REGISTER && loading ? (
-                <ClipLoader color={"teal"} loading={loading} size={15} />
+                <LoadingAnimation size={4} />
               ) : (
                 status
               )}
@@ -285,8 +285,8 @@ const AuthenticationForm = (props: Props) => {
             />
             <StyledStatus>
               {userChoice === UserChoiceList.LOGIN && loading ? (
-                <ClipLoader color={"teal"} loading={loading} size={15} />
-              ) : (
+                <LoadingAnimation size={4} />
+                ) : (
                 status
               )}
             </StyledStatus>
@@ -311,8 +311,8 @@ const AuthenticationForm = (props: Props) => {
             />
             <StyledStatus>
               {userChoice === UserChoiceList.FORGET_PASSWORD && loading ? (
-                <ClipLoader color={"teal"} loading={loading} size={15} />
-              ) : (
+                <LoadingAnimation size={4} />
+                ) : (
                 status
               )}
             </StyledStatus>
