@@ -51,6 +51,7 @@ const DeleteAllData = styled(AddButton)({
   fontSize: 11,
   textDecoration: "underline",
   transition: "all ease 100ms",
+  color: "rgba(0, 0, 0, 0.6)",
   ":hover": {
     backgroundColor: "inherit",
     color: "red",
@@ -75,10 +76,15 @@ export const AuthenticationButton = styled("button")({
   padding: "10px",
   textDecoration: "none",
   cursor: "pointer",
-  border: "solid black",
+  border: "none",
   borderRadius: "10px",
-  backgroundColor: "teal",
+  backgroundColor: "green",
   fontWeight: "bolder",
+  color: "white",
+  transition: "all ease 200ms",
+  ":hover": {
+    transform: "scale(1.03)"
+  }
 });
 
 const PlusIcon = styled("span")({
@@ -160,7 +166,7 @@ const Header = (props: Props) => {
       </HelpButton>
       {!isLoggedIn && (
         <DeleteAllData onClick={handleDeleteAllData}>
-          Delete All Data
+          Delete All
         </DeleteAllData>
       )}
       {!isLoggedIn && (
