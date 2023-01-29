@@ -17,21 +17,12 @@ const StyledHeader = styled("div")({
 });
 
 const HelpButton = styled("a")({
-  display: "flex",
-  border: "2px solid black",
-  borderRadius: 10,
-  padding: 5,
   marginRight: "auto",
   marginLeft: "20px",
   textDecoration: "none",
-  backgroundColor: "white",
   transition: "all ease 200ms",
-  color: "teal",
-  ":active": {
-    color: "teal",
-  },
   ":hover": {
-    backgroundColor: "teal",
+    transform: "scale(1.1)",
   },
 });
 
@@ -98,6 +89,7 @@ const PlusIcon = styled("span")({
 
 const AddText = styled("span")({
   margin: "0 10px 0 0",
+  color: "rgba(0, 0, 0, 0.7)",
 });
 
 interface Props {
@@ -134,7 +126,7 @@ const Header = (props: Props) => {
   } = props;
 
   const [showAuthenticationForm, setShowAuthenticationForm] = useState(false);
-  
+
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
     const storedData: NodeDataType[] = window.localStorage.getItem("savedData")

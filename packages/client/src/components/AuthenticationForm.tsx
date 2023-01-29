@@ -119,7 +119,7 @@ const AuthenticationForm = (props: Props) => {
   } = props;
 
   //Store the status from backend
-  const [status, setStatus] = useState<String | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
   //Store the choice of user ( login/register/forget password )
   const [userChoice, setUserChoice] = useState(UserChoiceList.REGISTER);
   //Store if the response from backend has come or not

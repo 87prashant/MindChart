@@ -126,7 +126,6 @@ const IntensityForm = (props: Props) => {
     setIntensityForm(null);
   };
 
-  console.log(nodeData)
   return (
     <Container>
       <FormWrapper>

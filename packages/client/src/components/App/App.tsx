@@ -105,6 +105,7 @@ function App() {
     });
     const handleDebounceResize = debounce(function handleResize() {
       setIsChartAdded(false);
+      setShowNodeClickModal(false);
       setDimensions({
         w: mainRef.current!.getBoundingClientRect().width,
         h: mainRef.current!.getBoundingClientRect().height,

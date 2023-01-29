@@ -7,7 +7,6 @@ import { StyledWrapper } from "./NodeForm";
 import { AuthenticationButton } from "./Header";
 import { StyledInput, StyledInputName } from "./AuthenticationForm";
 import { ResponseStatus, Errors } from "./constants";
-import React from "react";
 
 const Wrapper = styled(StyledWrapper)({
   width: 280,
@@ -49,7 +48,6 @@ const InputName = styled(StyledInputName)({
 });
 
 const Input = styled(StyledInput)({
-  // width: 200,
   padding: 5,
 });
 

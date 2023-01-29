@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Emotions from "./Emotions";
 import Thoughts from "./Thoughts";
 import { validateNodeData } from "./nodeFormValidation";
@@ -115,7 +115,6 @@ const StyledSlider = styled("input")({
 
 interface Props {
   setShowNodeForm: any;
-  showNodeForm: boolean;
   savedData: NodeDataType[];
   setSavedData: any;
   setIsChartAdded: any;
@@ -164,7 +163,6 @@ export interface NodeFormErrorType {
 
 const NodeForm: any = (props: Props) => {
   const {
-    showNodeForm,
     setShowNodeForm,
     setSavedData,
     setIsChartAdded,
@@ -307,13 +305,7 @@ const NodeForm: any = (props: Props) => {
     if (!isDemoActive && !isLoggedIn) {
       window.localStorage.setItem("savedData", JSON.stringify(savedData));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedData]);
-
-  const tips = useMemo(() => {
-    return <Tips />;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showNodeForm]);
+  }, [isDemoActive, isLoggedIn, savedData]);
 
   return (
     <StyledDiv>
@@ -363,7 +355,7 @@ const NodeForm: any = (props: Props) => {
           />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
-        {tips}
+        <Tips />
       </StyledWrapper>
     </StyledDiv>
   );
