@@ -2,11 +2,11 @@
  * 1. Account Status: {@link AccountStatus}
  * 2. Response Status: {@link ResponseStatus}
  * 3. Data operation: {@link DataOperation}
- * 4. Categories List: {@link CategoriesList}
+ * 4. Thoughts List: {@link ThoughtsList}
  * 5. Emotions List: {@link EmotionsList}
  * 6. Emotions Colors: {@link EmotionsColor}
  * 7. Error Messages: {@link Errors}
- * 8. Option selected by user during registering on frontend {@link UserChoiceList}
+ * 8. Option selected by user during authenticating {@link UserChoiceList}
  * 9. Tips array {@link TipsArray}
  * 10. Misc: {@link Misc}
  */
@@ -27,7 +27,7 @@ const DataOperation = {
   UPDATE: "Update",
 };
 
-const CategoriesList = {
+const ThoughtsList = {
   CREATIVE: "creative",
   ANALYTICAL: "analytical",
   CRITICAL: "critical",
@@ -61,7 +61,7 @@ const EmotionsColor = {
 
 const Errors = {
   UNMATCHED_PASSWORD: "Password not matched",
-  CATEGORY_REQUIRED: "At least select one category",
+  THOUGHT_REQUIRED: "At least select one thought",
   EMOTION_REQUIRED: "At least select one emotion",
   DESCRIPTION_REQUIRED: "Description can not be empty",
   INVALID_EMAIL: "Invalid Email",
@@ -89,7 +89,7 @@ export {
   AccountStatus,
   ResponseStatus,
   DataOperation,
-  CategoriesList,
+  ThoughtsList,
   EmotionsList,
   EmotionsColor,
   Errors,

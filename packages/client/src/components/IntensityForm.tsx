@@ -101,7 +101,7 @@ const IntensityForm = (props: Props) => {
   const [intensity, setIntensity] = useState(selectedEmotion || 40);
 
   const handleChange = (e: any) => {
-    setIntensity(e.target.value);
+    setIntensity(Number(e.target.value));
   };
 
   const handleCancel = () => {
@@ -114,7 +114,7 @@ const IntensityForm = (props: Props) => {
     }));
     setIntensityForm(null);
   };
-  
+
   const handleDone = () => {
     setNodeData((nodeData: any) => ({
       ...nodeData,
@@ -126,6 +126,7 @@ const IntensityForm = (props: Props) => {
     setIntensityForm(null);
   };
 
+  console.log(nodeData)
   return (
     <Container>
       <FormWrapper>

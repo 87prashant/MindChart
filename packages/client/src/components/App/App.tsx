@@ -87,14 +87,7 @@ function App() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   //Stores the node form data when creating new node or editing existing data
   const [nodeData, setNodeData] = useState({
-    categories: {
-      creative: false,
-      concrete: false,
-      abstract: false,
-      analytical: false,
-      critical: false,
-      unknown: false,
-    },
+    thoughts: {},
     emotions: {},
     priority: 20,
     description: "",

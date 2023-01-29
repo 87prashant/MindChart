@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import React, { useState, useEffect, useMemo } from "react";
 import Emotions from "./Emotions";
-import Categories from "./Categories";
+import Thoughts from "./Thoughts";
 import { validateNodeData } from "./nodeFormValidation";
 import Tips from "./Tips";
 import { DataOperation } from "./constants";
@@ -57,7 +57,7 @@ export const SubmitButton = styled(Inputs)<{ isNodeDataDuplicate: boolean }>(
       ? "2px solid rgba(0, 0, 0, 0.3)"
       : "2px solid black",
     ":hover": {
-      backgroundColor: "rgb(192, 192, 192, 0.7)",
+      backgroundColor: isNodeDataDuplicate ? "" : "rgb(192, 192, 192, 0.7)",
     },
   })
 );
@@ -139,17 +139,17 @@ export interface Emotion {
   sadness?: number;
 }
 
-interface Thoughts {
-  creative: boolean;
-  concrete: boolean;
-  abstract: boolean;
-  analytical: boolean;
-  critical: boolean;
-  unknown: boolean;
+interface Thought {
+  creative?: boolean;
+  concrete?: boolean;
+  abstract?: boolean;
+  analytical?: boolean;
+  critical?: boolean;
+  unknown?: boolean;
 }
 
 export interface NodeDataType {
-  categories: Thoughts;
+  thoughts: Thought;
   emotions: Emotion;
   priority: number;
   description: string;
@@ -157,7 +157,7 @@ export interface NodeDataType {
 }
 
 export interface NodeFormErrorType {
-  categoriesError: string;
+  thoughtsError: string;
   emotionsError: string;
   descriptionError: string;
 }
@@ -177,35 +177,30 @@ const NodeForm: any = (props: Props) => {
     userInfo: { email },
     isLoggedIn,
   } = props;
-  
+
   const [nodeFormErrors, setNodeFormErrors] = useState({
-    categoriesError: "",
+    thoughtsError: "",
     emotionsError: "",
     descriptionError: "",
   });
   const [isNodeDataDuplicate, setIsNodeDataDuplicate] = useState(false);
   const [isEarlySubmit, setIsEarlySubmit] = useState(false);
+
   const refreshNodeData = () => {
     setNodeData(() => {
       return {
-        categories: {
-          creative: false,
-          concrete: false,
-          abstract: false,
-          analytical: false,
-          critical: false,
-          unknown: false,
-        },
+        thoughts: {},
         emotions: {},
         priority: 20,
         description: "",
       };
     });
   };
+
   const refreshFormErrors = () => {
     setNodeFormErrors(() => {
       return {
-        categoriesError: "",
+        thoughtsError: "",
         emotionsError: "",
         descriptionError: "",
       };
@@ -230,24 +225,30 @@ const NodeForm: any = (props: Props) => {
     setIsEarlySubmit(false);
   };
 
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: any) => {
     setNodeData((nodeData: NodeDataType) => {
       const { type, value, name, id } = e.target;
 
+      // Handles thought change
       if (type === "checkbox") {
         return {
           ...nodeData,
-          categories: {
-            ...nodeData.categories,
-            [id]: (e.target as HTMLInputElement).checked ? true : false,
+          thoughts: {
+            ...nodeData.thoughts,
+            [id]: (e.target as HTMLInputElement).checked ? true : undefined,
           },
         };
       }
+
+      // Handles priority change
+      if (name === "priority") {
+        return {
+          ...nodeData,
+          [name]: Number(value),
+        };
+      }
+
+      // Handles description change
       return {
         ...nodeData,
         [name]: value,
@@ -257,6 +258,7 @@ const NodeForm: any = (props: Props) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!validateNodeData(nodeData, setNodeFormErrors)) {
       setIsEarlySubmit(true);
       return;
@@ -265,14 +267,9 @@ const NodeForm: any = (props: Props) => {
     if (isNodeDataDuplicate) return;
 
     if (hackedNodeData) {
-      const newSavedData = savedData.filter((d) => {
-        return (
-          d.categories !== hackedNodeData.categories &&
-          d.description !== hackedNodeData.description &&
-          d.emotions !== hackedNodeData.emotions &&
-          d.priority !== hackedNodeData.priority
-        );
-      });
+      const newSavedData = savedData.filter(
+        (d) => JSON.stringify(d) !== JSON.stringify(hackedNodeData)
+      );
       setSavedData(() => {
         return [...newSavedData, nodeData];
       });
@@ -294,9 +291,10 @@ const NodeForm: any = (props: Props) => {
         }),
       })
         .then((response) => response.json())
-        //do something if error comes for example delete the created data with showing th messages etc.
+        //do something if error comes for example delete and inform the user
         .then((data) => {});
     }
+
     setHackedNodeData(null);
     refreshNodeData();
     refreshFormErrors();
@@ -334,11 +332,11 @@ const NodeForm: any = (props: Props) => {
                 {nodeFormErrors.descriptionError}
               </StyledErrors>
             )}
-            <Header>Category</Header>
-            <Categories nodeData={nodeData} handleChange={handleChange} />
-            {nodeFormErrors.categoriesError && (
+            <Header>Thoughts</Header>
+            <Thoughts nodeData={nodeData} handleChange={handleChange} />
+            {nodeFormErrors.thoughtsError && (
               <StyledErrors isEarlySubmit={isEarlySubmit}>
-                {nodeFormErrors.categoriesError}
+                {nodeFormErrors.thoughtsError}
               </StyledErrors>
             )}
             <Header>Emotions</Header>

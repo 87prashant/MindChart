@@ -28,7 +28,7 @@ const MiniChart = (props: Props) => {
     return {
       description: data.description,
       priority: +data.priority,
-      categories: JSON.parse(JSON.stringify(data.categories)), // to remove the undefined property
+      thoughts: JSON.parse(JSON.stringify(data.thoughts)), // to remove the undefined property
       emotions: JSON.parse(JSON.stringify(data.emotions)),
       group: findGroupArray(data.emotions),
     };
@@ -36,7 +36,7 @@ const MiniChart = (props: Props) => {
 
   const hackDataArray = savedData.map((data) => {
     return {
-      categories: JSON.parse(JSON.stringify(data.categories)),
+      thoughts: JSON.parse(JSON.stringify(data.thoughts)),
       emotions: JSON.parse(JSON.stringify(data.emotions)),
       priority: data.priority,
       description: data.description,

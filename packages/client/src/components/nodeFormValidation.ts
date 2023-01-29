@@ -4,11 +4,11 @@ import { Errors } from "./constants";
 export const validateNodeData = (data: NodeDataType, setNodeFormErrors: any) => {
   let output = true;
 
-  if (JSON.stringify(data.categories) === "{}") {
+  if (JSON.stringify(data.thoughts) === "{}") {
     setNodeFormErrors((nodeFormErrors: NodeFormErrorType) => {
       return {
         ...nodeFormErrors,
-        categoriesError: `* ${Errors.CATEGORY_REQUIRED}`,
+        thoughtsError: `* ${Errors.THOUGHT_REQUIRED}`,
       };
     });
     output = false;
@@ -16,7 +16,7 @@ export const validateNodeData = (data: NodeDataType, setNodeFormErrors: any) => 
     setNodeFormErrors((nodeFormErrors: NodeFormErrorType) => {
       return {
         ...nodeFormErrors,
-        categoriesError: "",
+        thoughtsError: "",
       };
     });
   }

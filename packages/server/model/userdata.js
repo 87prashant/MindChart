@@ -5,7 +5,7 @@ const UserDataSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     data: [
       {
-        categories: {
+        thoughts: {
           creative: { type: Boolean },
           concrete: { type: Boolean },
           abstract: { type: Boolean },
