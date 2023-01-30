@@ -10,7 +10,7 @@ const Header = styled("div")({
 });
 
 const Button = styled("button")<{ name: string }>(({ name }) => ({
-  border: "2px solid black",
+  border: "1px solid rgba(0, 0, 0, 0.1)",
   cursor: "pointer",
   backgroundColor: name === "delete" ? "red" : undefined,
   display: "flex",

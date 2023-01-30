@@ -56,7 +56,7 @@ const SubmitWrapper = styled("div")({
 
 const DoneButton = styled("button")({
   padding: 4,
-  border: "2px solid black",
+  border: "1px solid rgba(0, 0, 0, 0.1)",
   borderRadius: 8,
   cursor: "pointer",
   marginLeft: "auto",
@@ -69,7 +69,7 @@ const DoneButton = styled("button")({
 
 const CancelButton = styled("button")({
   padding: 4,
-  border: "2px solid black",
+  border: "1px solid rgba(0, 0, 0, 0.1)",
   borderRadius: 8,
   cursor: "pointer",
   fontWeight: "bold",

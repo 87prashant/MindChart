@@ -1,4 +1,4 @@
-//TODO fix the displacement of the dots on size change and make component more modular
+//TODO make it more re-usable
 
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -9,29 +9,33 @@ const sizeAnimation = (variable: number) => keyframes`
     width: ${variable}px;
     height: ${variable}px;
 }
-50% {
-    width: ${variable * 2}px;
-    height: ${variable * 2}px;
+40% {
+    width: ${variable * 1.8}px;
+    height: ${variable * 1.8}px;
 } 
-100% { 
+80% { 
     width: ${variable}px;
     height: ${variable}px;
-}`;
+}
+100% { 
+  width: ${variable}px;
+  height: ${variable}px;
+}
+`;
 
-const Wrapper = styled("div")<{ variable: number }>(({ variable }) => ({
+const Wrapper = styled("div")({
   display: "flex",
-}));
+});
 
 const Dot = styled("span")<{ size: number; index: number }>(
   ({ size, index }) => ({
     width: 10,
     height: 10,
-    transition: "all ease 1s",
     "& svg": {
       width: size,
       height: size,
       fill: "green",
-      animation: `${sizeAnimation(size)} 1s ${index / 6}s infinite`,
+      animation: `${sizeAnimation(size)} 1.3s ${index / 6}s infinite`,
     },
   })
 );
@@ -44,7 +48,7 @@ const LoadingAnimation = (props: Props) => {
   const { size } = props;
 
   return (
-    <Wrapper variable={size}>
+    <Wrapper>
       <Dot size={size} index={0}>
         <DotSvg />
       </Dot>

@@ -32,7 +32,7 @@ export const Inputs = styled("input")({
   width: "300px",
   padding: "4px 10px",
   borderRadius: 7,
-  border: "2px solid black",
+  border: "1px solid rgba(0, 0, 0, 0.1)",
 });
 
 const DescriptionInput = styled("textarea")({
@@ -41,7 +41,7 @@ const DescriptionInput = styled("textarea")({
   resize: "none",
   padding: "4px 10px",
   borderRadius: 7,
-  border: "2px solid black",
+  border: "1px solid rgba(0, 0, 0, 0.1)",
   marginBottom: 10,
 });
 
@@ -55,7 +55,7 @@ export const SubmitButton = styled(Inputs)<{ isNodeDataDuplicate: boolean }>(
     color: isNodeDataDuplicate ? "rgba(0, 0, 0, 0.3)" : "black",
     border: isNodeDataDuplicate
       ? "2px solid rgba(0, 0, 0, 0.3)"
-      : "2px solid black",
+      : "1px solid rgba(0, 0, 0, 0.1)",
     ":hover": {
       backgroundColor: isNodeDataDuplicate ? "" : "rgb(192, 192, 192, 0.7)",
     },

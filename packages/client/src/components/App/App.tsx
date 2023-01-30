@@ -15,7 +15,7 @@ import { demoData } from "./demoData";
 
 const Container = styled("div")<{ showNodeClickModal: boolean }>(
   ({ showNodeClickModal }) => ({
-    border: "2px solid black",
+    border: "1px solid rgba(0, 0, 0, 0.1)",
     position: "absolute",
     backgroundColor: "rgba(225, 225, 225, 1)",
     visibility: showNodeClickModal ? "visible" : "hidden",
