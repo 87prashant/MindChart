@@ -1,3 +1,13 @@
+/**
+ * <b>Apis</b>:
+ * 1. Register user
+ * 2. Registered user verification
+ * 3. Forget password
+ * 4. Forget password verification
+ * 5. Login
+ * 6. Modify user data
+ */
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -34,6 +44,7 @@ if (!process.env.MONGODB_URI) {
   return;
 }
 
+// Connect to DB
 try {
   mongoose.connect(process.env.MONGODB_URI);
 } catch (error) {
@@ -41,15 +52,18 @@ try {
   return;
 }
 
+// Create new user empty data
 async function createUserData(email) {
   await UserData.create({ email, data: [] });
   logger(Message.NEW_USER_ADDED, LogLevel.INFO);
 }
 
+// Fetch user data
 async function getUserData(email) {
   return (await UserData.findOne({ email }).lean()).data;
 }
 
+// Remove unverified account after particular time
 function removeAccount(email) {
   setTimeout(async () => {
     try {
@@ -62,6 +76,7 @@ function removeAccount(email) {
   }, fiveMinutes);
 }
 
+// Remove token after particular time
 function removeToken(email) {
   setTimeout(async () => {
     try {
@@ -81,11 +96,12 @@ function removeToken(email) {
 }
 
 /**
- * @api Register user
+ * <b>@api Register user</b>
  */
 app.post("/register", async function (req, res) {
   const { username, email, password: plainPassword } = req.body;
 
+  // Validation
   if (!plainPassword || !email || !username) {
     return res.json({
       status: ResponseStatus.ERROR,
@@ -112,6 +128,7 @@ app.post("/register", async function (req, res) {
   const uniqueUrl = `${process.env.ORIGIN}/verify-email/${email}/${verificationToken}`;
   const status = AccountStatus.UNVERIFIED;
 
+  // Authorization and Registration
   if (user) {
     if (user.status === AccountStatus.UNVERIFIED) {
       try {
@@ -153,6 +170,7 @@ app.post("/register", async function (req, res) {
     }
   }
 
+  // Send mail
   const html = registrationMailString({ username, uniqueUrl });
   try {
     await mailSender({
@@ -177,12 +195,14 @@ app.post("/register", async function (req, res) {
 });
 
 /**
- * @api verify email
+ * <b>@api Email verification</b>
  */
 app.post("/verify-email", async function (req, res) {
   const { email, verificationToken } = req.body;
 
   const user = await User.findOne({ email }).lean();
+
+  // Authorization
   if (!user) {
     return res.json({
       status: ResponseStatus.ERROR,
@@ -201,6 +221,8 @@ app.post("/verify-email", async function (req, res) {
       error: Error.INVALID_TOKEN,
     });
   }
+
+  // Update user as verified
   await User.updateMany(
     { email },
     { $unset: { verificationToken: "", status: "" } }
@@ -210,15 +232,19 @@ app.post("/verify-email", async function (req, res) {
 });
 
 /**
- * @api forger password
+ * <b>@api Forget password</b>
  */
 app.post("/forget-password", async function (req, res) {
   const { email } = req.body;
+
+  // Validation
   if (!email.trim()) {
     return res.json({ status: ResponseStatus.ERROR, error: Error.EMPTY_MAIL });
   }
 
   const user = await User.findOne({ email }).lean();
+
+  // Authorization
   if (!user) {
     return res.json({
       status: ResponseStatus.ERROR,
@@ -235,22 +261,7 @@ app.post("/forget-password", async function (req, res) {
   const verificationToken = generateUniqueVerificationToken();
   const uniqueUrl = `${process.env.ORIGIN}/forget-password-verify/${email}/${verificationToken}`;
 
-  const html = forgetPasswordMailString({ username: user.username, uniqueUrl });
-  try {
-    await mailSender({
-      to: email,
-      subject: Message.FORGET_PASSWORD_MAIL,
-      message: html,
-    });
-  } catch (error) {
-    logger(error, LogLevel.ERROR);
-    return res.json({
-      status: ResponseStatus.ERROR,
-      error:
-        error.code === "EENVELOPE" ? Error.INVALID_EMAIL : Error.SERVER_ERROR,
-    });
-  }
-
+  // Mark status as forget password
   try {
     await User.updateMany(
       { email },
@@ -267,6 +278,23 @@ app.post("/forget-password", async function (req, res) {
     });
   }
 
+  // Send mail
+  const html = forgetPasswordMailString({ username: user.username, uniqueUrl });
+  try {
+    await mailSender({
+      to: email,
+      subject: Message.FORGET_PASSWORD_MAIL,
+      message: html,
+    });
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error:
+        error.code === "EENVELOPE" ? Error.INVALID_EMAIL : Error.SERVER_ERROR,
+    });
+  }
+
   return res.json({
     status: ResponseStatus.ERROR,
     error: Error.FORGET_PASSWORD_MAIL,
@@ -274,11 +302,12 @@ app.post("/forget-password", async function (req, res) {
 });
 
 /**
- * @api forget password verify
+ * <b>@api forget password verify</b>
  */
 app.post("/forget-password-verify", async function (req, res) {
   const { email, verificationToken, password: plainPassword } = req.body;
 
+  // Validation
   if (plainPassword.length < 8) {
     return res.json({
       status: ResponseStatus.ERROR,
@@ -288,13 +317,13 @@ app.post("/forget-password-verify", async function (req, res) {
 
   const user = await User.findOne({ email }).lean();
 
+  // Authorization
   if (!user) {
     return res.json({
       status: ResponseStatus.ERROR,
       error: Error.NOT_REGISTERED,
     });
   }
-
   if (!user.status) {
     return res.json({
       status: ResponseStatus.ERROR,
@@ -305,36 +334,36 @@ app.post("/forget-password-verify", async function (req, res) {
       status: ResponseStatus.ERROR,
       error: Error.NOT_VERIFIED,
     });
-  } else {
-    if (user.verificationToken !== verificationToken) {
-      return res.json({
-        status: ResponseStatus.ERROR,
-        error: Error.INVALID_TOKEN,
-      });
-    }
-
-    const password = await bcrypt.hash(plainPassword, 10);
-    await User.updateMany(
-      { email },
-      { $unset: { status: "", verificationToken: "" } }
-    );
-    await User.updateMany({ email }, { $set: { password: password } }); // why not working in one query?
-    const userData = await getUserData(email);
-
+  } else if (user.verificationToken !== verificationToken) {
     return res.json({
-      status: ResponseStatus.OK,
-      username: user.username,
-      userData,
+      status: ResponseStatus.ERROR,
+      error: Error.INVALID_TOKEN,
     });
   }
+
+  // Change password
+  const password = await bcrypt.hash(plainPassword, 10);
+  await User.updateMany(
+    { email },
+    { $unset: { status: "", verificationToken: "" } }
+  );
+  await User.updateMany({ email }, { $set: { password: password } }); // why not working in one query?
+  const userData = await getUserData(email);
+
+  return res.json({
+    status: ResponseStatus.OK,
+    username: user.username,
+    userData,
+  });
 });
 
 /**
- * @api login user
+ * <b>@api Login user</b>
  */
 app.post("/login", async function (req, res) {
   const { email, password: plainPassword } = req.body;
 
+  // Validation
   if (!plainPassword || !email) {
     return res.json({
       status: ResponseStatus.ERROR,
@@ -343,6 +372,8 @@ app.post("/login", async function (req, res) {
   }
 
   const user = await User.findOne({ email }).lean();
+
+  // Authorization
   if (!user) {
     return res.json({
       status: ResponseStatus.ERROR,
@@ -355,6 +386,8 @@ app.post("/login", async function (req, res) {
       error: Error.NOT_VERIFIED,
     });
   }
+
+  // Login the user
   if (await bcrypt.compare(plainPassword, user.password)) {
     const { username, email } = user;
     const userData = await getUserData(email);
@@ -371,7 +404,7 @@ app.post("/login", async function (req, res) {
 });
 
 /**
- * @api modify user data
+ * <b>@api modify user data</b>
  */
 app.post("/modify-data", async function (req, res) {
   //currently there is no immutable field in nodeData to find required nodeData. So need to send the two nodeData to distinguish between the oldNodeData to be deleted and newNodeData to be added
@@ -382,10 +415,16 @@ app.post("/modify-data", async function (req, res) {
     operation,
   } = req.body;
 
+  // Validation
+
+  // Authorization
+
+  // Add new node 
   const addData = async () => {
     await UserData.updateOne({ email }, { $addToSet: { data: newNodeData } });
   };
 
+  // Delete a node
   const deleteData = async () => {
     await UserData.updateOne(
       { email },
@@ -397,12 +436,13 @@ app.post("/modify-data", async function (req, res) {
     );
   };
 
+  // Controller
   try {
     if (operation === DataOperation.ADD) {
       addData();
     } else if (operation === DataOperation.DELETE) {
       deleteData();
-    } else {
+    } else {  // updating existing one
       deleteData();
       addData();
     }

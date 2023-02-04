@@ -257,7 +257,7 @@ const AuthenticationForm = (props: Props) => {
             />
             <StyledStatus>
               {userChoice === UserChoiceList.REGISTER && loading ? (
-                <LoadingAnimation size={4} />
+                <LoadingAnimation size={6} />
               ) : (
                 status
               )}
@@ -285,7 +285,7 @@ const AuthenticationForm = (props: Props) => {
             />
             <StyledStatus>
               {userChoice === UserChoiceList.LOGIN && loading ? (
-                <LoadingAnimation size={4} />
+                <LoadingAnimation size={6} />
                 ) : (
                 status
               )}
@@ -311,7 +311,7 @@ const AuthenticationForm = (props: Props) => {
             />
             <StyledStatus>
               {userChoice === UserChoiceList.FORGET_PASSWORD && loading ? (
-                <LoadingAnimation size={4} />
+                <LoadingAnimation size={6} />
                 ) : (
                 status
               )}

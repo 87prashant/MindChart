@@ -23,7 +23,7 @@ const Error = {
   SHORT_USERNAME: "Username should be at least 5 symbol long",
   FORGET_PASSWORD_MAIL: "Forget Password mail sent",
   VERIFICATION_MAIL: "Verification mail sent",
-  SERVER_ERROR: "Error on our end",
+  SERVER_ERROR: "Error on our end, try again",
 };
 
 const Message = {

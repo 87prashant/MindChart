@@ -116,7 +116,7 @@ const ForgetPasswordPage = () => {
           autoComplete="current-password"
         />
         <StyledStatus>
-          {loading ? <LoadingAnimation size={4} /> : status}
+          {loading ? <LoadingAnimation size={6} /> : status}
         </StyledStatus>
         <ChangeButton onClick={handleClick}>Change</ChangeButton>
       </Wrapper>

@@ -9,13 +9,17 @@ const sizeAnimation = (variable: number) => keyframes`
     width: ${variable}px;
     height: ${variable}px;
 }
-40% {
-    width: ${variable * 1.8}px;
-    height: ${variable * 1.8}px;
+30% {
+    width: ${variable * 1.3}px;
+    height: ${variable * 1.3}px;
 } 
-80% { 
-    width: ${variable}px;
-    height: ${variable}px;
+50% { 
+    width: ${variable / 1.25}px;
+    height: ${variable / 1.25}px;
+}
+70% { 
+  width: ${variable}px;
+  height: ${variable}px;
 }
 100% { 
   width: ${variable}px;

@@ -87,7 +87,7 @@ const VerifyEmailPage = () => {
         <Heading>Hi, Verify by clicking the below button</Heading>
         <VerifyButton onClick={handleClick}>Verify and Login</VerifyButton>
         <StyledStatus>
-          {loading ? <LoadingAnimation size={4} /> : status}
+          {loading ? <LoadingAnimation size={6} /> : status}
         </StyledStatus>
       </Wrapper>
     </>
