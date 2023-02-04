@@ -19,21 +19,13 @@ const Wrapper = styled(StyledWrapper)({
   width: 250,
   height: 320,
   overflow: "hidden",
+  backgroundColor: "white",
 });
 
-const FormContainer = styled("div")<{ userChoice: String }>(
-  ({ userChoice }) => ({
-    gap: 15,
-    display: "flex",
-    transition: "all 250ms linear",
-    transform:
-      userChoice === UserChoiceList.REGISTER
-        ? ""
-        : userChoice === UserChoiceList.LOGIN
-        ? "translate(-236px)"
-        : "translate(-472px)",
-  })
-);
+const FormContainer = styled("div")({
+  gap: 15,
+  display: "flex",
+});
 
 const Form = styled("form")({
   minWidth: "100%",
@@ -232,95 +224,93 @@ const AuthenticationForm = (props: Props) => {
   return (
     <Container>
       <Wrapper>
-        <FormContainer userChoice={userChoice}>
-          <RegisterForm>
-            <StyledHeader>Create an Account</StyledHeader>
-            <StyledInputName>Name</StyledInputName>
-            <StyledInput
-              ref={registerNameRef}
-              type={"text"}
-              placeholder="Name"
-            />
-            <StyledInputName>Email</StyledInputName>
-            <StyledInput
-              ref={registerEmailRef}
-              type="email"
-              placeholder="Email"
-              autoComplete="email"
-            />
-            <StyledInputName>Password</StyledInputName>
-            <StyledInput
-              ref={registerPassRef}
-              type="password"
-              placeholder="Password"
-              autoComplete="current-password"
-            />
-            <StyledStatus>
-              {userChoice === UserChoiceList.REGISTER && loading ? (
-                <LoadingAnimation size={6} />
-              ) : (
-                status
-              )}
-            </StyledStatus>
-            <HorizontalRule />
-            <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
-              Login instead
-            </Button>
-          </RegisterForm>
-          <LoginForm>
-            <StyledHeader>Log in</StyledHeader>
-            <StyledInputName>Email</StyledInputName>
-            <StyledInput
-              ref={loginEmailRef}
-              type="email"
-              placeholder="Email"
-              autoComplete="email"
-            />
-            <StyledInputName>Password</StyledInputName>
-            <StyledInput
-              ref={loginPassRef}
-              type="password"
-              placeholder="Password"
-              autoComplete="current-password"
-            />
-            <StyledStatus>
-              {userChoice === UserChoiceList.LOGIN && loading ? (
-                <LoadingAnimation size={6} />
+        <FormContainer>
+          {userChoice === UserChoiceList.REGISTER && (
+            <RegisterForm>
+              <StyledHeader>Create an Account</StyledHeader>
+              <StyledInputName>Name</StyledInputName>
+              <StyledInput
+                ref={registerNameRef}
+                type={"text"}
+                placeholder="Name"
+              />
+              <StyledInputName>Email</StyledInputName>
+              <StyledInput
+                ref={registerEmailRef}
+                type="email"
+                placeholder="Email"
+                autoComplete="email"
+              />
+              <StyledInputName>Password</StyledInputName>
+              <StyledInput
+                ref={registerPassRef}
+                type="password"
+                placeholder="Password"
+                autoComplete="current-password"
+              />
+              <StyledStatus>
+                {loading ? <LoadingAnimation size={6} /> : status}
+              </StyledStatus>
+              <HorizontalRule />
+              <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
+                Login instead
+              </Button>
+            </RegisterForm>
+          )}
+          {userChoice === UserChoiceList.LOGIN && (
+            <LoginForm>
+              <StyledHeader>Log in</StyledHeader>
+              <StyledInputName>Email</StyledInputName>
+              <StyledInput
+                ref={loginEmailRef}
+                type="email"
+                placeholder="Email"
+                autoComplete="email"
+              />
+              <StyledInputName>Password</StyledInputName>
+              <StyledInput
+                ref={loginPassRef}
+                type="password"
+                placeholder="Password"
+                autoComplete="current-password"
+              />
+              <StyledStatus>
+                {userChoice === UserChoiceList.LOGIN && loading ? (
+                  <LoadingAnimation size={6} />
                 ) : (
-                status
-              )}
-            </StyledStatus>
-            <HorizontalRule />
-            <Button onClick={() => handleUserChoice(UserChoiceList.REGISTER)}>
-              Register
-            </Button>
-            <Button
-              onClick={() => handleUserChoice(UserChoiceList.FORGET_PASSWORD)}
-            >
-              Forget Password
-            </Button>
-          </LoginForm>
-          <ForgetPasswordForm>
-            <StyledHeader>Forget Password</StyledHeader>
-            <StyledInputName>Email</StyledInputName>
-            <StyledInput
-              ref={forgetPasswordEmailRef}
-              type="email"
-              placeholder="Email"
-              autoComplete="email"
-            />
-            <StyledStatus>
-              {userChoice === UserChoiceList.FORGET_PASSWORD && loading ? (
-                <LoadingAnimation size={6} />
-                ) : (
-                status
-              )}
-            </StyledStatus>
-            <HorizontalRule />
-            <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
-              Login
-            </Button>
-          </ForgetPasswordForm>
+                  status
+                )}
+              </StyledStatus>
+              <HorizontalRule />
+              <Button onClick={() => handleUserChoice(UserChoiceList.REGISTER)}>
+                Register
+              </Button>
+              <Button
+                onClick={() => handleUserChoice(UserChoiceList.FORGET_PASSWORD)}
+              >
+                Forget Password
+              </Button>
+            </LoginForm>
+          )}
+          {userChoice === UserChoiceList.FORGET_PASSWORD && (
+            <ForgetPasswordForm>
+              <StyledHeader>Forget Password</StyledHeader>
+              <StyledInputName>Email</StyledInputName>
+              <StyledInput
+                ref={forgetPasswordEmailRef}
+                type="email"
+                placeholder="Email"
+                autoComplete="email"
+              />
+              <StyledStatus>
+                {loading ? <LoadingAnimation size={6} /> : status}
+              </StyledStatus>
+              <HorizontalRule />
+              <Button onClick={() => handleUserChoice(UserChoiceList.LOGIN)}>
+                Login
+              </Button>
+            </ForgetPasswordForm>
+          )}
         </FormContainer>
         <StyledSubmitButton
           onClick={(e) => handleFormSubmit(e)}

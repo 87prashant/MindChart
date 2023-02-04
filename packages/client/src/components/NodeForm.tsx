@@ -12,7 +12,7 @@ export const StyledWrapper = styled("div")({
   bottom: 0,
   right: 0,
   left: 0,
-  backgroundColor: "rgba(242, 242, 242, 1)",
+  backgroundColor: "white",
   width: "700px",
   height: "480px",
   margin: "auto",
@@ -50,6 +50,7 @@ export const SubmitButton = styled(Inputs)<{ isNodeDataDuplicate: boolean }>(
     position: "absolute",
     bottom: 50,
     left: 20,
+    backgroundColor: "white",
     cursor: isNodeDataDuplicate ? "not-allowed" : "pointer",
     fontWeight: "bold",
     color: isNodeDataDuplicate ? "rgba(0, 0, 0, 0.3)" : "black",
@@ -57,7 +58,7 @@ export const SubmitButton = styled(Inputs)<{ isNodeDataDuplicate: boolean }>(
       ? "2px solid rgba(0, 0, 0, 0.3)"
       : "1px solid rgba(0, 0, 0, 0.1)",
     ":hover": {
-      backgroundColor: isNodeDataDuplicate ? "" : "rgb(192, 192, 192, 0.7)",
+      backgroundColor: isNodeDataDuplicate ? "" : "rgb(192, 192, 192, 0.3)",
     },
   })
 );
@@ -67,10 +68,11 @@ export const CancelButton = styled(Inputs)({
   bottom: 50,
   right: 20,
   cursor: "pointer",
+  backgroundColor: "white",
   fontWeight: "bold",
   transition: "all ease 300ms",
   ":hover": {
-    backgroundColor: "rgb(192, 192, 192, 0.7)",
+    backgroundColor: "rgb(192, 192, 192, 0.3)",
   },
 });
 
@@ -93,7 +95,7 @@ const StyledErrors = styled("div")<{ isEarlySubmit: boolean }>(
 const StyledContainer = styled("div")({
   height: 350,
   padding: "10px 20px",
-  backgroundColor: "white",
+  backgroundColor: "rgba(242, 242, 242, 0.4)",
   borderRadius: 8,
   overflowY: "scroll",
   "::-webkit-scrollbar": {
