@@ -219,6 +219,7 @@ const AuthenticationForm = (props: Props) => {
   function handleUserChoice(choice: string) {
     setUserChoice(choice);
     setStatus(null);
+    setLoading(false);
   }
 
   return (

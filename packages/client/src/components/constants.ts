@@ -65,6 +65,7 @@ const Errors = {
   EMOTION_REQUIRED: "At least select one emotion",
   DESCRIPTION_REQUIRED: "Description can not be empty",
   INVALID_EMAIL: "Invalid Email",
+  SERVER_ERROR: "Error on our end, try again",
 };
 
 const UserChoiceList = {
