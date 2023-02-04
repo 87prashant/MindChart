@@ -1,5 +1,5 @@
 /**
- * <b>Apis</b>:
+ * Apis:
  * 1. Register user
  * 2. Registered user verification
  * 3. Forget password
@@ -96,7 +96,7 @@ function removeToken(email) {
 }
 
 /**
- * <b>@api Register user</b>
+ * @api Register user
  */
 app.post("/register", async function (req, res) {
   const { username, email, password: plainPassword } = req.body;
@@ -195,7 +195,7 @@ app.post("/register", async function (req, res) {
 });
 
 /**
- * <b>@api Email verification</b>
+ * @api Email verification
  */
 app.post("/verify-email", async function (req, res) {
   const { email, verificationToken } = req.body;
@@ -232,7 +232,7 @@ app.post("/verify-email", async function (req, res) {
 });
 
 /**
- * <b>@api Forget password</b>
+ * @api Forget password
  */
 app.post("/forget-password", async function (req, res) {
   const { email } = req.body;
@@ -302,7 +302,7 @@ app.post("/forget-password", async function (req, res) {
 });
 
 /**
- * <b>@api forget password verify</b>
+ * @api Forget password verification
  */
 app.post("/forget-password-verify", async function (req, res) {
   const { email, verificationToken, password: plainPassword } = req.body;
@@ -358,7 +358,7 @@ app.post("/forget-password-verify", async function (req, res) {
 });
 
 /**
- * <b>@api Login user</b>
+ * @api Login user
  */
 app.post("/login", async function (req, res) {
   const { email, password: plainPassword } = req.body;
@@ -404,7 +404,7 @@ app.post("/login", async function (req, res) {
 });
 
 /**
- * <b>@api modify user data</b>
+ * @api Modify user data
  */
 app.post("/modify-data", async function (req, res) {
   //currently there is no immutable field in nodeData to find required nodeData. So need to send the two nodeData to distinguish between the oldNodeData to be deleted and newNodeData to be added
