@@ -54,7 +54,8 @@ try {
 
 // Create new user empty data
 async function createUserData(email, session) {
-  await UserData.create({ email, data: [] }, { session });
+  await UserData.create([{ email, data: [] }], { session });
+  console.log("The email is: ", email);
   logger(Message.NEW_USER_ADDED, LogLevel.INFO);
 }
 
