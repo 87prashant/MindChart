@@ -53,8 +53,8 @@ try {
 }
 
 // Create new user empty data
-async function createUserData(email) {
-  await UserData.create({ email, data: [] });
+async function createUserData(email, session) {
+  await UserData.create({ email, data: [] }, { session });
   logger(Message.NEW_USER_ADDED, LogLevel.INFO);
 }
 
@@ -190,7 +190,7 @@ app.post("/register", async function (req, res) {
 
   return res.json({
     status: ResponseStatus.ERROR,
-    error: Error.VERIFICATION_EMAIL,
+    error: Error.VERIFICATION_MAIL,
   });
 });
 
@@ -200,7 +200,16 @@ app.post("/register", async function (req, res) {
 app.post("/verify-email", async function (req, res) {
   const { email, verificationToken } = req.body;
 
-  const user = await User.findOne({ email }).lean();
+  let user;
+  try {
+    user = await User.findOne({ email }).lean();
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.SERVER_ERROR,
+    });
+  }
 
   // Authorization
   if (!user) {
@@ -223,12 +232,31 @@ app.post("/verify-email", async function (req, res) {
   }
 
   // Update user as verified
-  await User.updateMany(
-    { email },
-    { $unset: { verificationToken: "", status: "" } }
-  );
-  createUserData(email);
-  return res.json({ status: ResponseStatus.OK, username: user.username });
+  let session = null;
+  try {
+    // Start a session
+    session = await mongoose.startSession();
+    session.startTransaction();
+
+    await User.updateMany(
+      { email },
+      { $unset: { verificationToken: "", status: "" } }, // no status means verified
+      { session }
+    );
+    await createUserData(email, session);
+
+    await session.commitTransaction();
+    return res.json({ status: ResponseStatus.OK, username: user.username });
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+    await session.abortTransaction();
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.SERVER_ERROR,
+    });
+  } finally {
+    if (session) session.endSession();
+  }
 });
 
 /**
@@ -419,7 +447,7 @@ app.post("/modify-data", async function (req, res) {
 
   // Authorization
 
-  // Add new node 
+  // Add new node
   const addData = async () => {
     await UserData.updateOne({ email }, { $addToSet: { data: newNodeData } });
   };
@@ -442,7 +470,8 @@ app.post("/modify-data", async function (req, res) {
       addData();
     } else if (operation === DataOperation.DELETE) {
       deleteData();
-    } else {  // updating existing one
+    } else {
+      // updating existing one
       deleteData();
       addData();
     }

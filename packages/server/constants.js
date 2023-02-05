@@ -22,6 +22,7 @@ const Error = {
   SHORT_PASSWORD: "Password should be at least 8 symbol long",
   SHORT_USERNAME: "Username should be at least 5 symbol long",
   FORGET_PASSWORD_MAIL: "Forget Password mail sent",
+  DATABASE_ERROR: "Database operation failed",
   VERIFICATION_MAIL: "Verification mail sent",
   SERVER_ERROR: "Error on our end, try again",
 };
