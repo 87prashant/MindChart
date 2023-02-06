@@ -20,7 +20,7 @@ Any contribution is appreciated.
 2. cd MindChart
 3. yarn
 4. create .env files from .env.local files (inside the 'root' directory and 'packages/client' directory)
-5. set up mongodb as described below
+5. Start the all 3 mongodb instances using "mongod --port 27017", "mongod --port 27027", and "mongod --port 27037". You can set up mongodb as described below if not already
 6. cd packages/client
 7. yarn start (To start the frontend server)
 8. (In the new terminal) cd packages/server
