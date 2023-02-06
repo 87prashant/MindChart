@@ -16,11 +16,11 @@ Any contribution is appreciated.
 
 ### Local Setup (Windows)
 ```
-1. Clone the repo
+1. clone the repo
 2. cd MindChart
 3. yarn
-4. Create .env files from .env.local files (inside the 'root' directory and 'packages/client' directory)
-5. Start the mongodb server at default port 27017
+4. create .env files from .env.local files (inside the 'root' directory and 'packages/client' directory)
+5. create and start the mongodb "mindChartReplicaSet" replica set at ports 27017 ( primary ), 27027, 27037
 6. cd packages/client
 7. yarn start (To start the frontend server)
 8. (In the new terminal) cd packages/server
