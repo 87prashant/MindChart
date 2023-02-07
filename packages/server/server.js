@@ -122,7 +122,17 @@ app.post("/register", async function (req, res) {
     });
   }
 
-  const user = await User.findOne({ email }).lean();
+  let user;
+  try {
+    user = await User.findOne({ email }).lean();
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.SERVER_ERROR,
+    });
+  }
+
   const password = await bcrypt.hash(plainPassword, 10);
   const verificationToken = generateUniqueVerificationToken();
   const createdAt = new Date();
@@ -247,10 +257,13 @@ app.post("/verify-email", async function (req, res) {
     await createUserData(email, session);
 
     await session.commitTransaction();
+
     return res.json({ status: ResponseStatus.OK, username: user.username });
   } catch (error) {
     logger(error, LogLevel.ERROR);
+
     await session.abortTransaction();
+
     return res.json({
       status: ResponseStatus.ERROR,
       error: Error.SERVER_ERROR,
@@ -271,7 +284,16 @@ app.post("/forget-password", async function (req, res) {
     return res.json({ status: ResponseStatus.ERROR, error: Error.EMPTY_MAIL });
   }
 
-  const user = await User.findOne({ email }).lean();
+  let user;
+  try {
+    user = await User.findOne({ email }).lean();
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.SERVER_ERROR,
+    });
+  }
 
   // Authorization
   if (!user) {
@@ -344,7 +366,16 @@ app.post("/forget-password-verify", async function (req, res) {
     });
   }
 
-  const user = await User.findOne({ email }).lean();
+  let user;
+  try {
+    user = await User.findOne({ email }).lean();
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.SERVER_ERROR,
+    });
+  }
 
   // Authorization
   if (!user) {
@@ -400,7 +431,16 @@ app.post("/login", async function (req, res) {
     });
   }
 
-  const user = await User.findOne({ email }).lean();
+  let user;
+  try {
+    user = await User.findOne({ email }).lean();
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.SERVER_ERROR,
+    });
+  }
 
   // Authorization
   if (!user) {
