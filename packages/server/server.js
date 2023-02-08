@@ -54,19 +54,28 @@ try {
 
 // Create new user empty data
 async function createUserData(email, session) {
-  await UserData.create([{ email, data: [] }], { session });
-  console.log("The email is: ", email);
-  logger(Message.NEW_USER_ADDED, LogLevel.INFO);
+  try {
+    await UserData.create([{ email, data: [] }], { session });
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+    throw error;
+  }
 }
 
 // Fetch user data
 async function getUserData(email) {
-  return (await UserData.findOne({ email }).lean()).data;
+  try {
+    const user = await UserData.findOne({ email }).lean();
+    return user.data;
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+    throw error;
+  }
 }
 
 // Remove unverified account after particular time
 function removeAccount(email) {
-  setTimeout(async () => {
+  const timeoutId = setTimeout(async () => {
     try {
       await User.deleteOne({
         $and: [{ email }, { status: AccountStatus.UNVERIFIED }],
@@ -75,6 +84,7 @@ function removeAccount(email) {
       logger(error, LogLevel.ERROR);
     }
   }, fiveMinutes);
+  return timeoutId;
 }
 
 // Remove token after particular time
@@ -140,14 +150,20 @@ app.post("/register", async function (req, res) {
   const status = AccountStatus.UNVERIFIED;
 
   // Authorization and Registration
+  // Start a session
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  const timeoutId = null;
   if (user) {
     if (user.status === AccountStatus.UNVERIFIED) {
       try {
         await User.updateOne(
           { email },
-          { $set: { username, password, verificationToken } }
+          { $set: { username, password, verificationToken } },
+          { session }
         );
-        removeAccount(email);
+        timeoutId = removeAccount(email);
       } catch (error) {
         logger(error, LogLevel.ERROR);
         return res.json({
@@ -189,6 +205,10 @@ app.post("/register", async function (req, res) {
       subject: Message.VERIFICATION_MAIL,
       message: html,
     });
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.VERIFICATION_MAIL,
+    });
   } catch (error) {
     logger(error, LogLevel.ERROR);
     return res.json({
@@ -198,11 +218,6 @@ app.post("/register", async function (req, res) {
         error.code === "EENVELOPE" ? Error.INVALID_EMAIL : Error.SERVER_ERROR,
     });
   }
-
-  return res.json({
-    status: ResponseStatus.ERROR,
-    error: Error.VERIFICATION_MAIL,
-  });
 });
 
 /**
