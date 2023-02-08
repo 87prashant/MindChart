@@ -28,7 +28,7 @@ const Button = styled("button")<{ name: string }>(({ name }) => ({
 const Content = styled("div")({
   borderRadius: 7,
   marginTop: 8,
-  backgroundColor: "white",
+  backgroundColor: "rgba(242, 242, 242, 0.4)",
   width: "100%",
   maxHeight: 150,
   overflow: "auto",

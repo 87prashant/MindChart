@@ -17,7 +17,8 @@ const Container = styled("div")<{ showNodeClickModal: boolean }>(
   ({ showNodeClickModal }) => ({
     border: "1px solid rgba(0, 0, 0, 0.1)",
     position: "absolute",
-    backgroundColor: "rgba(225, 225, 225, 1)",
+    backgroundColor: "white",
+    // backgroundColor: "rgba(225, 225, 225, 1)",
     visibility: showNodeClickModal ? "visible" : "hidden",
     borderRadius: 7,
     padding: 4,

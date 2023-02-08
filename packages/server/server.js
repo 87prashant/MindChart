@@ -154,7 +154,7 @@ app.post("/register", async function (req, res) {
   const session = await mongoose.startSession();
   session.startTransaction();
 
-  const timeoutId = null;
+  let timeoutId = null;
   if (user) {
     if (user.status === AccountStatus.UNVERIFIED) {
       try {
@@ -166,6 +166,10 @@ app.post("/register", async function (req, res) {
         timeoutId = removeAccount(email);
       } catch (error) {
         logger(error, LogLevel.ERROR);
+        clearTimeout(timeoutId);
+
+        await session.abortTransaction();
+
         return res.json({
           status: ResponseStatus.ERROR,
           error: Error.SERVER_ERROR,
@@ -179,17 +183,26 @@ app.post("/register", async function (req, res) {
     }
   } else {
     try {
-      await User.create({
-        username,
-        email,
-        password,
-        createdAt,
-        status,
-        verificationToken,
-      });
-      removeAccount(email);
+      await User.create(
+        [
+          {
+            username,
+            email,
+            password,
+            createdAt,
+            status,
+            verificationToken,
+          },
+        ],
+        { session }
+      );
+      timeoutId = removeAccount(email);
     } catch (error) {
       logger(error, LogLevel.ERROR);
+      clearTimeout(timeoutId);
+
+      await session.abortTransaction();
+
       return res.json({
         status: ResponseStatus.ERROR,
         error: Error.SERVER_ERROR,
@@ -205,12 +218,19 @@ app.post("/register", async function (req, res) {
       subject: Message.VERIFICATION_MAIL,
       message: html,
     });
+
+    await session.commitTransaction();
+
     return res.json({
       status: ResponseStatus.ERROR,
       error: Error.VERIFICATION_MAIL,
     });
   } catch (error) {
     logger(error, LogLevel.ERROR);
+    clearTimeout(timeoutId);
+
+    await session.abortTransaction();
+
     return res.json({
       status: ResponseStatus.ERROR,
       //EENVELOPE not working. Why?
