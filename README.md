@@ -19,19 +19,23 @@ Any contribution is appreciated.
 1. clone the repo
 2. cd MindChart
 3. yarn
-4. create .env files from .env.local files (inside the 'root' directory and 'packages/client' directory)
-5. Start the all 3 mongodb instances using "mongod --port 27017", "mongod --port 27027", and "mongod --port 27037". You can set up mongodb as described below if not already
+4. create two .env files from .env.local files (present inside the 'root' directory and 'packages/client' directory)
+5. Start the all 3 mongodb instances ( in separate terminals ) using:
+  -  mongod --port 27017 --dbpath <path1> --replSet mindChartReplicaSet
+  -  mongod --port 27027 --dbpath <path2> --replSet mindChartReplicaSet
+  -  mongod --port 27037 --dbpath <path3> --replSet mindChartReplicaSet
+  You can set up mongodb as described below if not already
 6. cd packages/client
 7. yarn start (To start the frontend server)
 8. (In the new terminal) cd packages/server
 9. yarn dev (To start the backend server)
 ```
-#### Commands to Setup Mongodb
+#### Set up Mongodb
 ```
 1. Install mongodb ( v6.0.3 ) and set up enviorment variables ( required for mongosh and mongod )
-2. mongod --port 27017 --dbpath <path> --replSet mindChartReplicaSet
-3. mongod --port 27027 --dbpath <path> --replSet mindChartReplicaSet
-4. mongod --port 27037 --dbpath <path> --replSet mindChartReplicaSet
+2. mongod --port 27017 --dbpath <path1> --replSet mindChartReplicaSet
+3. mongod --port 27027 --dbpath <path2> --replSet mindChartReplicaSet
+4. mongod --port 27037 --dbpath <path3> --replSet mindChartReplicaSet
 5. mongosh --port 27017
 6. rs.initiate()
 7. rs.add("localhost:27027")
