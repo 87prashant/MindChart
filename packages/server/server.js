@@ -89,7 +89,7 @@ function removeAccount(email) {
 
 // Remove token after particular time
 function removeToken(email) {
-  setTimeout(async () => {
+  const timeoutId = setTimeout(async () => {
     try {
       await User.updateOne(
         { email },
@@ -104,6 +104,7 @@ function removeToken(email) {
       logger(error, LogLevel.ERROR);
     }
   }, fiveMinutes);
+  return timeoutId;
 }
 
 /**
@@ -237,6 +238,8 @@ app.post("/register", async function (req, res) {
       error:
         error.code === "EENVELOPE" ? Error.INVALID_EMAIL : Error.SERVER_ERROR,
     });
+  } finally {
+    if (session) session.endSession();
   }
 });
 
@@ -278,12 +281,10 @@ app.post("/verify-email", async function (req, res) {
   }
 
   // Update user as verified
-  let session = null;
+  // Start a session
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
-    // Start a session
-    session = await mongoose.startSession();
-    session.startTransaction();
-
     await User.updateMany(
       { email },
       { $unset: { verificationToken: "", status: "" } }, // no status means verified
@@ -348,16 +349,26 @@ app.post("/forget-password", async function (req, res) {
   const uniqueUrl = `${process.env.ORIGIN}/forget-password-verify/${email}/${verificationToken}`;
 
   // Mark status as forget password
+  // Start a session
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  let timeoutId = null;
   try {
     await User.updateMany(
       { email },
       {
         $set: { status: AccountStatus.FORGET_PASSWORD, verificationToken },
-      }
+      },
+      { session }
     );
-    removeToken(email);
+    timeoutId = removeToken(email);
   } catch (error) {
     logger(error, LogLevel.ERROR);
+    clearTimeout(timeoutId);
+
+    await session.abortTransaction();
+
     return res.json({
       status: ResponseStatus.ERROR,
       error: Error.SERVER_ERROR,
@@ -372,19 +383,27 @@ app.post("/forget-password", async function (req, res) {
       subject: Message.FORGET_PASSWORD_MAIL,
       message: html,
     });
+
+    await session.commitTransaction();
+
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.FORGET_PASSWORD_MAIL,
+    });
   } catch (error) {
     logger(error, LogLevel.ERROR);
+    clearTimeout(timeoutId);
+
+    await session.abortTransaction();
+
     return res.json({
       status: ResponseStatus.ERROR,
       error:
         error.code === "EENVELOPE" ? Error.INVALID_EMAIL : Error.SERVER_ERROR,
     });
+  } finally {
+    if (session) session.endSession();
   }
-
-  return res.json({
-    status: ResponseStatus.ERROR,
-    error: Error.FORGET_PASSWORD_MAIL,
-  });
 });
 
 /**
@@ -437,19 +456,43 @@ app.post("/forget-password-verify", async function (req, res) {
   }
 
   // Change password
-  const password = await bcrypt.hash(plainPassword, 10);
-  await User.updateMany(
-    { email },
-    { $unset: { status: "", verificationToken: "" } }
-  );
-  await User.updateMany({ email }, { $set: { password: password } }); // why not working in one query?
-  const userData = await getUserData(email);
+  // Start a session
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  return res.json({
-    status: ResponseStatus.OK,
-    username: user.username,
-    userData,
-  });
+  const password = await bcrypt.hash(plainPassword, 10);
+  try {
+    await User.updateMany(
+      { email },
+      { $unset: { status: "", verificationToken: "" } },
+      { session }
+    );
+    await User.updateMany(
+      { email },
+      { $set: { password: password } },
+      { session }
+    ); // why not working in one query?
+    const userData = await getUserData(email);
+
+    await session.commitTransaction();
+
+    return res.json({
+      status: ResponseStatus.OK,
+      username: user.username,
+      userData,
+    });
+  } catch (error) {
+    logger(error, LogLevel.ERROR);
+
+    await session.abortTransaction();
+
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.SERVER_ERROR,
+    });
+  } finally {
+    if (session) session.endSession();
+  }
 });
 
 /**
@@ -494,12 +537,21 @@ app.post("/login", async function (req, res) {
   // Login the user
   if (await bcrypt.compare(plainPassword, user.password)) {
     const { username, email } = user;
-    const userData = await getUserData(email);
-    return res.json({
-      status: ResponseStatus.OK,
-      userCredentials: { username, email },
-      userData,
-    });
+
+    try {
+      const userData = await getUserData(email);
+
+      return res.json({
+        status: ResponseStatus.OK,
+        userCredentials: { username, email },
+        userData,
+      });
+    } catch (error) {
+      return res.json({
+        status: ResponseStatus.ERROR,
+        error: Error.SERVER_ERROR,
+      });
+    }
   }
   return res.json({
     status: ResponseStatus.ERROR,
@@ -524,36 +576,65 @@ app.post("/modify-data", async function (req, res) {
   // Authorization
 
   // Add new node
-  const addData = async () => {
-    await UserData.updateOne({ email }, { $addToSet: { data: newNodeData } });
+  const addData = async (session) => {
+    try {
+      await UserData.updateOne(
+        { email },
+        { $addToSet: { data: newNodeData } },
+        { session }
+      );
+    } catch (error) {
+      throw error;
+    }
   };
 
   // Delete a node
-  const deleteData = async () => {
-    await UserData.updateOne(
-      { email },
-      {
-        $pull: {
-          data: oldNodeData,
+  const deleteData = async (session) => {
+    try {
+      await UserData.updateOne(
+        { email },
+        {
+          $pull: {
+            data: oldNodeData,
+          },
         },
-      }
-    );
+        { session }
+      );
+    } catch (error) {
+      throw error;
+    }
   };
 
   // Controller
+  // Start a session
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     if (operation === DataOperation.ADD) {
-      addData();
+      addData(session);
     } else if (operation === DataOperation.DELETE) {
-      deleteData();
+      deleteData(session);
     } else {
       // updating existing one
-      deleteData();
-      addData();
+      deleteData(session);
+      addData(session);
     }
+
+    await session.commitTransaction();
+
     return res.json({ status: ResponseStatus.OK });
   } catch (error) {
     logger(error, LogLevel.ERROR);
+
+    await session.abortTransaction();
+
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: Error.SERVER_ERROR,
+    });
+  } finally {
+    if (session) session.endSession();
   }
 });
 
