@@ -5,7 +5,7 @@ const RegistrationMail = props => {
     username,
     uniqueUrl
   } = props;
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", null, "Hello ", username, ", verify you account"), /*#__PURE__*/React.createElement("a", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", null, "Hello ", username, ", verify your account"), /*#__PURE__*/React.createElement("a", {
     href: uniqueUrl
   }, "Verify"));
 };
