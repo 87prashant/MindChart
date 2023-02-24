@@ -22,7 +22,7 @@ const generateUniqueVerificationToken = require("./generateUniqueVerificationTok
 const registrationMailString = require("./build/RegistrationMail");
 const forgetPasswordMailString = require("./build/ForgetPasswordMail");
 const {
-  Error,
+  ErrorMessage,
   Message,
   LogLevel,
   AccountStatus,
@@ -40,10 +40,10 @@ app.use(cors());
 const fiveMinutes = 1000 * 300;
 const fifteenSeconds = 1000 * 15;
 
-if (!process.env.MONGODB_URI) logger(Error.EMPTY_MONGODB_URI, LogLevel.ERROR);
+if (!process.env.MONGODB_URI) logger(ErrorMessage.EMPTY_MONGODB_URI, LogLevel.ERROR);
 
 mongoose.connect(process.env.MONGODB_URI, (error) => {
-  if (error) logger(error, LogLevel.ERROR);
+  if (error) logger(ErrorMessage.DATABASE_NOT_CONNECTED, LogLevel.ERROR, error);
   else logger(Message.CONNECTED_DATABASE, LogLevel.INFO);
 });
 
@@ -52,7 +52,7 @@ async function createUserData(email, session) {
   try {
     await UserData.create([{ email, data: [] }], { session });
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_CREATE_USERDATA, LogLevel.ERROR, error);
     throw error;
   }
 }
@@ -63,7 +63,7 @@ async function getUserData(email) {
     const user = await UserData.findOne({ email }).lean();
     return user.data;
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_FIND_USERDATA, LogLevel.ERROR, error);
     throw error;
   }
 }
@@ -76,7 +76,7 @@ function removeAccount(email) {
         $and: [{ email }, { status: AccountStatus.UNVERIFIED }],
       });
     } catch (error) {
-      logger(error, LogLevel.ERROR);
+      logger(ErrorMessage.UNABLE_TO_REMOVE_USER, LogLevel.ERROR, error);
     }
   }, fiveMinutes);
   return timeoutId;
@@ -96,7 +96,7 @@ function removeToken(email) {
         }
       );
     } catch (error) {
-      logger(error, LogLevel.ERROR);
+      logger(ErrorMessage.UNABLE_TO_REMOVE_TOKEN, LogLevel.ERROR, error);
     }
   }, fiveMinutes);
   return timeoutId;
@@ -112,19 +112,19 @@ app.post("/register", async function (req, res) {
   if (!plainPassword || !email || !username) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.ALL_FIELDS_COMPULSORY,
+      error: ErrorMessage.ALL_FIELDS_COMPULSORY,
     });
   }
   if (username.length < 5) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SHORT_USERNAME,
+      error: ErrorMessage.SHORT_USERNAME,
     });
   }
   if (plainPassword.length < 8) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SHORT_PASSWORD,
+      error: ErrorMessage.SHORT_PASSWORD,
     });
   }
 
@@ -132,10 +132,10 @@ app.post("/register", async function (req, res) {
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_FIND_USER, LogLevel.ERROR, error);
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SERVER_ERROR,
+      error: ErrorMessage.SERVER_ERROR,
     });
   }
 
@@ -161,20 +161,20 @@ app.post("/register", async function (req, res) {
         );
         timeoutId = removeAccount(email);
       } catch (error) {
-        logger(error, LogLevel.ERROR);
+        logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
         clearTimeout(timeoutId);
 
         await session.abortTransaction();
 
         return res.json({
           status: ResponseStatus.ERROR,
-          error: Error.SERVER_ERROR,
+          error: ErrorMessage.SERVER_ERROR,
         });
       }
     } else {
       return res.json({
         status: ResponseStatus.ERROR,
-        error: Error.ALREADY_REGISTERED,
+        error: ErrorMessage.ALREADY_REGISTERED,
       });
     }
   } else {
@@ -194,14 +194,14 @@ app.post("/register", async function (req, res) {
       );
       timeoutId = removeAccount(email);
     } catch (error) {
-      logger(error, LogLevel.ERROR);
+      logger(ErrorMessage.UNABLE_TO_CREATE_USER, LogLevel.ERROR, error);
       clearTimeout(timeoutId);
 
       await session.abortTransaction();
 
       return res.json({
         status: ResponseStatus.ERROR,
-        error: Error.SERVER_ERROR,
+        error: ErrorMessage.SERVER_ERROR,
       });
     }
   }
@@ -219,10 +219,10 @@ app.post("/register", async function (req, res) {
 
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.VERIFICATION_MAIL,
+      error: ErrorMessage.VERIFICATION_MAIL,
     });
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_SEND_MAIL, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
 
     await session.abortTransaction();
@@ -231,7 +231,7 @@ app.post("/register", async function (req, res) {
       status: ResponseStatus.ERROR,
       //EENVELOPE not working. Why?
       error:
-        error.code === "EENVELOPE" ? Error.INVALID_EMAIL : Error.SERVER_ERROR,
+        error.code === "EENVELOPE" ? ErrorMessage.INVALID_EMAIL : ErrorMessage.SERVER_ERROR,
     });
   } finally {
     if (session) session.endSession();
@@ -248,10 +248,10 @@ app.post("/verify-email", async function (req, res) {
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_FIND_USER, LogLevel.ERROR, error);
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SERVER_ERROR,
+      error: ErrorMessage.SERVER_ERROR,
     });
   }
 
@@ -259,19 +259,19 @@ app.post("/verify-email", async function (req, res) {
   if (!user) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.NOT_REGISTERED,
+      error: ErrorMessage.NOT_REGISTERED,
     });
   }
   if (user.status !== AccountStatus.UNVERIFIED) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.NOT_ALLOWED,
+      error: ErrorMessage.NOT_ALLOWED,
     });
   }
   if (user.verificationToken !== verificationToken) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.INVALID_TOKEN,
+      error: ErrorMessage.INVALID_TOKEN,
     });
   }
 
@@ -291,13 +291,13 @@ app.post("/verify-email", async function (req, res) {
 
     return res.json({ status: ResponseStatus.OK, username: user.username });
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
 
     await session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SERVER_ERROR,
+      error: ErrorMessage.SERVER_ERROR,
     });
   } finally {
     if (session) session.endSession();
@@ -312,17 +312,17 @@ app.post("/forget-password", async function (req, res) {
 
   // Validation
   if (!email.trim()) {
-    return res.json({ status: ResponseStatus.ERROR, error: Error.EMPTY_MAIL });
+    return res.json({ status: ResponseStatus.ERROR, error: ErrorMessage.EMPTY_MAIL });
   }
 
   let user;
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_FIND_USER, LogLevel.ERROR, error);
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SERVER_ERROR,
+      error: ErrorMessage.SERVER_ERROR,
     });
   }
 
@@ -330,13 +330,13 @@ app.post("/forget-password", async function (req, res) {
   if (!user) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.NOT_REGISTERED,
+      error: ErrorMessage.NOT_REGISTERED,
     });
   }
   if (user.status === AccountStatus.UNVERIFIED) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.NOT_VERIFIED,
+      error: ErrorMessage.NOT_VERIFIED,
     });
   }
 
@@ -359,14 +359,14 @@ app.post("/forget-password", async function (req, res) {
     );
     timeoutId = removeToken(email);
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
 
     await session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SERVER_ERROR,
+      error: ErrorMessage.SERVER_ERROR,
     });
   }
 
@@ -383,10 +383,10 @@ app.post("/forget-password", async function (req, res) {
 
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.FORGET_PASSWORD_MAIL,
+      error: ErrorMessage.FORGET_PASSWORD_MAIL,
     });
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_SEND_MAIL, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
 
     await session.abortTransaction();
@@ -394,7 +394,7 @@ app.post("/forget-password", async function (req, res) {
     return res.json({
       status: ResponseStatus.ERROR,
       error:
-        error.code === "EENVELOPE" ? Error.INVALID_EMAIL : Error.SERVER_ERROR,
+        error.code === "EENVELOPE" ? ErrorMessage.INVALID_EMAIL : ErrorMessage.SERVER_ERROR,
     });
   } finally {
     if (session) session.endSession();
@@ -411,7 +411,7 @@ app.post("/forget-password-verify", async function (req, res) {
   if (plainPassword.length < 8) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SHORT_PASSWORD,
+      error: ErrorMessage.SHORT_PASSWORD,
     });
   }
 
@@ -419,10 +419,10 @@ app.post("/forget-password-verify", async function (req, res) {
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_FIND_USER, LogLevel.ERROR, error);
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SERVER_ERROR,
+      error: ErrorMessage.SERVER_ERROR,
     });
   }
 
@@ -430,23 +430,23 @@ app.post("/forget-password-verify", async function (req, res) {
   if (!user) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.NOT_REGISTERED,
+      error: ErrorMessage.NOT_REGISTERED,
     });
   }
   if (!user.status) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.NOT_ALLOWED,
+      error: ErrorMessage.NOT_ALLOWED,
     });
   } else if (user.status == AccountStatus.UNVERIFIED) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.NOT_VERIFIED,
+      error: ErrorMessage.NOT_VERIFIED,
     });
   } else if (user.verificationToken !== verificationToken) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.INVALID_TOKEN,
+      error: ErrorMessage.INVALID_TOKEN,
     });
   }
 
@@ -477,13 +477,13 @@ app.post("/forget-password-verify", async function (req, res) {
       userData,
     });
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
 
     await session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SERVER_ERROR,
+      error: ErrorMessage.SERVER_ERROR,
     });
   } finally {
     if (session) session.endSession();
@@ -500,7 +500,7 @@ app.post("/login", async function (req, res) {
   if (!plainPassword || !email) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.ALL_FIELDS_COMPULSORY,
+      error: ErrorMessage.ALL_FIELDS_COMPULSORY,
     });
   }
 
@@ -508,10 +508,10 @@ app.post("/login", async function (req, res) {
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_FIND_USER, LogLevel.ERROR, error);
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SERVER_ERROR,
+      error: ErrorMessage.SERVER_ERROR,
     });
   }
 
@@ -519,13 +519,13 @@ app.post("/login", async function (req, res) {
   if (!user) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.NOT_REGISTERED,
+      error: ErrorMessage.NOT_REGISTERED,
     });
   }
   if (user.status === AccountStatus.UNVERIFIED) {
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.NOT_VERIFIED,
+      error: ErrorMessage.NOT_VERIFIED,
     });
   }
 
@@ -544,13 +544,13 @@ app.post("/login", async function (req, res) {
     } catch (error) {
       return res.json({
         status: ResponseStatus.ERROR,
-        error: Error.SERVER_ERROR,
+        error: ErrorMessage.SERVER_ERROR,
       });
     }
   }
   return res.json({
     status: ResponseStatus.ERROR,
-    error: Error.INCORRECT_PASSWORD,
+    error: ErrorMessage.INCORRECT_PASSWORD,
   });
 });
 
@@ -620,13 +620,13 @@ app.post("/modify-data", async function (req, res) {
 
     return res.json({ status: ResponseStatus.OK });
   } catch (error) {
-    logger(error, LogLevel.ERROR);
+    logger(ErrorMessage.UNABLE_TO_UPDATE_USERDATA, LogLevel.ERROR, error);
 
     await session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
-      error: Error.SERVER_ERROR,
+      error: ErrorMessage.SERVER_ERROR,
     });
   } finally {
     if (session) session.endSession();
