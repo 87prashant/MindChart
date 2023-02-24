@@ -31,7 +31,8 @@ const Message = {
   NEW_USER_ADDED: "New user registered",
   FORGET_PASSWORD_MAIL: "Forget Password Mail",
   VERIFICATION_MAIL: "Verification Mail",
-  MAIL_SENT: "Mail Sent..."
+  MAIL_SENT: "Mail Sent...",
+  CONNECTED_DATABASE: "Connected to database successfully"
 };
 
 const LogLevel = {

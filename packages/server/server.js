@@ -38,19 +38,14 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const fiveMinutes = 1000 * 300;
+const fifteenSeconds = 1000 * 15;
 
-if (!process.env.MONGODB_URI) {
-  logger(Error.EMPTY_MONGODB_URI, LogLevel.ERROR);
-  return;
-}
+if (!process.env.MONGODB_URI) logger(Error.EMPTY_MONGODB_URI, LogLevel.ERROR);
 
-// Connect to DB
-try {
-  mongoose.connect(process.env.MONGODB_URI);
-} catch (error) {
-  logger(error, LogErrorLevel.ERROR);
-  return;
-}
+mongoose.connect(process.env.MONGODB_URI, (error) => {
+  if (error) logger(error, LogLevel.ERROR);
+  else logger(Message.CONNECTED_DATABASE, LogLevel.INFO);
+});
 
 // Create new user empty data
 async function createUserData(email, session) {
