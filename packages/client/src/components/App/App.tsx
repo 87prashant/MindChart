@@ -12,6 +12,7 @@ import NodeForm from "../NodeForm";
 import NodeClickModal from "../NodeClickModal";
 import { DataOperation, Misc } from "../constants";
 import { demoData } from "./demoData";
+import Tooltip from "../Tooltip";
 
 const Container = styled("div")<{ showNodeClickModal: boolean }>(
   ({ showNodeClickModal }) => ({
@@ -75,7 +76,7 @@ function App() {
   const [savedData, setSavedData] = useState(
     state?.isLoggedIn ? state.userData ?? [] : getStoredData()
   );
-  //Stores info of Logged in user
+  //Stores info of logged-in user
   const [userInfo, setUserInfo] = useState({
     username: !!state ? state.username : "",
     email: !!state ? state.email : "",
@@ -93,11 +94,15 @@ function App() {
     priority: 20,
     description: "",
   });
+  // Store whether to show Tooltip or not
+  const [showTooltip, setShowTooltip] = useState(false);
 
-  //NodeClickModal reference
+  // NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
-  //Main reference
+  // Main reference
   const mainRef = useRef<HTMLDivElement>(null);
+  // Tooltip reference
+  const tooltipRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setDimensions({
@@ -115,17 +120,17 @@ function App() {
     window.addEventListener("resize", handleDebounceResize);
   }, []);
 
-  //Handles node click
+  // Handles node click
   function handleNodeClick(e: any) {
     e.stopPropagation();
     setShowNodeClickModal(true);
 
     const current = nodeClickModalRef.current;
     const r = e.srcElement.r.baseVal.value; //node radius
-    //Add description of node to modal
+    // Add description of node to modal
     current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML! =
       JSON.parse(e.srcElement.id).description;
-    //Add hackedNodeData to modal
+    // Add hackedNodeData to modal
     current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
 
     let isTop = false; //is node located on a position so that modal needs to be moved to the right of the node
@@ -190,6 +195,11 @@ function App() {
     current!.style.top = yPosition < 70 ? "70px" : yPosition + "px";
   }
 
+  function handleTooltipHover(e: any) {
+    setShowTooltip(true);
+    console.log("hello")
+  }
+
   //Handles node edit
   function handleEdit(hackDataRef: any) {
     const hackedData = hackDataRef.current!.innerHTML;
@@ -229,6 +239,7 @@ function App() {
 
   return (
     <div className="App">
+      {showTooltip && <Tooltip tooltipRef={tooltipRef} />}
       <Header
         setIsDemoActive={setIsDemoActive}
         isDemoActive={isDemoActive}
@@ -243,6 +254,8 @@ function App() {
         setShowNodeClickModal={setShowNodeClickModal}
         userInfo={userInfo}
         setUserInfo={setUserInfo}
+        handleTooltipHover={handleTooltipHover}
+        setShowTooltip={setShowTooltip}
       />
       <Container
         showNodeClickModal={showNodeClickModal}

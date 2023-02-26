@@ -83,8 +83,8 @@ export const AuthenticationButton = styled("button")({
   color: "white",
   transition: "all ease 200ms",
   ":hover": {
-    transform: "scale(1.03)"
-  }
+    transform: "scale(1.03)",
+  },
 });
 
 const PlusIcon = styled("span")({
@@ -112,6 +112,8 @@ interface Props {
   setShowNodeClickModal: any;
   userInfo: { username: string; email: string };
   setUserInfo: any;
+  handleTooltipHover: any;
+  setShowTooltip: any;
 }
 
 const Header = (props: Props) => {
@@ -129,6 +131,8 @@ const Header = (props: Props) => {
     showProfileModal,
     userInfo,
     setUserInfo,
+    handleTooltipHover,
+    setShowTooltip,
   } = props;
 
   const [showAuthenticationForm, setShowAuthenticationForm] = useState(false);
@@ -165,7 +169,11 @@ const Header = (props: Props) => {
         <img src="github_logo.png" alt="" width="25" height="25" />
       </HelpButton>
       {!isLoggedIn && (
-        <DeleteAllData onClick={handleDeleteAllData}>
+        <DeleteAllData
+          onClick={handleDeleteAllData}
+          onMouseEnter={handleTooltipHover}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
           Delete All
         </DeleteAllData>
       )}
