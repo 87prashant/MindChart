@@ -89,7 +89,7 @@ const Misc = {
   GITHUB_LINK: "https://github.com/87prashant/MindChart",
   EMAIL_PATTERN: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
   HEADER_HEIGHT: 70,
-  TOOLTIP_DELAY: 500,
+  TOOLTIP_DELAY: 750,
 };
 
 export {

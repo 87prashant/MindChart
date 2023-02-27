@@ -31,6 +31,8 @@ const Content = styled("div")({
   backgroundColor: "rgba(242, 242, 242, 0.4)",
   width: "100%",
   maxHeight: 150,
+  fontSize: 14,
+  color: "grey",
   overflow: "auto",
   padding: 5,
   cursor: "default",

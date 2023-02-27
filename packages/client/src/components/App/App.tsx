@@ -206,7 +206,7 @@ function App() {
     setTooltipTimeoutId(() =>
       setTimeout(() => {
         const current = tooltipRef.current as HTMLDivElement;
-        current.innerHTML = content;
+        current.lastElementChild!.innerHTML = content;
         current!.style.left = e.pageX + "px";
         current!.style.top = e.pageY + 15 + "px"; // extra 15 px to put it below the element
       }, Misc.TOOLTIP_DELAY)
