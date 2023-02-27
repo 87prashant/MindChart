@@ -112,8 +112,8 @@ interface Props {
   setShowNodeClickModal: any;
   userInfo: { username: string; email: string };
   setUserInfo: any;
-  handleTooltipHover: any;
-  setShowTooltip: any;
+  handleTooltipMouseIn: any;
+  handleTooltipMouseOut: any;
 }
 
 const Header = (props: Props) => {
@@ -131,8 +131,8 @@ const Header = (props: Props) => {
     showProfileModal,
     userInfo,
     setUserInfo,
-    handleTooltipHover,
-    setShowTooltip,
+    handleTooltipMouseIn,
+    handleTooltipMouseOut,
   } = props;
 
   const [showAuthenticationForm, setShowAuthenticationForm] = useState(false);
@@ -171,8 +171,8 @@ const Header = (props: Props) => {
       {!isLoggedIn && (
         <DeleteAllData
           onClick={handleDeleteAllData}
-          onMouseEnter={handleTooltipHover}
-          onMouseLeave={() => setShowTooltip(false)}
+          onMouseEnter={handleTooltipMouseIn}
+          onMouseLeave={handleTooltipMouseOut}
         >
           Delete All
         </DeleteAllData>

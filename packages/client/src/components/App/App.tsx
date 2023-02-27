@@ -96,6 +96,10 @@ function App() {
   });
   // Store whether to show Tooltip or not
   const [showTooltip, setShowTooltip] = useState(false);
+  // Store timeout id of tooltip
+  const [tooltipTimeoutId, setTooltipTimeoutId] = useState<NodeJS.Timeout | null>(
+    null
+  );
 
   // NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
@@ -195,9 +199,22 @@ function App() {
     current!.style.top = yPosition < 70 ? "70px" : yPosition + "px";
   }
 
-  function handleTooltipHover(e: any) {
+  function handleTooltipMouseIn(e: any) {
     setShowTooltip(true);
-    console.log("hello")
+
+    setTooltipTimeoutId(() =>
+      setTimeout(() => {
+        console.log(tooltipRef);
+        const current = tooltipRef.current as HTMLDivElement;
+        current!.style.left = e.pageX + "px";
+        current!.style.top = e.pageY + 20 + "px";
+      }, 500)
+    );
+  }
+
+  function handleTooltipMouseOut() {
+    setShowTooltip(false);
+    clearTimeout(tooltipTimeoutId as unknown as number)
   }
 
   //Handles node edit
@@ -254,8 +271,8 @@ function App() {
         setShowNodeClickModal={setShowNodeClickModal}
         userInfo={userInfo}
         setUserInfo={setUserInfo}
-        handleTooltipHover={handleTooltipHover}
-        setShowTooltip={setShowTooltip}
+        handleTooltipMouseIn={handleTooltipMouseIn}
+        handleTooltipMouseOut={handleTooltipMouseOut}
       />
       <Container
         showNodeClickModal={showNodeClickModal}

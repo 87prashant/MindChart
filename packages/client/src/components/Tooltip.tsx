@@ -5,7 +5,7 @@ const Container = styled("div")({
   width: 60,
   height: 60,
   border: "2px solid black",
-  left: 0,
+  left: -200,
   top: 0,
 });
 
