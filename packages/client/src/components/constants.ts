@@ -8,7 +8,8 @@
  * 7. Error Messages: {@link Errors}
  * 8. Option selected by user during authenticating {@link UserChoiceList}
  * 9. Tips array {@link TipsArray}
- * 10. Misc: {@link Misc}
+ * 10. Tooltip messages {@link TooltipMessage}
+ * 11. Misc: {@link Misc}
  */
 
 const AccountStatus = {
@@ -78,12 +79,17 @@ const TipsArray = [
   "Larger size means high priority",
   "Color of node represents its highest intensity emotion",
   "Similar emotion nodes are closer to each other",
-]; 
+];
+
+const TooltipMessage = {
+  DELETE_ALL_BUTTON: "It will delete all the nodes on the chart permanently",
+};
 
 const Misc = {
   GITHUB_LINK: "https://github.com/87prashant/MindChart",
   EMAIL_PATTERN: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
-  HEADER_HEIGHT: 70
+  HEADER_HEIGHT: 70,
+  TOOLTIP_DELAY: 500,
 };
 
 export {
@@ -96,5 +102,6 @@ export {
   Errors,
   UserChoiceList,
   TipsArray,
+  TooltipMessage,
   Misc,
 };

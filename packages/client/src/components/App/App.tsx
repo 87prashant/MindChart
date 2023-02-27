@@ -97,9 +97,8 @@ function App() {
   // Store whether to show Tooltip or not
   const [showTooltip, setShowTooltip] = useState(false);
   // Store timeout id of tooltip
-  const [tooltipTimeoutId, setTooltipTimeoutId] = useState<NodeJS.Timeout | null>(
-    null
-  );
+  const [tooltipTimeoutId, setTooltipTimeoutId] =
+    useState<NodeJS.Timeout | null>(null);
 
   // NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
@@ -199,25 +198,28 @@ function App() {
     current!.style.top = yPosition < 70 ? "70px" : yPosition + "px";
   }
 
+  // Handle MouseIn for element to show tooltip
   function handleTooltipMouseIn(e: any) {
     setShowTooltip(true);
+    const content = e.currentTarget.getAttribute("data-tooltip");
 
     setTooltipTimeoutId(() =>
       setTimeout(() => {
-        console.log(tooltipRef);
         const current = tooltipRef.current as HTMLDivElement;
+        current.innerHTML = content;
         current!.style.left = e.pageX + "px";
-        current!.style.top = e.pageY + 20 + "px";
-      }, 500)
+        current!.style.top = e.pageY + 15 + "px"; // extra 15 px to put it below the element
+      }, Misc.TOOLTIP_DELAY)
     );
   }
 
+  // Handle MouseOut for element to hide tooltip
   function handleTooltipMouseOut() {
     setShowTooltip(false);
-    clearTimeout(tooltipTimeoutId as unknown as number)
+    clearTimeout(tooltipTimeoutId as unknown as number);
   }
 
-  //Handles node edit
+  // Handles node edit
   function handleEdit(hackDataRef: any) {
     const hackedData = hackDataRef.current!.innerHTML;
     setHackedNodeData(JSON.parse(hackedData));
@@ -226,7 +228,7 @@ function App() {
     setShowNodeClickModal(false);
   }
 
-  //Handles node delete
+  // Handles node delete
   function handleDelete(hackDataRef: any) {
     const hackedData = hackDataRef.current!.innerHTML;
     const newSavedData = savedData.filter(

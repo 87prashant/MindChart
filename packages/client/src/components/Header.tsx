@@ -4,7 +4,7 @@ import { NodeDataType } from "./NodeForm";
 import AuthenticationForm from "./AuthenticationForm";
 import ProfileButton from "./ProfileButton";
 import ProfileModal from "./ProfileModal";
-import { Misc } from "./constants";
+import { Misc, TooltipMessage } from "./constants";
 
 const StyledHeader = styled("div")({
   height: `${Misc.HEADER_HEIGHT}px`,
@@ -173,6 +173,7 @@ const Header = (props: Props) => {
           onClick={handleDeleteAllData}
           onMouseEnter={handleTooltipMouseIn}
           onMouseLeave={handleTooltipMouseOut}
+          data-tooltip={TooltipMessage.DELETE_ALL_BUTTON}
         >
           Delete All
         </DeleteAllData>

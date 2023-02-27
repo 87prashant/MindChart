@@ -2,11 +2,16 @@ import styled from "@emotion/styled";
 
 const Container = styled("div")({
   position: "absolute",
-  width: 60,
-  height: 60,
-  border: "2px solid black",
-  left: -200,
+  maxWidth: 150,
+  maxHeight: 150,
+  left: -150,
   top: 0,
+  backgroundColor: "white",
+  boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)",
+  borderRadius: 8,
+  padding: 10,
+  fontSize: 11,
+  color: "grey",
 });
 
 interface Props {
@@ -18,7 +23,6 @@ const Tooltip = (props: Props) => {
 
   return (
     <Container ref={tooltipRef}>
-      <div>Content</div>
     </Container>
   );
 };
