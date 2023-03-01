@@ -5,6 +5,7 @@ import AuthenticationForm from "./AuthenticationForm";
 import ProfileButton from "./ProfileButton";
 import ProfileModal from "./ProfileModal";
 import { Misc, TooltipMessage } from "./constants";
+import DeleteSvg from "./SvgComponent/DeleteSvg";
 
 const StyledHeader = styled("div")({
   height: `${Misc.HEADER_HEIGHT}px`,
@@ -36,7 +37,7 @@ const AddButton = styled("button")({
   cursor: "pointer",
   border: "none",
   borderRadius: "10px",
-  backgroundColor: "	rgba(255,253,228, 1)",
+  backgroundColor: "rgba(255,253,228, 1)",
   transition: "all ease 300ms",
   fontWeight: "bolder",
   ":hover": {
@@ -46,15 +47,22 @@ const AddButton = styled("button")({
 });
 
 const DeleteAllData = styled(AddButton)({
-  border: "none",
-  backgroundColor: "inherit",
+  position: "absolute",
+  margin: 0,
+  padding: 0,
+  top: Misc.HEADER_HEIGHT + 10,
+  right: 10,
   fontSize: 11,
-  textDecoration: "underline",
+  borderRadius: 0,
   transition: "all ease 100ms",
-  color: "rgba(0, 0, 0, 0.6)",
-  ":hover": {
-    backgroundColor: "inherit",
-    color: "red",
+  "& svg": {
+    width: 25,
+    height: 25,
+    "& path": {
+      display: "block",
+      width: 25,
+      height: 25
+    }
   },
 });
 
@@ -175,7 +183,7 @@ const Header = (props: Props) => {
           onMouseLeave={handleTooltipMouseOut}
           data-tooltip={TooltipMessage.DELETE_ALL_BUTTON}
         >
-          Delete All
+          <DeleteSvg color={"red"} size={100} />
         </DeleteAllData>
       )}
       {!isLoggedIn && (

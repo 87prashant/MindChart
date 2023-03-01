@@ -32,7 +32,7 @@ const Content = styled("div")({
   width: "100%",
   maxHeight: 150,
   fontSize: 14,
-  color: "grey",
+  color: "rgba(0, 0, 0, 0.6)",
   overflow: "auto",
   padding: 5,
   cursor: "default",

@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "@emotion/styled";
 
 const Container = styled("div")({
@@ -35,9 +34,9 @@ const ProfileButton = (props: Props) => {
   for (i in username as any) {
     if (username[i] === " ") surnameFirstLetter = username[++i];
   }
-  const content = (username.slice(0, 1) + surnameFirstLetter).toUpperCase();
+  const userInitial = (username.slice(0, 1) + surnameFirstLetter).toUpperCase();
 
-  return <Container onClick={handleClick}>{content}</Container>;
+  return <Container onClick={handleClick}>{userInitial}</Container>;
 };
 
 export default ProfileButton;

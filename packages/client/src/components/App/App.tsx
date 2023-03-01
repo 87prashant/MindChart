@@ -198,7 +198,7 @@ function App() {
     current!.style.top = yPosition < 70 ? "70px" : yPosition + "px";
   }
 
-  // Handle MouseIn for element to show tooltip
+  // Handles MouseIn for element to show tooltip
   function handleTooltipMouseIn(e: any) {
     setShowTooltip(true);
     const content = e.currentTarget.getAttribute("data-tooltip");
@@ -213,7 +213,7 @@ function App() {
     );
   }
 
-  // Handle MouseOut for element to hide tooltip
+  // Handles MouseOut for element to hide tooltip
   function handleTooltipMouseOut() {
     setShowTooltip(false);
     clearTimeout(tooltipTimeoutId as unknown as number);
