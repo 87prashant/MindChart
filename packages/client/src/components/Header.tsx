@@ -53,16 +53,18 @@ const DeleteAllData = styled(AddButton)({
   top: Misc.HEADER_HEIGHT + 10,
   right: 10,
   fontSize: 11,
-  borderRadius: 0,
+  borderRadius: "50%",
   transition: "all ease 100ms",
+  // width: 25,
+  // height: 25,
   "& svg": {
-    width: 25,
-    height: 25,
-    "& path": {
-      display: "block",
-      width: 25,
-      height: 25
-    }
+    width: 30,
+    height: 30,
+    padding: 3,
+    fill: "rgba(255, 0, 0, 0.6)",
+    ":hover": {
+      fill: "rgba(255, 0, 0, 1)",
+    },
   },
 });
 
@@ -183,7 +185,7 @@ const Header = (props: Props) => {
           onMouseLeave={handleTooltipMouseOut}
           data-tooltip={TooltipMessage.DELETE_ALL_BUTTON}
         >
-          <DeleteSvg color={"red"} size={100} />
+          <DeleteSvg />
         </DeleteAllData>
       )}
       {!isLoggedIn && (
