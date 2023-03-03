@@ -55,8 +55,6 @@ const DeleteAllData = styled(AddButton)({
   fontSize: 11,
   borderRadius: "50%",
   transition: "all ease 100ms",
-  // width: 25,
-  // height: 25,
   "& svg": {
     width: 30,
     height: 30,

@@ -198,7 +198,7 @@ function App() {
     current!.style.top = yPosition < 70 ? "70px" : yPosition + "px";
   }
 
-  // Handles MouseIn for element to show tooltip
+  // Handles mouse-in for element to show tooltip
   function handleTooltipMouseIn(e: any) {
     setShowTooltip(true);
     const content = e.currentTarget.getAttribute("data-tooltip");
@@ -207,13 +207,24 @@ function App() {
       setTimeout(() => {
         const current = tooltipRef.current as HTMLDivElement;
         current.lastElementChild!.innerHTML = content;
-        current!.style.left = e.pageX + "px";
+
+        const tooltipWidth = current!.offsetWidth
+        let shiftToLeft = 0;
+
+        if(tooltipWidth > dimensions.w - e.pageX){
+          console.log("inside")
+          shiftToLeft = tooltipWidth - dimensions.w + e.pageX
+        }
+
+        // console.log(e.pageX - shiftToLeft + "px")
+        const isRight = current
+        current!.style.left = e.pageX - shiftToLeft + "px";
         current!.style.top = e.pageY + 15 + "px"; // extra 15 px to put it below the element
       }, Misc.TOOLTIP_DELAY)
     );
   }
 
-  // Handles MouseOut for element to hide tooltip
+  // Handles mouse-out for element to hide tooltip
   function handleTooltipMouseOut() {
     setShowTooltip(false);
     clearTimeout(tooltipTimeoutId as unknown as number);
