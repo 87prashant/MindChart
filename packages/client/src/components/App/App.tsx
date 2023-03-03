@@ -208,16 +208,13 @@ function App() {
         const current = tooltipRef.current as HTMLDivElement;
         current.lastElementChild!.innerHTML = content;
 
-        const tooltipWidth = current!.offsetWidth
+        const tooltipWidth = current!.offsetWidth;
         let shiftToLeft = 0;
 
-        if(tooltipWidth > dimensions.w - e.pageX){
-          console.log("inside")
-          shiftToLeft = tooltipWidth - dimensions.w + e.pageX
+        if (tooltipWidth > dimensions.w - e.pageX) {
+          shiftToLeft = tooltipWidth - dimensions.w + e.pageX;
         }
 
-        // console.log(e.pageX - shiftToLeft + "px")
-        const isRight = current
         current!.style.left = e.pageX - shiftToLeft + "px";
         current!.style.top = e.pageY + 15 + "px"; // extra 15 px to put it below the element
       }, Misc.TOOLTIP_DELAY)
