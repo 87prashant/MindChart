@@ -289,6 +289,7 @@ app.post("/verify-email", async function (req, res) {
 
     await session.commitTransaction();
 
+    logger(Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email), LogLevel.INFO)
     return res.json({ status: ResponseStatus.OK, username: user.username });
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
@@ -471,6 +472,7 @@ app.post("/forget-password-verify", async function (req, res) {
 
     await session.commitTransaction();
 
+    logger(Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email), LogLevel.INFO)
     return res.json({
       status: ResponseStatus.OK,
       username: user.username,

@@ -23,7 +23,7 @@ const ErrorMessage = {
   SHORT_USERNAME: "Username should be at least 5 symbol long",
   FORGET_PASSWORD_MAIL: "Forget Password mail sent",
   DATABASE_ERROR: "Database operation failed",
-  VERIFICATION_MAIL: "Verification mail sent",
+  VERIFICATION_MAIL: "Please verify through email",
   SERVER_ERROR: "Error on our end, try again",
   DATABASE_NOT_CONNECTED: "Unable to connect to database",
   UNABLE_TO_CREATE_USERDATA: "Unable to create user data",
@@ -40,6 +40,7 @@ const ErrorMessage = {
 const Message = {
   NEW_USER_ADDED: "New user registered",
   FORGET_PASSWORD_MAIL: "Forget Password Mail",
+  VERIFY_SUCCESS: "#USEREMAIL#, verified successfully!",
   VERIFICATION_MAIL: "Verification Mail",
   MAIL_SENT: "Mail Sent...",
   CONNECTED_DATABASE: "Connected to database successfully",

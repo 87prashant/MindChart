@@ -13,6 +13,7 @@ import NodeClickModal from "../NodeClickModal";
 import { DataOperation, Misc } from "../constants";
 import { demoData } from "./demoData";
 import Tooltip from "../Tooltip";
+import NotificationBanner from "../NotificationBanner";
 
 const Container = styled("div")<{ showNodeClickModal: boolean }>(
   ({ showNodeClickModal }) => ({
@@ -94,11 +95,14 @@ function App() {
     priority: 20,
     description: "",
   });
-  // Store whether to show Tooltip or not
+  // Stores whether to show Tooltip or not
   const [showTooltip, setShowTooltip] = useState(false);
-  // Store timeout id of tooltip
+  // Stores timeout id of tooltip
   const [tooltipTimeoutId, setTooltipTimeoutId] =
     useState<NodeJS.Timeout | null>(null);
+  // Stores whether to show the notification banner or not
+  const [showNotificationBanner, setShowNotificationBanner] =
+    useState<boolean>(false);
 
   // NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
@@ -106,6 +110,8 @@ function App() {
   const mainRef = useRef<HTMLDivElement>(null);
   // Tooltip reference
   const tooltipRef = useRef<HTMLDivElement | null>(null);
+  // NotificationBanner reference
+  const notificationBannerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setDimensions({
@@ -236,6 +242,22 @@ function App() {
     setShowNodeClickModal(false);
   }
 
+  // Handles notification banner visibility
+  function handleNotificationBanner(message: string) {
+    setShowNotificationBanner(true);
+
+    setTimeout(() => {
+      const current = notificationBannerRef!.current;
+      console.log("inside");
+      current!.lastElementChild!.innerHTML = message;
+      current!.style.left = dimensions.w / 2 - current?.offsetWidth! / 2 + "px";
+    }, 100);
+
+    setTimeout(() => {
+      setShowNotificationBanner(false);
+    }, 3500);
+  }
+
   // Handles node delete
   function handleDelete(hackDataRef: any) {
     const hackedData = hackDataRef.current!.innerHTML;
@@ -266,6 +288,9 @@ function App() {
 
   return (
     <div className="App">
+      {showNotificationBanner && (
+        <NotificationBanner notificationBannerRef={notificationBannerRef} />
+      )}
       {showTooltip && <Tooltip tooltipRef={tooltipRef} />}
       <Header
         setIsDemoActive={setIsDemoActive}
@@ -283,6 +308,7 @@ function App() {
         setUserInfo={setUserInfo}
         handleTooltipMouseIn={handleTooltipMouseIn}
         handleTooltipMouseOut={handleTooltipMouseOut}
+        handleNotificationBanner={handleNotificationBanner}
       />
       <Container
         showNodeClickModal={showNodeClickModal}

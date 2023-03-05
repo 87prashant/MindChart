@@ -9,7 +9,8 @@
  * 8. Option selected by user during authenticating {@link UserChoiceList}
  * 9. Tips array {@link TipsArray}
  * 10. Tooltip messages {@link TooltipMessage}
- * 11. Misc: {@link Misc}
+ * 11. Notification messages {@link NotificationMessage}
+ * 12. Misc: {@link Misc}
  */
 
 const AccountStatus = {
@@ -85,6 +86,10 @@ const TooltipMessage = {
   DELETE_ALL_BUTTON: "It will delete all the nodes on the chart permanently",
 };
 
+const NotificationMessage = {
+  LOGGED_OUT: "Logged out successfully",
+};
+
 const Misc = {
   GITHUB_LINK: "https://github.com/87prashant/MindChart",
   EMAIL_PATTERN: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
@@ -103,5 +108,6 @@ export {
   UserChoiceList,
   TipsArray,
   TooltipMessage,
+  NotificationMessage,
   Misc,
 };

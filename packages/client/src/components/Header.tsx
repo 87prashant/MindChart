@@ -122,6 +122,7 @@ interface Props {
   setUserInfo: any;
   handleTooltipMouseIn: any;
   handleTooltipMouseOut: any;
+  handleNotificationBanner: any;
 }
 
 const Header = (props: Props) => {
@@ -141,6 +142,7 @@ const Header = (props: Props) => {
     setUserInfo,
     handleTooltipMouseIn,
     handleTooltipMouseOut,
+    handleNotificationBanner
   } = props;
 
   const [showAuthenticationForm, setShowAuthenticationForm] = useState(false);
@@ -222,6 +224,7 @@ const Header = (props: Props) => {
           setSavedData={setSavedData}
           setIsChartAdded={setIsChartAdded}
           setShowProfileModal={setShowProfileModal}
+          handleNotificationBanner={handleNotificationBanner}
         />
       )}
     </StyledHeader>
