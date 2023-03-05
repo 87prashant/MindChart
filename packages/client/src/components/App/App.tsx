@@ -10,7 +10,7 @@ import { NodeDataType } from "../NodeForm";
 import "../../App.css";
 import NodeForm from "../NodeForm";
 import NodeClickModal from "../NodeClickModal";
-import { DataOperation, Misc } from "../constants";
+import { DataOperation, Misc, ResponseStatus } from "../constants";
 import { demoData } from "./demoData";
 import Tooltip from "../Tooltip";
 import NotificationBanner from "../NotificationBanner";
@@ -243,15 +243,19 @@ function App() {
   }
 
   // Handles notification banner visibility
-  function handleNotificationBanner(message: string) {
+  function handleNotificationBanner(message: string, messageType: string) {
     setShowNotificationBanner(true);
-
+    
     setTimeout(() => {
       const current = notificationBannerRef!.current;
-      console.log("inside");
       current!.lastElementChild!.innerHTML = message;
       current!.style.left = dimensions.w / 2 - current?.offsetWidth! / 2 + "px";
-    }, 100);
+      if (messageType === ResponseStatus.OK) {
+        current!.style.color = "green"; // why not working?
+      } else {
+        current!.style.color = "red";
+      }
+    }, 100); // 100 ms, to escape from null/undefined
 
     setTimeout(() => {
       setShowNotificationBanner(false);
