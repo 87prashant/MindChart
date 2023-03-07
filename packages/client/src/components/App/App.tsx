@@ -245,17 +245,24 @@ function App() {
   // Handles notification banner visibility
   function handleNotificationBanner(message: string, messageType: string) {
     setShowNotificationBanner(true);
-    
+
     setTimeout(() => {
       const current = notificationBannerRef!.current;
       current!.lastElementChild!.innerHTML = message;
       current!.style.left = dimensions.w / 2 - current?.offsetWidth! / 2 + "px";
+      current!.style.opacity = "1";
+
       if (messageType === ResponseStatus.OK) {
-        current!.style.color = "green"; // why not working?
+        current!.style.color = "green"; //
       } else {
         current!.style.color = "red";
       }
     }, 100); // 100 ms, to escape from null/undefined
+
+    setTimeout(() => {
+      const current = notificationBannerRef!.current;
+      current!.style.opacity = "0";
+    }, 3000);
 
     setTimeout(() => {
       setShowNotificationBanner(false);

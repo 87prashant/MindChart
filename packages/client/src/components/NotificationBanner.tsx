@@ -6,15 +6,18 @@ const Container = styled("div")({
   left: -200,
   bottom: 40,
   zIndex: 3,
-  border: "1px solid grey",
   padding: "10px 15px",
   borderRadius: "5px",
   backgroundColor: "white",
+  boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)",
+  opacity: 0,
+  transition: "opacity ease 400ms"
 });
 
 const Message = styled("div")({
   fontSize: 13,
-  color: "grey",
+  fontWeight: "bold"
+
 });
 
 interface Props {
