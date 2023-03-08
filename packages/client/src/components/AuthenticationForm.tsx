@@ -124,9 +124,9 @@ const AuthenticationForm = (props: Props) => {
   const loginPassRef = useRef<HTMLInputElement | null>(null);
   const forgetPasswordEmailRef = useRef<HTMLInputElement | null>(null);
 
-  function handleInvalidEmail() {
+  function handleStatus(message: string) {
     setLoading(false);
-    setStatus(Errors.INVALID_EMAIL);
+    setStatus(message);
   }
 
   function handleFormSubmit(e: any) {
@@ -137,7 +137,24 @@ const AuthenticationForm = (props: Props) => {
     //Register
     if (userChoice === UserChoiceList.REGISTER) {
       if (!Misc.EMAIL_PATTERN.test(registerEmailRef.current!.value)) {
-        handleInvalidEmail();
+        handleStatus(Errors.INVALID_EMAIL);
+        return;
+      }
+
+      const username = registerNameRef.current!.value.toLowerCase();
+      const email = registerEmailRef.current!.value.toLowerCase();
+      const password = registerPassRef.current!.value;
+
+      if (!password || !email || !username) {
+        handleStatus(Errors.ALL_FIELDS_COMPULSORY);
+        return;
+      }
+      if (username.length < 5) {
+        handleStatus(Errors.SHORT_USERNAME);
+        return;
+      }
+      if (password.length < 8) {
+        handleStatus(Errors.SHORT_PASSWORD);
         return;
       }
 
@@ -145,9 +162,9 @@ const AuthenticationForm = (props: Props) => {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: registerNameRef.current!.value.toLowerCase(),
-          email: registerEmailRef.current!.value.toLowerCase(),
-          password: registerPassRef.current!.value,
+          username,
+          email,
+          password,
         }),
       })
         .then((response) => response.json())
@@ -161,7 +178,15 @@ const AuthenticationForm = (props: Props) => {
     //Login
     else if (userChoice === UserChoiceList.LOGIN) {
       if (!Misc.EMAIL_PATTERN.test(loginEmailRef.current!.value)) {
-        handleInvalidEmail();
+        handleStatus(Errors.INVALID_EMAIL);
+        return;
+      }
+
+      const email = loginEmailRef.current!.value.toLowerCase();
+      const password = loginPassRef.current!.value;
+
+      if (!password || !email) {
+        handleStatus(Errors.ALL_FIELDS_COMPULSORY);
         return;
       }
 
@@ -169,8 +194,8 @@ const AuthenticationForm = (props: Props) => {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: loginEmailRef.current!.value.toLowerCase(),
-          password: loginPassRef.current!.value,
+          email,
+          password,
         }),
       })
         .then((response) => response.json())
@@ -195,7 +220,14 @@ const AuthenticationForm = (props: Props) => {
     //Forget Password
     else {
       if (!Misc.EMAIL_PATTERN.test(forgetPasswordEmailRef.current!.value)) {
-        handleInvalidEmail();
+        handleStatus(Errors.INVALID_EMAIL);
+        return;
+      }
+
+      const email = registerEmailRef.current!.value.toLowerCase();
+
+      if (!email) {
+        handleStatus(Errors.ALL_FIELDS_COMPULSORY);
         return;
       }
 
@@ -203,7 +235,7 @@ const AuthenticationForm = (props: Props) => {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: forgetPasswordEmailRef.current!.value.toLowerCase(),
+          email,
         }),
       })
         .then((response) => response.json())

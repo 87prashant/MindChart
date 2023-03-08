@@ -199,7 +199,7 @@ const Header = (props: Props) => {
       </AddButton>
       {!isLoggedIn && (
         <AuthenticationButton onClick={() => setShowAuthenticationForm(true)}>
-          Register
+          Sign Up
         </AuthenticationButton>
       )}
       {!isLoggedIn && showAuthenticationForm && (

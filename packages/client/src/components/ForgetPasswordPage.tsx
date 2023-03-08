@@ -72,6 +72,12 @@ const ForgetPasswordPage = () => {
       return;
     }
 
+    if (passwordOne.length < 8) {
+      setLoading(false);
+      setStatus(Errors.SHORT_PASSWORD);
+      return;
+    }
+
     fetch(process.env.REACT_APP_FORGET_PASSWORD_VERIFY_API!, {
       method: "post",
       headers: { "Content-Type": "application/json" },

@@ -68,6 +68,9 @@ const Errors = {
   DESCRIPTION_REQUIRED: "Description can not be empty",
   INVALID_EMAIL: "Invalid Email",
   SERVER_ERROR: "Error on our end, try again",
+  SHORT_PASSWORD: "Password should be at least 8 symbol long",
+  SHORT_USERNAME: "Username should be at least 5 symbol long",
+  ALL_FIELDS_COMPULSORY: "All fields are compulsory",
 };
 
 const UserChoiceList = {

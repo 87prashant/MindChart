@@ -9,6 +9,7 @@ const Container = styled("div")({
   WebkitAlignItems: "center",
   justifyContent: "center",
   fontSize: 20,
+  color: "#F4EBD0",
   margin: "0 20px",
   cursor: "pointer",
 });
