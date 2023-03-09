@@ -1,5 +1,5 @@
-//TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
-//TODO Find alternate way of using hackedNodeData
+// TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
+// TODO Find alternate way of using hackedNodeData
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
@@ -31,7 +31,7 @@ const Container = styled("div")<{ showNodeClickModal: boolean }>(
   })
 );
 
-//To restrict re-rendering of the chart on zoom in and out
+// To restrict re-rendering of the chart on zoom in and out
 function debounce(fn: any, ms: number) {
   let timer: any;
   return (_: any) => {
@@ -43,7 +43,7 @@ function debounce(fn: any, ms: number) {
   };
 }
 
-//Returns saved Data in case of not logged in
+// Returns saved Data in case of not logged in
 function getStoredData() {
   return window.localStorage.getItem("savedData")
     ? JSON.parse(window.localStorage.getItem("savedData")!)
@@ -60,36 +60,36 @@ type State =
   | undefined;
 
 function App() {
-  //It is passed in case routed from verification and forget-password page
+  // It is passed in case routed from verification and forget-password page
   const state: State = useLocation().state;
-  //Stores if user is Logged in or not
+  // Stores if user is Logged in or not
   const [isLoggedIn, setIsRegistered] = useState(!!state);
-  //Stores if the demo mode is active or not
+  // Stores if the demo mode is active or not
   const [isDemoActive, setIsDemoActive] = useState(false);
-  //Stores if node form should be visible to create/edit nodes
+  // Stores if node form should be visible to create/edit nodes
   const [showNodeForm, setShowNodeForm] = useState(false);
-  //Stores if to show the nodeClickModal or not
+  // Stores if to show the nodeClickModal or not
   const [showNodeClickModal, setShowNodeClickModal] = useState(false);
-  //Stores the nodeData to be deleted after we delete or edit the node
+  // Stores the nodeData to be deleted after we delete or edit the node
   const [hackedNodeData, setHackedNodeData] = useState<NodeDataType | null>(
     null
   );
-  //Stores saved data after fetching from database or localStorage
+  // Stores saved data after fetching from database or localStorage
   const [savedData, setSavedData] = useState(
     state?.isLoggedIn ? state.userData ?? [] : getStoredData()
   );
-  //Stores info of logged-in user
+  // Stores info of logged-in user
   const [userInfo, setUserInfo] = useState({
     username: !!state ? state.username : "",
     email: !!state ? state.email : "",
   });
-  //Stores if the chart is added/updated or not
+  // Stores if the chart is added/updated or not
   const [isChartAdded, setIsChartAdded] = useState(false);
-  //Stores the dimensions of the window to update the chart on zoom in/out
+  // Stores the dimensions of the window to update the chart on zoom in/out
   const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
-  //Store whether to show the profile modal or not
+  // Store whether to show the profile modal or not
   const [showProfileModal, setShowProfileModal] = useState(false);
-  //Stores the node form data when creating new node or editing existing data
+  // Stores the node form data when creating new node or editing existing data
   const [nodeData, setNodeData] = useState({
     thoughts: {},
     emotions: {},
@@ -106,7 +106,9 @@ function App() {
     useState<boolean>(false);
   // Stores whether to show the confirmation modal or not
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  
+  // Stores handleConfirmation function for confirmation modal
+  const [handleConfirmation, setHandleConfirmation] = useState(null);
+
   // NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
   // Main reference
@@ -162,7 +164,7 @@ function App() {
       isRight = true;
     }
 
-    //X-position of nodeClickModal
+    // X-position of nodeClickModal
     let xPosition;
     if (isTop) {
       if (isRight) {
@@ -188,7 +190,7 @@ function App() {
       }
     }
 
-    //Y-position of nodeClickModal
+    // Y-position of nodeClickModal
     let yPosition;
     if (isTop || isRight) {
       yPosition =
@@ -312,6 +314,8 @@ function App() {
         <ConfirmationModal
           confirmationModalRef={confirmationModalRef}
           setShowConfirmationModal={setShowConfirmationModal}
+          handleConfirmation={handleConfirmation}
+          setHandleConfirmation={setHandleConfirmation}
         />
       )}
       <Header
@@ -332,6 +336,7 @@ function App() {
         handleTooltipMouseOut={handleTooltipMouseOut}
         handleNotificationBanner={handleNotificationBanner}
         setShowConfirmationModal={setShowConfirmationModal}
+        setHandleConfirmation={setHandleConfirmation}
       />
       <Container
         showNodeClickModal={showNodeClickModal}

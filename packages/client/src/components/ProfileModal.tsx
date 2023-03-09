@@ -42,6 +42,7 @@ interface Props {
   setShowProfileModal: any;
   handleNotificationBanner: any;
   setShowConfirmationModal: any;
+  setHandleConfirmation: any;
 }
 
 const ProfileModal = (props: Props) => {
@@ -53,22 +54,28 @@ const ProfileModal = (props: Props) => {
     setShowProfileModal,
     handleNotificationBanner,
     setShowConfirmationModal,
+    setHandleConfirmation,
   } = props;
 
-  function handleLogout() {
-    setShowConfirmationModal(true);
+  const handleLogout = () => {
+    setShowConfirmationModal(false);
     setShowProfileModal(false);
     setIsRegistered(false);
     setSavedData([]);
     setIsChartAdded(false);
     handleNotificationBanner(NotificationMessage.LOGGED_OUT, ResponseStatus.OK);
-  }
+  };
+
+  const handleClick = () => {
+    setShowConfirmationModal(true);
+    setHandleConfirmation(() => handleLogout);
+  };
 
   return (
     <Container onClick={(e) => e.stopPropagation()}>
       <Info>{userInfo.email}</Info>
       <HorizontalRule />
-      <Button value="Log out" type="button" onClick={handleLogout} />
+      <Button value="Log out" type="button" onClick={handleClick} />
     </Container>
   );
 };

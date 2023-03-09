@@ -1,15 +1,22 @@
 import styled from "@emotion/styled";
 
-const Container = styled("div")({
+const Wrapper = styled("div")({
   position: "absolute",
-  maxWidth: 200,
-  maxHeight: 100,
+  width: "100vw",
+  height: "100vh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+});
+
+const Container = styled("div")({
+  maxWidth: 300,
+  maxHeight: 200,
   borderRadius: 5,
   boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
   backgroundColor: "white",
   padding: 8,
   userSelect: "none",
-  //   left: -200,
 });
 
 const Header = styled("div")({
@@ -46,21 +53,33 @@ const NoButton = styled("button")({});
 interface Props {
   confirmationModalRef: any;
   setShowConfirmationModal: any;
+  handleConfirmation: any;
+  setHandleConfirmation: any;
 }
 
 const ConfirmationModal = (props: Props) => {
-  const { confirmationModalRef, setShowConfirmationModal } = props;
+  const {
+    confirmationModalRef,
+    setShowConfirmationModal,
+    handleConfirmation,
+    setHandleConfirmation,
+  } = props;
 
-  function handleConfirmation() {}
+  function handleCancel() {
+    setShowConfirmationModal(false);
+    setHandleConfirmation(null);
+  }
 
   return (
-    <Container ref={confirmationModalRef}>
-      <Header>Do you want to continue?</Header>
-      <ButtonContainer>
-        <YesButton onClick={handleConfirmation}>Yes</YesButton>
-        <NoButton onClick={() => setShowConfirmationModal(false)}>No</NoButton>
-      </ButtonContainer>
-    </Container>
+    <Wrapper>
+      <Container ref={confirmationModalRef}>
+        <Header>Do you want to continue?</Header>
+        <ButtonContainer>
+          <YesButton onClick={handleConfirmation}>Yes</YesButton>
+          <NoButton onClick={handleCancel}>No</NoButton>
+        </ButtonContainer>
+      </Container>
+    </Wrapper>
   );
 };
 

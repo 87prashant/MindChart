@@ -124,6 +124,7 @@ interface Props {
   handleTooltipMouseOut: any;
   handleNotificationBanner: any;
   setShowConfirmationModal: any;
+  setHandleConfirmation: any;
 }
 
 const Header = (props: Props) => {
@@ -145,6 +146,7 @@ const Header = (props: Props) => {
     handleTooltipMouseOut,
     handleNotificationBanner,
     setShowConfirmationModal,
+    setHandleConfirmation,
   } = props;
 
   const [showAuthenticationForm, setShowAuthenticationForm] = useState(false);
@@ -228,6 +230,7 @@ const Header = (props: Props) => {
           setShowProfileModal={setShowProfileModal}
           handleNotificationBanner={handleNotificationBanner}
           setShowConfirmationModal={setShowConfirmationModal}
+          setHandleConfirmation={setHandleConfirmation}
         />
       )}
     </StyledHeader>
