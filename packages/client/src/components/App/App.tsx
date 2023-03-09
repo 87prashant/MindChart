@@ -1,7 +1,7 @@
 //TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
 //TODO Find alternate way of using hackedNodeData
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import Main from "../Main";
@@ -14,6 +14,7 @@ import { DataOperation, Misc, ResponseStatus } from "../constants";
 import { demoData } from "./demoData";
 import Tooltip from "../Tooltip";
 import NotificationBanner from "../NotificationBanner";
+import ConfirmationModal from "../ConfirmationModal";
 
 const Container = styled("div")<{ showNodeClickModal: boolean }>(
   ({ showNodeClickModal }) => ({
@@ -103,7 +104,9 @@ function App() {
   // Stores whether to show the notification banner or not
   const [showNotificationBanner, setShowNotificationBanner] =
     useState<boolean>(false);
-
+  // Stores whether to show the confirmation modal or not
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  
   // NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
   // Main reference
@@ -112,6 +115,8 @@ function App() {
   const tooltipRef = useRef<HTMLDivElement | null>(null);
   // NotificationBanner reference
   const notificationBannerRef = useRef<HTMLDivElement | null>(null);
+  // ConfirmationModal reference
+  const confirmationModalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setDimensions({
@@ -303,6 +308,12 @@ function App() {
         <NotificationBanner notificationBannerRef={notificationBannerRef} />
       )}
       {showTooltip && <Tooltip tooltipRef={tooltipRef} />}
+      {showConfirmationModal && (
+        <ConfirmationModal
+          confirmationModalRef={confirmationModalRef}
+          setShowConfirmationModal={setShowConfirmationModal}
+        />
+      )}
       <Header
         setIsDemoActive={setIsDemoActive}
         isDemoActive={isDemoActive}
@@ -320,6 +331,7 @@ function App() {
         handleTooltipMouseIn={handleTooltipMouseIn}
         handleTooltipMouseOut={handleTooltipMouseOut}
         handleNotificationBanner={handleNotificationBanner}
+        setShowConfirmationModal={setShowConfirmationModal}
       />
       <Container
         showNodeClickModal={showNodeClickModal}

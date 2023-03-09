@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useCallback } from "react";
 import { HorizontalRule } from "./AuthenticationForm";
 import { NotificationMessage, ResponseStatus } from "./constants";
 
@@ -40,6 +41,7 @@ interface Props {
   setIsChartAdded: any;
   setShowProfileModal: any;
   handleNotificationBanner: any;
+  setShowConfirmationModal: any;
 }
 
 const ProfileModal = (props: Props) => {
@@ -50,14 +52,16 @@ const ProfileModal = (props: Props) => {
     setIsChartAdded,
     setShowProfileModal,
     handleNotificationBanner,
+    setShowConfirmationModal,
   } = props;
 
   function handleLogout() {
+    setShowConfirmationModal(true);
     setShowProfileModal(false);
     setIsRegistered(false);
     setSavedData([]);
     setIsChartAdded(false);
-    handleNotificationBanner(NotificationMessage.LOGGED_OUT, ResponseStatus.OK)
+    handleNotificationBanner(NotificationMessage.LOGGED_OUT, ResponseStatus.OK);
   }
 
   return (
