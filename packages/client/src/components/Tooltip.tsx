@@ -13,7 +13,7 @@ const Container = styled("div")({
   color: "grey",
   display: "flex",
   flexDirection: "column",
-  zIndex: 2
+  zIndex: 4
 });
 
 const QuestionMark = styled("img")({

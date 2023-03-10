@@ -5,7 +5,7 @@ const Container = styled("div")({
   maxWidth: 200,
   left: -200,
   bottom: 40,
-  zIndex: 3,
+  zIndex: 5,
   padding: "10px 15px",
   borderRadius: "5px",
   backgroundColor: "white",
