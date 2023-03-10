@@ -169,8 +169,14 @@ const Header = (props: Props) => {
   }
 
   function handleDeleteAllData() {
+    setShowConfirmationModal(false)
     setSavedData([]);
     setIsChartAdded(false);
+  }
+
+  function handleDeleteAllDataConfirmed() {
+    setShowConfirmationModal(true)
+    setHandleConfirmation(() => handleDeleteAllData)
   }
 
   const showNodeForm = () => {
@@ -184,7 +190,7 @@ const Header = (props: Props) => {
       </HelpButton>
       {!isLoggedIn && (
         <DeleteAllData
-          onClick={handleDeleteAllData}
+          onClick={handleDeleteAllDataConfirmed}
           onMouseEnter={handleTooltipMouseIn}
           onMouseLeave={handleTooltipMouseOut}
           data-tooltip={TooltipMessage.DELETE_ALL_BUTTON}

@@ -7,6 +7,7 @@ const Wrapper = styled("div")({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  backdropFilter: "blur(10px)"
 });
 
 const Container = styled("div")({

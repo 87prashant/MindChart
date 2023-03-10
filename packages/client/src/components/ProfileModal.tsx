@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { useCallback } from "react";
 import { HorizontalRule } from "./AuthenticationForm";
 import { NotificationMessage, ResponseStatus } from "./constants";
 
@@ -66,7 +65,7 @@ const ProfileModal = (props: Props) => {
     handleNotificationBanner(NotificationMessage.LOGGED_OUT, ResponseStatus.OK);
   };
 
-  const handleClick = () => {
+  const handleLogoutConfirmed = () => {
     setShowConfirmationModal(true);
     setHandleConfirmation(() => handleLogout);
   };
@@ -75,7 +74,7 @@ const ProfileModal = (props: Props) => {
     <Container onClick={(e) => e.stopPropagation()}>
       <Info>{userInfo.email}</Info>
       <HorizontalRule />
-      <Button value="Log out" type="button" onClick={handleClick} />
+      <Button value="Log out" type="button" onClick={handleLogoutConfirmed} />
     </Container>
   );
 };
