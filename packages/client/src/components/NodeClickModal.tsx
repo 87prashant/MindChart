@@ -58,18 +58,35 @@ const HackDataDiv = styled("div")({
 interface Props {
   handleEdit: any;
   handleDelete: any;
+  setShowConfirmationModal: any;
+  setHandleConfirmation: any;
 }
 
 const NodeClickModal = (props: Props) => {
-  const { handleEdit, handleDelete } = props;
+  const {
+    handleEdit,
+    handleDelete,
+    setShowConfirmationModal,
+    setHandleConfirmation,
+  } = props;
 
   const ref = useRef<HTMLDivElement | null>(null);
   const hackDataRef = useRef<HTMLDivElement | null>(null);
 
+  function handleDeleteNode() {
+    setShowConfirmationModal(false);
+    handleDelete(hackDataRef);
+  }
+
+  function handleDeleteNodeConfirm() {
+    setShowConfirmationModal(true);
+    setHandleConfirmation(() => handleDeleteNode);
+  }
+
   return (
     <div>
       <Header>
-        <Button name={"delete"} onClick={() => handleDelete(hackDataRef)}>
+        <Button name={"delete"} onClick={handleDeleteNodeConfirm}>
           <img src="/delete.svg" alt="" />
         </Button>
         <Button name={"edit"} onClick={() => handleEdit(hackDataRef)}>

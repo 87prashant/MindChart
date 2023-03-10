@@ -342,7 +342,12 @@ function App() {
         showNodeClickModal={showNodeClickModal}
         ref={nodeClickModalRef}
       >
-        <NodeClickModal handleEdit={handleEdit} handleDelete={handleDelete} />
+        <NodeClickModal
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+          setHandleConfirmation={setHandleConfirmation}
+          setShowConfirmationModal={setShowConfirmationModal}
+        />
       </Container>
       {showNodeForm && (
         <NodeForm

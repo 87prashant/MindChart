@@ -65,7 +65,7 @@ const ProfileModal = (props: Props) => {
     handleNotificationBanner(NotificationMessage.LOGGED_OUT, ResponseStatus.OK);
   };
 
-  const handleLogoutConfirmed = () => {
+  const handleLogoutConfirm = () => {
     setShowConfirmationModal(true);
     setHandleConfirmation(() => handleLogout);
   };
@@ -74,7 +74,7 @@ const ProfileModal = (props: Props) => {
     <Container onClick={(e) => e.stopPropagation()}>
       <Info>{userInfo.email}</Info>
       <HorizontalRule />
-      <Button value="Log out" type="button" onClick={handleLogoutConfirmed} />
+      <Button value="Log out" type="button" onClick={handleLogoutConfirm} />
     </Container>
   );
 };
