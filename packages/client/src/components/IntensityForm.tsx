@@ -59,7 +59,6 @@ const DoneButton = styled("button")({
   border: "1px solid rgba(0, 0, 0, 0.1)",
   borderRadius: 8,
   cursor: "pointer",
-  marginLeft: "auto",
   fontWeight: "bold",
   width: 80,
   ":hover": {
@@ -69,6 +68,7 @@ const DoneButton = styled("button")({
 
 const CancelButton = styled("button")({
   padding: 4,
+  marginLeft: "auto",
   border: "1px solid rgba(0, 0, 0, 0.1)",
   borderRadius: 8,
   cursor: "pointer",
@@ -143,10 +143,10 @@ const IntensityForm = (props: Props) => {
           />
         </StyledDiv>
         <SubmitWrapper>
+          <DoneButton onClick={handleDone}>Done</DoneButton>
           <CancelButton onClick={handleCancel}>
             {selectedEmotion ? "Remove" : "Cancel"}
           </CancelButton>
-          <DoneButton onClick={handleDone}>Done</DoneButton>
         </SubmitWrapper>
       </FormWrapper>
     </Container>
