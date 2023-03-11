@@ -168,15 +168,13 @@ const Header = (props: Props) => {
     setShowNodeClickModal(false);
   }
 
-  function handleDeleteAllData() {
-    setShowConfirmationModal(false)
-    setSavedData([]);
-    setIsChartAdded(false);
-  }
-
   function handleDeleteAllDataConfirm() {
-    setShowConfirmationModal(true)
-    setHandleConfirmation(() => handleDeleteAllData)
+    setShowConfirmationModal(true);
+    setHandleConfirmation(() => () => {
+      setShowConfirmationModal(false);
+      setSavedData([]);
+      setIsChartAdded(false);
+    });
   }
 
   const showNodeForm = () => {

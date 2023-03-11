@@ -73,14 +73,12 @@ const NodeClickModal = (props: Props) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const hackDataRef = useRef<HTMLDivElement | null>(null);
 
-  function handleDeleteNode() {
-    setShowConfirmationModal(false);
-    handleDelete(hackDataRef);
-  }
-
   function handleDeleteNodeConfirm() {
     setShowConfirmationModal(true);
-    setHandleConfirmation(() => handleDeleteNode);
+    setHandleConfirmation(() => () => {
+      setShowConfirmationModal(false);
+      handleDelete(hackDataRef);
+    });
   }
 
   return (

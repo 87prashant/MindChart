@@ -56,18 +56,19 @@ const ProfileModal = (props: Props) => {
     setHandleConfirmation,
   } = props;
 
-  const handleLogout = () => {
-    setShowConfirmationModal(false);
-    setShowProfileModal(false);
-    setIsRegistered(false);
-    setSavedData([]);
-    setIsChartAdded(false);
-    handleNotificationBanner(NotificationMessage.LOGGED_OUT, ResponseStatus.OK);
-  };
-
   const handleLogoutConfirm = () => {
     setShowConfirmationModal(true);
-    setHandleConfirmation(() => handleLogout);
+    setHandleConfirmation(() => () => {
+      setShowConfirmationModal(false);
+      setShowProfileModal(false);
+      setIsRegistered(false);
+      setSavedData([]);
+      setIsChartAdded(false);
+      handleNotificationBanner(
+        NotificationMessage.LOGGED_OUT,
+        ResponseStatus.OK
+      );
+    });
   };
 
   return (
