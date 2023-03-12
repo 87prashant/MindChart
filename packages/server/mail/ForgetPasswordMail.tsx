@@ -1,5 +1,5 @@
-const React = require("react");
-const ReactDOMServer = require("react-dom/server");
+import React from "react";
+import ReactDOMServer from "react-dom/server";
 
 const ForgetPasswordMail = (props) => {
   const { username, uniqueUrl } = props;
@@ -17,4 +17,4 @@ const forgetPasswordMailString = ({ username, uniqueUrl }) => {
   );
 };
 
-module.exports = forgetPasswordMailString;
+export default forgetPasswordMailString;

@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+import crypto from "crypto";
 
 function generateUniqueVerificationToken() {
   const token = crypto.randomBytes(32).toString("hex");
@@ -6,4 +6,4 @@ function generateUniqueVerificationToken() {
   return hash;
 }
 
-module.exports = generateUniqueVerificationToken;
+export default generateUniqueVerificationToken;

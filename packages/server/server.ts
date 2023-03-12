@@ -8,27 +8,20 @@
  * 6. Modify user data
  */
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const path = require("path");
-const cors = require("cors");
-const bcrypt = require("bcryptjs");
-const User = require("./model/user");
-const UserData = require("./model/userdata");
-const logger = require("./logger");
-const mailSender = require("./mailSender");
-const generateUniqueVerificationToken = require("./generateUniqueVerificationToken");
-const registrationMailString = require("./build/RegistrationMail");
-const forgetPasswordMailString = require("./build/ForgetPasswordMail");
-const {
-  ErrorMessage,
-  Message,
-  LogLevel,
-  AccountStatus,
-  ResponseStatus,
-  DataOperation,
-} = require("./constants");
+import express from "express";
+import bodyParser from "body-parser";
+import mongoose from "mongoose";
+import path from "path";
+import cors from "cors";
+import bcrypt from "bcryptjs";
+import User from "./model/user";
+import UserData from "./model/userdata";
+import logger from "./logger";
+import mailSender from "./mailSender";
+import generateUniqueVerificationToken from "./generateUniqueVerificationToken";
+import registrationMailString from "./build/RegistrationMail";
+import forgetPasswordMailString from "./build/ForgetPasswordMail";
+import { ErrorMessage, Message, LogLevel, AccountStatus, ResponseStatus, DataOperation } from "./constants";
 
 const app = express();
 

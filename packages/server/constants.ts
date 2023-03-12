@@ -8,7 +8,7 @@
  * 7. Data operation: {@link DataOperation}
  */
 
-const ErrorMessage = {
+export const ErrorMessage = {
   EMPTY_MONGODB_URI: "MONGODB_URI is empty!!!",
   ALL_FIELDS_COMPULSORY: "All fields are compulsory",
   INCORRECT_PASSWORD: "Incorrect Password",
@@ -37,7 +37,7 @@ const ErrorMessage = {
   UNABLE_TO_UPDATE_USERDATA: "Unable to update user data",
 };
 
-const Message = {
+export const Message = {
   NEW_USER_ADDED: "New user registered",
   FORGET_PASSWORD_MAIL: "Forget Password Mail",
   VERIFY_SUCCESS: "#USEREMAIL#, verified successfully!",
@@ -46,38 +46,28 @@ const Message = {
   CONNECTED_DATABASE: "Connected to database successfully",
 };
 
-const LogLevel = {
+export const LogLevel = {
   ERROR: "ERROR",
   INFO: "INFO",
 };
 
-const LogColor = {
+export const LogColor = {
   ERROR_COLOR: "\x1b[31m", //red
   INFO_COLOR: "\x1b[32m", //green
 };
 
-const AccountStatus = {
+export const AccountStatus = {
   UNVERIFIED: "Unverified",
   FORGET_PASSWORD: "Forget_Password",
 };
 
-const ResponseStatus = {
+export const ResponseStatus = {
   ERROR: "error",
   OK: "ok",
 };
 
-const DataOperation = {
+export const DataOperation = {
   ADD: "Add",
   DELETE: "Delete",
   UPDATE: "Update",
-};
-
-module.exports = {
-  ErrorMessage,
-  Message,
-  LogLevel,
-  LogColor,
-  AccountStatus,
-  ResponseStatus,
-  DataOperation,
 };

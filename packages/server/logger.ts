@@ -1,11 +1,11 @@
-const { LogLevel, LogColor } = require("./constants");
+import { LogLevel, LogColor } from "./constants";
 
 const giveColor = {
   [LogLevel.INFO]: LogColor.INFO_COLOR,
   [LogLevel.ERROR]: LogColor.ERROR_COLOR,
 };
 
-const logger = (message, level, error) => {
+const logger = (message: string, level: string, error: any = null) => {
   const basicInfoString = `\x1b[1m${
     giveColor[level]
   }[${new Date().toLocaleString()}] [${level}] |\x1b[22m${giveColor[level]}`;
@@ -20,4 +20,4 @@ const logger = (message, level, error) => {
   }
 };
 
-module.exports = logger;
+export default logger;

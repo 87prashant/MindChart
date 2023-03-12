@@ -1,7 +1,7 @@
-const nodemailer = require("nodemailer");
-const logger = require("./logger");
+import nodemailer from "nodemailer";
+import logger from "./logger";
 require("dotenv").config({ path: "../../.env" });
-const {LogLevel, Message} = require("./constants")
+import { LogLevel, Message } from "./constants";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const mailSender = async (data) => {
+const mailSender = async (data: { to: string; subject: string; message: string; }) => {
   const { to, subject, message } = data;
   
   const email = {
@@ -31,4 +31,4 @@ const mailSender = async (data) => {
   }
 };
 
-module.exports = mailSender;
+export default mailSender;

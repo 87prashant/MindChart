@@ -1,5 +1,5 @@
-const React = require("react");
-const ReactDOMServer = require("react-dom/server");
+import React from "react";
+import ReactDOMServer from "react-dom/server";
 
 const RegistrationMail = (props) => {
   const { username, uniqueUrl } = props;
@@ -17,4 +17,4 @@ const registrationMailString = ({ username, uniqueUrl }) => {
   );
 };
 
-module.exports = registrationMailString;
+export default registrationMailString;
