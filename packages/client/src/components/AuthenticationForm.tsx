@@ -224,7 +224,7 @@ const AuthenticationForm = (props: Props) => {
         return;
       }
 
-      const email = registerEmailRef.current!.value.toLowerCase();
+      const email = forgetPasswordEmailRef.current!.value.toLowerCase();
 
       if (!email) {
         handleStatus(Errors.ALL_FIELDS_COMPULSORY);

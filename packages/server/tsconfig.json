@@ -10,5 +10,9 @@
       "outDir": "./dist",
       "allowJs": true
     },
-    "include": ["*"]
+    "include": ["*"],
+    "exclude": [
+        "node_modules/@types/d3-selection",
+        "node_modules/@types/d3-fetch"
+      ]
   }

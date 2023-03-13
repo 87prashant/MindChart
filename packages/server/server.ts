@@ -21,7 +21,15 @@ import mailSender from "./mailSender";
 import generateUniqueVerificationToken from "./generateUniqueVerificationToken";
 import registrationMailString from "./build/RegistrationMail";
 import forgetPasswordMailString from "./build/ForgetPasswordMail";
-import { ErrorMessage, Message, LogLevel, AccountStatus, ResponseStatus, DataOperation } from "./constants";
+import {
+  ErrorMessage,
+  Message,
+  LogLevel,
+  AccountStatus,
+  ResponseStatus,
+  DataOperation,
+} from "./constants";
+import { ClientSession } from "mongodb";
 
 const app = express();
 
@@ -31,17 +39,30 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const fiveMinutes = 1000 * 300;
-const fifteenSeconds = 1000 * 15;
 
-if (!process.env.MONGODB_URI) logger(ErrorMessage.EMPTY_MONGODB_URI, LogLevel.ERROR);
+if (!process.env.MONGODB_URI)
+  logger(ErrorMessage.EMPTY_MONGODB_URI, LogLevel.ERROR);
 
 mongoose.connect(process.env.MONGODB_URI, (error) => {
   if (error) logger(ErrorMessage.DATABASE_NOT_CONNECTED, LogLevel.ERROR, error);
   else logger(Message.CONNECTED_DATABASE, LogLevel.INFO);
 });
 
+const session = mongoose.startSession() as unknown as ClientSession;
+
+type UserType = mongoose.LeanDocument<
+  {
+    username: string;
+    email: string;
+    password: string;
+    createdAt: string;
+    status?: string;
+    verificationToken?: string;
+  } & { _id: mongoose.Types.ObjectId }
+>;
+
 // Create new user empty data
-async function createUserData(email, session) {
+async function createUserData(email: any, session: ClientSession) {
   try {
     await UserData.create([{ email, data: [] }], { session });
   } catch (error) {
@@ -51,7 +72,7 @@ async function createUserData(email, session) {
 }
 
 // Fetch user data
-async function getUserData(email) {
+async function getUserData(email: string) {
   try {
     const user = await UserData.findOne({ email }).lean();
     return user.data;
@@ -62,7 +83,7 @@ async function getUserData(email) {
 }
 
 // Remove unverified account after particular time
-function removeAccount(email) {
+function removeAccount(email: string) {
   const timeoutId = setTimeout(async () => {
     try {
       await User.deleteOne({
@@ -76,7 +97,7 @@ function removeAccount(email) {
 }
 
 // Remove token after particular time
-function removeToken(email) {
+function removeToken(email: string) {
   const timeoutId = setTimeout(async () => {
     try {
       await User.updateOne(
@@ -121,7 +142,7 @@ app.post("/register", async function (req, res) {
     });
   }
 
-  let user;
+  let user: UserType;
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
@@ -139,9 +160,8 @@ app.post("/register", async function (req, res) {
   const status = AccountStatus.UNVERIFIED;
 
   // Authorization and Registration
-  // Start a session
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  // Start the transaction
+  (await session).startTransaction();
 
   let timeoutId = null;
   if (user) {
@@ -157,7 +177,7 @@ app.post("/register", async function (req, res) {
         logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
         clearTimeout(timeoutId);
 
-        await session.abortTransaction();
+        (await session).abortTransaction();
 
         return res.json({
           status: ResponseStatus.ERROR,
@@ -190,7 +210,7 @@ app.post("/register", async function (req, res) {
       logger(ErrorMessage.UNABLE_TO_CREATE_USER, LogLevel.ERROR, error);
       clearTimeout(timeoutId);
 
-      await session.abortTransaction();
+      (await session).abortTransaction();
 
       return res.json({
         status: ResponseStatus.ERROR,
@@ -208,7 +228,7 @@ app.post("/register", async function (req, res) {
       message: html,
     });
 
-    await session.commitTransaction();
+    (await session).commitTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -218,16 +238,16 @@ app.post("/register", async function (req, res) {
     logger(ErrorMessage.UNABLE_TO_SEND_MAIL, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
 
-    await session.abortTransaction();
+    (await session).abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
       //EENVELOPE not working. Why?
       error:
-        error.code === "EENVELOPE" ? ErrorMessage.INVALID_EMAIL : ErrorMessage.SERVER_ERROR,
+        error.code === "EENVELOPE"
+          ? ErrorMessage.INVALID_EMAIL
+          : ErrorMessage.SERVER_ERROR,
     });
-  } finally {
-    if (session) session.endSession();
   }
 });
 
@@ -237,7 +257,7 @@ app.post("/register", async function (req, res) {
 app.post("/verify-email", async function (req, res) {
   const { email, verificationToken } = req.body;
 
-  let user;
+  let user: UserType;
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
@@ -269,32 +289,32 @@ app.post("/verify-email", async function (req, res) {
   }
 
   // Update user as verified
-  // Start a session
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  // Start the transaction
+  (await session).startTransaction();
   try {
     await User.updateMany(
       { email },
       { $unset: { verificationToken: "", status: "" } }, // no status means verified
       { session }
     );
-    await createUserData(email, session);
+    await createUserData(email, await session);
 
-    await session.commitTransaction();
+    (await session).commitTransaction();
 
-    logger(Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email), LogLevel.INFO)
+    logger(
+      Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email),
+      LogLevel.INFO
+    );
     return res.json({ status: ResponseStatus.OK, username: user.username });
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
 
-    await session.abortTransaction();
+    (await session).abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SERVER_ERROR,
     });
-  } finally {
-    if (session) session.endSession();
   }
 });
 
@@ -306,10 +326,13 @@ app.post("/forget-password", async function (req, res) {
 
   // Validation
   if (!email.trim()) {
-    return res.json({ status: ResponseStatus.ERROR, error: ErrorMessage.EMPTY_MAIL });
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: ErrorMessage.EMPTY_MAIL,
+    });
   }
 
-  let user;
+  let user: UserType;
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
@@ -338,9 +361,8 @@ app.post("/forget-password", async function (req, res) {
   const uniqueUrl = `${process.env.ORIGIN}/forget-password-verify/${email}/${verificationToken}`;
 
   // Mark status as forget password
-  // Start a session
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  // Start the transaction
+  (await session).startTransaction();
 
   let timeoutId = null;
   try {
@@ -356,7 +378,7 @@ app.post("/forget-password", async function (req, res) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
 
-    await session.abortTransaction();
+    (await session).abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -373,7 +395,7 @@ app.post("/forget-password", async function (req, res) {
       message: html,
     });
 
-    await session.commitTransaction();
+    (await session).commitTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -383,15 +405,15 @@ app.post("/forget-password", async function (req, res) {
     logger(ErrorMessage.UNABLE_TO_SEND_MAIL, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
 
-    await session.abortTransaction();
+    (await session).abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
       error:
-        error.code === "EENVELOPE" ? ErrorMessage.INVALID_EMAIL : ErrorMessage.SERVER_ERROR,
+        error.code === "EENVELOPE"
+          ? ErrorMessage.INVALID_EMAIL
+          : ErrorMessage.SERVER_ERROR,
     });
-  } finally {
-    if (session) session.endSession();
   }
 });
 
@@ -409,7 +431,7 @@ app.post("/forget-password-verify", async function (req, res) {
     });
   }
 
-  let user;
+  let user: UserType;
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
@@ -445,9 +467,8 @@ app.post("/forget-password-verify", async function (req, res) {
   }
 
   // Change password
-  // Start a session
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  // Start the transaction
+  (await session).startTransaction();
 
   const password = await bcrypt.hash(plainPassword, 10);
   try {
@@ -463,9 +484,12 @@ app.post("/forget-password-verify", async function (req, res) {
     ); // why not working in one query?
     const userData = await getUserData(email);
 
-    await session.commitTransaction();
+    (await session).commitTransaction();
 
-    logger(Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email), LogLevel.INFO)
+    logger(
+      Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email),
+      LogLevel.INFO
+    );
     return res.json({
       status: ResponseStatus.OK,
       username: user.username,
@@ -474,14 +498,12 @@ app.post("/forget-password-verify", async function (req, res) {
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
 
-    await session.abortTransaction();
+    (await session).abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SERVER_ERROR,
     });
-  } finally {
-    if (session) session.endSession();
   }
 });
 
@@ -499,7 +521,7 @@ app.post("/login", async function (req, res) {
     });
   }
 
-  let user;
+  let user: UserType;
   try {
     user = await User.findOne({ email }).lean();
   } catch (error) {
@@ -566,7 +588,7 @@ app.post("/modify-data", async function (req, res) {
   // Authorization
 
   // Add new node
-  const addData = async (session) => {
+  const addData = async (session: ClientSession) => {
     try {
       await UserData.updateOne(
         { email },
@@ -579,7 +601,7 @@ app.post("/modify-data", async function (req, res) {
   };
 
   // Delete a node
-  const deleteData = async (session) => {
+  const deleteData = async (session: ClientSession) => {
     try {
       await UserData.updateOne(
         { email },
@@ -596,35 +618,32 @@ app.post("/modify-data", async function (req, res) {
   };
 
   // Controller
-  // Start a session
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  // Start the transaction
+  (await session).startTransaction();
 
   try {
     if (operation === DataOperation.ADD) {
-      addData(session);
+      addData(await session);
     } else if (operation === DataOperation.DELETE) {
-      deleteData(session);
+      deleteData(await session);
     } else {
       // updating existing one
-      deleteData(session);
-      addData(session);
+      deleteData(await session);
+      addData(await session);
     }
 
-    await session.commitTransaction();
+    (await session).commitTransaction();
 
     return res.json({ status: ResponseStatus.OK });
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USERDATA, LogLevel.ERROR, error);
 
-    await session.abortTransaction();
+    (await session).abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SERVER_ERROR,
     });
-  } finally {
-    if (session) session.endSession();
   }
 });
 
