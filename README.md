@@ -27,8 +27,8 @@ Any contribution is appreciated.
   You can set up mongodb as described below if not already
 6. cd packages/client
 7. yarn start (To start the frontend server)
-8. (In the new terminal) cd packages/server
-9. yarn dev (To start the backend server)
+8. cd packages/server (In the new terminal) 
+9. yarn build; yarn start (To start the backend server)
 ```
 #### Set up Mongodb
 ```
