@@ -5,6 +5,7 @@ import Thoughts from "./Thoughts";
 import { validateNodeData } from "./nodeFormValidation";
 import Tips from "./Tips";
 import { DataOperation } from "./constants";
+import { ObjectId } from 'bson';
 
 export const StyledWrapper = styled("div")({
   position: "fixed",
@@ -193,6 +194,8 @@ const NodeForm: any = (props: Props) => {
         emotions: {},
         priority: 20,
         description: "",
+        _id: new ObjectId("")
+
       };
     });
   };
@@ -279,6 +282,7 @@ const NodeForm: any = (props: Props) => {
       });
     }
 
+    console.log(nodeData)
     if (isLoggedIn) {
       fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
         method: "post",

@@ -15,6 +15,7 @@ import { demoData } from "./demoData";
 import Tooltip from "../Tooltip";
 import NotificationBanner from "../NotificationBanner";
 import ConfirmationModal from "../ConfirmationModal";
+import { ObjectId } from 'bson';
 
 const Container = styled("div")<{ showNodeClickModal: boolean }>(
   ({ showNodeClickModal }) => ({
@@ -95,6 +96,7 @@ function App() {
     emotions: {},
     priority: 20,
     description: "",
+    _id: new ObjectId()
   });
   // Stores whether to show Tooltip or not
   const [showTooltip, setShowTooltip] = useState(false);
@@ -234,7 +236,7 @@ function App() {
     );
   }
 
-  // Handles mouse-out for element to hide tooltip
+  // Handles mouseout for element to hide tooltip
   function handleTooltipMouseOut() {
     setShowTooltip(false);
     clearTimeout(tooltipTimeoutId as unknown as number);
@@ -279,9 +281,11 @@ function App() {
   // Handles node delete
   function handleDelete(hackDataRef: any) {
     const hackedData = hackDataRef.current!.innerHTML;
-    const newSavedData = savedData.filter(
-      (d: NodeDataType) => JSON.stringify(d) !== hackedData
-    );
+    console.log(hackedData);
+    const newSavedData = savedData.filter((d: NodeDataType) => {
+      // d._id = "";
+      return JSON.stringify(d) !== hackedData;
+    });
     setSavedData([...newSavedData]);
 
     if (isLoggedIn) {
