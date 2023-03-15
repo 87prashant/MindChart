@@ -30,23 +30,14 @@ const MiniChart = (props: Props) => {
       priority: +data.priority,
       thoughts: JSON.parse(JSON.stringify(data.thoughts)), // to remove the undefined property
       emotions: JSON.parse(JSON.stringify(data.emotions)),
+      _id: data._id,
       group: findGroupArray(data.emotions),
-    };
-  });
-
-  const hackDataArray = savedData.map((data) => {
-    return {
-      thoughts: JSON.parse(JSON.stringify(data.thoughts)),
-      emotions: JSON.parse(JSON.stringify(data.emotions)),
-      priority: data.priority,
-      description: data.description,
     };
   });
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
   const R = d3.map(nodesArray, (d) => d.priority); //radius array
   const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array
-  const mappedHackDataArray = d3.map(hackDataArray, (d) => JSON.stringify(d));
 
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({
     index: N[i],
@@ -99,11 +90,9 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(nodes)
     .join("circle")
-    .attr("id", ({ index: i }) => mappedHackDataArray[i!]) // for NodeClickModel
-    .attr("r", ({ index: i }) => R[i!])
-    .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
+    // .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)
-    .on("click", (e) => handleNodeClick(e));
+    .on("click", (e, { index: i}) => handleNodeClick(e, savedData[i!], R[i!]));
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"
@@ -144,14 +133,14 @@ const MiniChart = (props: Props) => {
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
       handleOtherNodes("fixOtherNodes");
-      setShowNodeClickModal(false)
+      setShowNodeClickModal(false);
     }
 
     function dragged(event: any) {
       handleOtherNodes();
       event.subject.fx = event.sourceEvent.clientX - w / 2;
       event.subject.fy = event.sourceEvent.clientY - h / 2 - Misc.HEADER_HEIGHT;
-      setShowNodeClickModal(false)
+      setShowNodeClickModal(false);
     }
 
     function dragended(event: any) {

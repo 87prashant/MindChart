@@ -1,7 +1,6 @@
 // TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
-// TODO Find alternate way of using hackedNodeData
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import Main from "../Main";
@@ -15,7 +14,7 @@ import { demoData } from "./demoData";
 import Tooltip from "../Tooltip";
 import NotificationBanner from "../NotificationBanner";
 import ConfirmationModal from "../ConfirmationModal";
-import { ObjectId } from 'bson';
+import { ObjectId } from "bson";
 
 const Container = styled("div")<{ showNodeClickModal: boolean }>(
   ({ showNodeClickModal }) => ({
@@ -72,9 +71,12 @@ function App() {
   // Stores if to show the nodeClickModal or not
   const [showNodeClickModal, setShowNodeClickModal] = useState(false);
   // Stores the nodeData to be deleted after we delete or edit the node
+  // TODO remove
   const [hackedNodeData, setHackedNodeData] = useState<NodeDataType | null>(
     null
   );
+  //TODO may be need to remove
+  const [selectedNode, setSelectedNode] = useState<NodeDataType | null>(null);
   // Stores saved data after fetching from database or localStorage
   const [savedData, setSavedData] = useState(
     state?.isLoggedIn ? state.userData ?? [] : getStoredData()
@@ -96,7 +98,7 @@ function App() {
     emotions: {},
     priority: 20,
     description: "",
-    _id: new ObjectId()
+    _id: new ObjectId(),
   });
   // Stores whether to show Tooltip or not
   const [showTooltip, setShowTooltip] = useState(false);
@@ -139,29 +141,31 @@ function App() {
   }, []);
 
   // Handles node click
-  function handleNodeClick(e: any) {
+  function handleNodeClick(e: any, selectedNodeData: NodeDataType, radius: number) {
     e.stopPropagation();
     setShowNodeClickModal(true);
 
+    setSelectedNode(selectedNodeData);
+
     const current = nodeClickModalRef.current;
-    const r = e.srcElement.r.baseVal.value; //node radius
     // Add description of node to modal
     current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML! =
-      JSON.parse(e.srcElement.id).description;
+      selectedNodeData.description;
     // Add hackedNodeData to modal
-    current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
+    // TODO remove this
+    // current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
 
     let isTop = false; //is node located on a position so that modal needs to be moved to the right of the node
     let isRight = false; //is the node located on a position so that the modal needs to be moved to the left of the node
     if (
       current!.offsetHeight >
-      Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - r
+      Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - radius
     ) {
       isTop = true;
     }
     if (
       e.srcElement.cx.baseVal.value >
-      dimensions.w / 2 - r - current!.offsetWidth
+      dimensions.w / 2 - radius - current!.offsetWidth
     ) {
       isRight = true;
     }
@@ -174,10 +178,10 @@ function App() {
           Number(e.srcElement.cx.baseVal.valueAsString) +
           dimensions.w / 2 -
           current!.offsetWidth -
-          r;
+          radius;
       } else {
         xPosition =
-          Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 + r;
+          Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 + radius;
       }
     } else {
       if (isRight) {
@@ -185,10 +189,10 @@ function App() {
           Number(e.srcElement.cx.baseVal.valueAsString) +
           dimensions.w / 2 -
           current!.offsetWidth -
-          r;
+          radius;
       } else {
         xPosition =
-          Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - r;
+          Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - radius;
       }
     }
 
@@ -204,7 +208,7 @@ function App() {
       yPosition =
         Number(e.srcElement.cy.baseVal.valueAsString) +
         dimensions.h / 2 -
-        r +
+        radius +
         Misc.HEADER_HEIGHT -
         current!.offsetHeight;
     }
@@ -244,9 +248,10 @@ function App() {
 
   // Handles node edit
   function handleEdit(hackDataRef: any) {
-    const hackedData = hackDataRef.current!.innerHTML;
-    setHackedNodeData(JSON.parse(hackedData));
-    setNodeData(() => JSON.parse(hackedData));
+    //TODO remove these
+    // const hackedData = hackDataRef.current!.innerHTML;
+    // setHackedNodeData(JSON.parse(hackedData));
+    setNodeData(selectedNode!);
     setShowNodeForm(true);
     setShowNodeClickModal(false);
   }
@@ -281,7 +286,6 @@ function App() {
   // Handles node delete
   function handleDelete(hackDataRef: any) {
     const hackedData = hackDataRef.current!.innerHTML;
-    console.log(hackedData);
     const newSavedData = savedData.filter((d: NodeDataType) => {
       // d._id = "";
       return JSON.stringify(d) !== hackedData;
