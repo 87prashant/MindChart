@@ -71,13 +71,12 @@ const NodeClickModal = (props: Props) => {
   } = props;
 
   const ref = useRef<HTMLDivElement | null>(null);
-  const hackDataRef = useRef<HTMLDivElement | null>(null);
 
   function handleDeleteNodeConfirm() {
     setShowConfirmationModal(true);
     setHandleConfirmation(() => () => {
       setShowConfirmationModal(false);
-      handleDelete(hackDataRef);
+      handleDelete();
     });
   }
 
@@ -87,12 +86,11 @@ const NodeClickModal = (props: Props) => {
         <Button name={"delete"} onClick={handleDeleteNodeConfirm}>
           <img src="/delete.svg" alt="" />
         </Button>
-        <Button name={"edit"} onClick={() => handleEdit(hackDataRef)}>
+        <Button name={"edit"} onClick={() => handleEdit()}>
           <img src="/edit.svg" alt="" />
         </Button>
       </Header>
       <Content ref={ref}></Content>
-      <HackDataDiv ref={hackDataRef}></HackDataDiv>
     </div>
   );
 };

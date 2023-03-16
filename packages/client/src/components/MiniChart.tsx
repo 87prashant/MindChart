@@ -90,7 +90,8 @@ const MiniChart = (props: Props) => {
     .selectAll("circle")
     .data(nodes)
     .join("circle")
-    // .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
+    .attr("r", ({ index: i }) => R[i!])
+    .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)
     .on("click", (e, { index: i}) => handleNodeClick(e, savedData[i!], R[i!]));
 

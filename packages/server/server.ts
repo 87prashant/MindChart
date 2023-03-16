@@ -10,7 +10,7 @@
 
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import path from "path";
 import cors from "cors";
 import bcrypt from "bcryptjs";
@@ -62,7 +62,7 @@ type UserType = mongoose.LeanDocument<
 >;
 
 // Create new user empty data
-async function createUserData(email: any, session: ClientSession) {
+async function createUserData(email: string, session: ClientSession) {
   try {
     await UserData.create([{ email, data: [] }], { session });
   } catch (error) {
@@ -74,8 +74,8 @@ async function createUserData(email: any, session: ClientSession) {
 // Fetch user data
 async function getUserData(email: string) {
   try {
-    const user = await UserData.findOne({ email }).lean();
-    return user.data;
+    const userData = (await UserData.findOne({ email }).lean()).data;
+    return userData;
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_FIND_USERDATA, LogLevel.ERROR, error);
     throw error;

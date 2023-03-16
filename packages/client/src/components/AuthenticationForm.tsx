@@ -7,9 +7,11 @@ import {
   StyledDiv,
   SubmitButton,
   CancelButton,
+  NodeDataType,
 } from "./NodeForm";
 import { ResponseStatus, UserChoiceList, Misc, Errors } from "./constants";
 import LoadingAnimation from "./Animations/LoadingAnimation";
+import { ObjectId } from "bson";
 
 const Container = styled(StyledDiv)({
   backdropFilter: "blur(10px)",
@@ -207,8 +209,12 @@ const AuthenticationForm = (props: Props) => {
               userCredentials: { username, email },
               userData,
             } = data;
+            // because _id returned here is of string type
+            const fixedUserData = JSON.parse(userData).map((d: NodeDataType) => {
+              return { ...d, _id: new ObjectId(d._id) };
+            });
             setShowAuthenticationForm(false);
-            setSavedData(() => userData);
+            setSavedData(() => fixedUserData);
             setIsChartAdded(false);
             setIsRegistered(true);
             setUserInfo(() => ({ username, email }));
@@ -347,7 +353,6 @@ const AuthenticationForm = (props: Props) => {
         </FormContainer>
         <StyledSubmitButton
           onClick={(e) => handleFormSubmit(e)}
-          isNodeDataDuplicate={false}
           type="submit"
           value="Submit"
         />

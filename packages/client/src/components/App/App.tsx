@@ -9,7 +9,7 @@ import { NodeDataType } from "../NodeForm";
 import "../../App.css";
 import NodeForm from "../NodeForm";
 import NodeClickModal from "../NodeClickModal";
-import { DataOperation, Misc, ResponseStatus } from "../constants";
+import { Misc, ResponseStatus } from "../constants";
 import { demoData } from "./demoData";
 import Tooltip from "../Tooltip";
 import NotificationBanner from "../NotificationBanner";
@@ -70,12 +70,7 @@ function App() {
   const [showNodeForm, setShowNodeForm] = useState(false);
   // Stores if to show the nodeClickModal or not
   const [showNodeClickModal, setShowNodeClickModal] = useState(false);
-  // Stores the nodeData to be deleted after we delete or edit the node
-  // TODO remove
-  const [hackedNodeData, setHackedNodeData] = useState<NodeDataType | null>(
-    null
-  );
-  //TODO may be need to remove
+  // Stores the clicked node for deletion or updation the node
   const [selectedNode, setSelectedNode] = useState<NodeDataType | null>(null);
   // Stores saved data after fetching from database or localStorage
   const [savedData, setSavedData] = useState(
@@ -151,9 +146,6 @@ function App() {
     // Add description of node to modal
     current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML! =
       selectedNodeData.description;
-    // Add hackedNodeData to modal
-    // TODO remove this
-    // current!.firstElementChild!.lastElementChild!.innerHTML = e.srcElement.id;
 
     let isTop = false; //is node located on a position so that modal needs to be moved to the right of the node
     let isRight = false; //is the node located on a position so that the modal needs to be moved to the left of the node
@@ -246,49 +238,45 @@ function App() {
     clearTimeout(tooltipTimeoutId as unknown as number);
   }
 
-  // Handles node edit
-  function handleEdit(hackDataRef: any) {
-    //TODO remove these
-    // const hackedData = hackDataRef.current!.innerHTML;
-    // setHackedNodeData(JSON.parse(hackedData));
-    setNodeData(selectedNode!);
-    setShowNodeForm(true);
-    setShowNodeClickModal(false);
-  }
-
   // Handles notification banner visibility
   function handleNotificationBanner(message: string, messageType: string) {
     setShowNotificationBanner(true);
-
+    
     setTimeout(() => {
       const current = notificationBannerRef!.current;
       current!.lastElementChild!.innerHTML = message;
       current!.style.left = dimensions.w / 2 - current?.offsetWidth! / 2 + "px";
       current!.style.opacity = "1";
-
+      
       if (messageType === ResponseStatus.OK) {
         current!.style.color = "green"; //
       } else {
         current!.style.color = "red";
       }
     }, 100); // 100 ms, to escape from null/undefined
-
+    
     setTimeout(() => {
       const current = notificationBannerRef!.current;
       current!.style.opacity = "0";
     }, 3000);
-
+    
     setTimeout(() => {
       setShowNotificationBanner(false);
     }, 3500);
   }
+  
+  // Handles node edit
+  //TODO update on backend
+  function handleEdit() {
+    setNodeData(selectedNode!);
+    setShowNodeForm(true);
+    setShowNodeClickModal(false);
+  }
 
   // Handles node delete
-  function handleDelete(hackDataRef: any) {
-    const hackedData = hackDataRef.current!.innerHTML;
+  function handleDelete() {
     const newSavedData = savedData.filter((d: NodeDataType) => {
-      // d._id = "";
-      return JSON.stringify(d) !== hackedData;
+      return !d!._id.equals(selectedNode!._id);
     });
     setSavedData([...newSavedData]);
 
@@ -298,8 +286,7 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: userInfo.email,
-          toBeDeleted: JSON.parse(hackedData),
-          operation: DataOperation.DELETE,
+          nodeId: selectedNode!._id
         }),
       })
         .then((response) => response.json())
@@ -367,8 +354,6 @@ function App() {
           nodeData={nodeData}
           setNodeData={setNodeData}
           isDemoActive={isDemoActive}
-          hackedNodeData={hackedNodeData}
-          setHackedNodeData={setHackedNodeData}
           userInfo={userInfo}
           isLoggedIn={isLoggedIn}
         />

@@ -5,7 +5,7 @@ import Thoughts from "./Thoughts";
 import { validateNodeData } from "./nodeFormValidation";
 import Tips from "./Tips";
 import { DataOperation } from "./constants";
-import { ObjectId } from 'bson';
+import { ObjectId } from "bson";
 
 export const StyledWrapper = styled("div")({
   position: "fixed",
@@ -46,23 +46,19 @@ const DescriptionInput = styled("textarea")({
   marginBottom: 10,
 });
 
-export const SubmitButton = styled(Inputs)<{ isNodeDataDuplicate: boolean }>(
-  ({ isNodeDataDuplicate }) => ({
-    position: "absolute",
-    bottom: 50,
-    left: 20,
-    backgroundColor: "white",
-    cursor: isNodeDataDuplicate ? "not-allowed" : "pointer",
-    fontWeight: "bold",
-    color: isNodeDataDuplicate ? "rgba(0, 0, 0, 0.3)" : "black",
-    border: isNodeDataDuplicate
-      ? "2px solid rgba(0, 0, 0, 0.3)"
-      : "1px solid rgba(0, 0, 0, 0.1)",
-    ":hover": {
-      backgroundColor: isNodeDataDuplicate ? "" : "rgb(192, 192, 192, 0.3)",
-    },
-  })
-);
+export const SubmitButton = styled(Inputs)({
+  position: "absolute",
+  bottom: 50,
+  left: 20,
+  backgroundColor: "white",
+  cursor: "pointer",
+  fontWeight: "bold",
+  color: "black",
+  border: "1px solid rgba(0, 0, 0, 0.1)",
+  ":hover": {
+    backgroundColor: "rgb(192, 192, 192, 0.3)",
+  },
+});
 
 export const CancelButton = styled(Inputs)({
   position: "absolute",
@@ -124,8 +120,6 @@ interface Props {
   nodeData: NodeDataType;
   setNodeData: any;
   isDemoActive: boolean;
-  hackedNodeData: NodeDataType;
-  setHackedNodeData: any;
   userInfo: { username: string; email: string };
   isLoggedIn: boolean;
 }
@@ -173,8 +167,6 @@ const NodeForm: any = (props: Props) => {
     setNodeData,
     savedData,
     isDemoActive,
-    hackedNodeData,
-    setHackedNodeData,
     userInfo: { email },
     isLoggedIn,
   } = props;
@@ -184,7 +176,6 @@ const NodeForm: any = (props: Props) => {
     emotionsError: "",
     descriptionError: "",
   });
-  const [isNodeDataDuplicate, setIsNodeDataDuplicate] = useState(false);
   const [isEarlySubmit, setIsEarlySubmit] = useState(false);
 
   const refreshNodeData = () => {
@@ -194,7 +185,7 @@ const NodeForm: any = (props: Props) => {
         emotions: {},
         priority: 20,
         description: "",
-        _id: new ObjectId()
+        _id: new ObjectId(),
       };
     });
   };
@@ -211,11 +202,6 @@ const NodeForm: any = (props: Props) => {
 
   useEffect(() => {
     validateNodeData(nodeData, setNodeFormErrors);
-    if (hackedNodeData) {
-      setIsNodeDataDuplicate(
-        JSON.stringify(hackedNodeData) === JSON.stringify(nodeData)
-      );
-    }
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodeData]);
@@ -265,23 +251,18 @@ const NodeForm: any = (props: Props) => {
       setIsEarlySubmit(true);
       return;
     }
-
-    if (isNodeDataDuplicate) return;
-
-    if (hackedNodeData) {
-      const newSavedData = savedData.filter(
-        (d) => JSON.stringify(d) !== JSON.stringify(hackedNodeData)
-      );
-      setSavedData(() => {
-        return [...newSavedData, nodeData];
-      });
+    // if we are editing the existing node
+    const existingNodeIndex = savedData.findIndex((d) => {
+      return d._id.equals(nodeData._id);
+    });
+    if (existingNodeIndex !== -1) {
+      const newSavedData = savedData;
+      newSavedData[existingNodeIndex] = nodeData;
+      setSavedData(newSavedData);
     } else {
-      setSavedData((prev: NodeDataType[]) => {
-        return [...prev, nodeData];
-      });
+      setSavedData([...savedData, nodeData]);
     }
 
-    console.log(nodeData)
     if (isLoggedIn) {
       fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
         method: "post",
@@ -289,8 +270,8 @@ const NodeForm: any = (props: Props) => {
         body: JSON.stringify({
           email,
           toBeAdded: nodeData,
-          toBeDeleted: hackedNodeData,
-          operation: hackedNodeData ? DataOperation.UPDATE : DataOperation.ADD,
+          // toBeDeleted: hackedNodeData,
+          // operation: hackedNodeData ? DataOperation.UPDATE : DataOperation.ADD,
         }),
       })
         .then((response) => response.json())
@@ -298,7 +279,6 @@ const NodeForm: any = (props: Props) => {
         .then((data) => {});
     }
 
-    setHackedNodeData(null);
     refreshNodeData();
     refreshFormErrors();
     setShowNodeForm(false);
@@ -353,11 +333,7 @@ const NodeForm: any = (props: Props) => {
               value={nodeData.priority}
             />
           </StyledContainer>
-          <SubmitButton
-            isNodeDataDuplicate={isNodeDataDuplicate}
-            type="submit"
-            value="Submit"
-          />
+          <SubmitButton type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
         <Tips />
