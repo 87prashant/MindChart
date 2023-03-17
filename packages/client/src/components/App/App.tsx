@@ -9,7 +9,7 @@ import { NodeDataType } from "../NodeForm";
 import "../../App.css";
 import NodeForm from "../NodeForm";
 import NodeClickModal from "../NodeClickModal";
-import { Misc, ResponseStatus } from "../constants";
+import { DataOperation, Misc, ResponseStatus } from "../constants";
 import { demoData } from "./demoData";
 import Tooltip from "../Tooltip";
 import NotificationBanner from "../NotificationBanner";
@@ -144,7 +144,7 @@ function App() {
 
     const current = nodeClickModalRef.current;
     // Add description of node to modal
-    current!.firstElementChild!.lastElementChild!.previousElementSibling!.innerHTML! =
+    current!.firstElementChild!.lastElementChild!.innerHTML! =
       selectedNodeData.description;
 
     let isTop = false; //is node located on a position so that modal needs to be moved to the right of the node
@@ -286,7 +286,8 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: userInfo.email,
-          nodeId: selectedNode!._id
+          nodeData: selectedNode,
+          operation: DataOperation.DELETE
         }),
       })
         .then((response) => response.json())

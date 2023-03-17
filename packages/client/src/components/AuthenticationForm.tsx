@@ -209,10 +209,12 @@ const AuthenticationForm = (props: Props) => {
               userCredentials: { username, email },
               userData,
             } = data;
+
             // because _id returned here is of string type
-            const fixedUserData = JSON.parse(userData).map((d: NodeDataType) => {
+            const fixedUserData = userData.map((d: NodeDataType) => {
               return { ...d, _id: new ObjectId(d._id) };
             });
+            
             setShowAuthenticationForm(false);
             setSavedData(() => fixedUserData);
             setIsChartAdded(false);
