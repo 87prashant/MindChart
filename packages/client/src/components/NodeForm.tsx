@@ -122,6 +122,7 @@ interface Props {
   isDemoActive: boolean;
   userInfo: { username: string; email: string };
   isLoggedIn: boolean;
+  showNodeForm: boolean;
 }
 
 export interface Emotion {
@@ -169,6 +170,7 @@ const NodeForm: any = (props: Props) => {
     isDemoActive,
     userInfo: { email },
     isLoggedIn,
+    showNodeForm
   } = props;
 
   const [nodeFormErrors, setNodeFormErrors] = useState({
@@ -336,7 +338,7 @@ const NodeForm: any = (props: Props) => {
           <SubmitButton type="submit" value="Submit" />
           <CancelButton type="button" value="Cancel" onClick={handleCancel} />
         </form>
-        <Tips />
+        <Tips showNodeForm={showNodeForm} />
       </StyledWrapper>
     </StyledDiv>
   );

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useMemo } from "react";
 import { TipsArray } from "./constants";
 
 const StyledWrapper = styled("div")({
@@ -10,15 +11,15 @@ const StyledWrapper = styled("div")({
   fontSize: 13,
 });
 
-const Tips = () => {
-  function giveRandomTip() {
+const Tips = ({ showNodeForm }: { showNodeForm: boolean }) => {
+  const randomTip = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * TipsArray.length);
     return TipsArray[randomIndex];
-  }
+  }, [showNodeForm]);
 
   return (
     <StyledWrapper>
-      <span style={{ fontWeight: "bold" }}>Tip:</span> {giveRandomTip()}
+      <span style={{ fontWeight: "bold" }}>Tip:</span> {randomTip}
     </StyledWrapper>
   );
 };

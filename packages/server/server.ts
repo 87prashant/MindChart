@@ -576,12 +576,17 @@ app.post("/login", async function (req, res) {
  */
 app.post("/modify-data", async function (req, res) {
   //currently there is no immutable field in nodeData to find required nodeData. So need to send the two nodeData to distinguish between the oldNodeData to be deleted and newNodeData to be added
-  const {
-    email,
-    toBeAdded: newNodeData,
-    toBeDeleted: oldNodeData,
-    operation,
-  } = req.body;
+  const { email, nodeData, operation } = req.body;
+
+  // check if user data present or not
+  if (!(await UserData.findOne({ email }).lean())) {
+    logger(ErrorMessage.UNABLE_TO_FIND_USERDATA, LogLevel.ERROR);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: ErrorMessage.SERVER_ERROR,
+    });
+  }
+  console.log(nodeData);
 
   // Validation
 
@@ -592,7 +597,7 @@ app.post("/modify-data", async function (req, res) {
     try {
       await UserData.updateOne(
         { email },
-        { $addToSet: { data: newNodeData } },
+        { $addToSet: { data: nodeData } },
         { session }
       );
     } catch (error) {
@@ -607,10 +612,22 @@ app.post("/modify-data", async function (req, res) {
         { email },
         {
           $pull: {
-            data: oldNodeData,
+            data: nodeData,
           },
         },
         { session }
+      );
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const updateData = async (session: ClientSession) => {
+    try {
+      await UserData.updateOne(
+        { email, "data._id": nodeData._id },
+        { $set: { "grades.$": nodeData } },
+        {session}
       );
     } catch (error) {
       throw error;
@@ -628,8 +645,7 @@ app.post("/modify-data", async function (req, res) {
       deleteData(await session);
     } else {
       // updating existing one
-      deleteData(await session);
-      addData(await session);
+      updateData(await session);
     }
 
     (await session).commitTransaction();
