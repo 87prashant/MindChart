@@ -143,7 +143,7 @@ const AuthenticationForm = (props: Props) => {
         return;
       }
 
-      const username = registerNameRef.current!.value.toLowerCase();
+      const username = registerNameRef.current!.value;
       const email = registerEmailRef.current!.value.toLowerCase();
       const password = registerPassRef.current!.value;
 
