@@ -91,7 +91,7 @@ export const AuthenticationButton = styled("button")({
   color: "white",
   transition: "all ease 200ms",
   ":hover": {
-    transform: "scale(1.03)",
+    opacity: 0.7,
   },
 });
 

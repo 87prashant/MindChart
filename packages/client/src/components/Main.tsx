@@ -1,6 +1,6 @@
 // Optimize the resize feature
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
@@ -44,6 +44,29 @@ const Main = (props: Props) => {
     setShowNodeClickModal,
     setShowProfileModal,
   } = props;
+
+  const zoomRef = useRef(1);
+
+  useEffect(() => {
+    const canvas = mainRef.current
+    function handleWheelChange(e: any) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        // canvas!.style.
+        const canvas = mainRef.current;
+        const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1; // adjust as needed
+        zoomRef.current += zoomDelta;
+        canvas!.style.transformOrigin = "top left"
+        canvas.style.transform = `scale(${zoomRef.current})`;
+      }
+    }
+
+    canvas!.addEventListener(
+      "wheel",
+      (e: any) => handleWheelChange(e),
+      { passive: false }
+    );
+  }, []);
 
   useEffect(() => {
     if (isChartAdded) return;
