@@ -107,6 +107,8 @@ function App() {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   // Stores handleConfirmation function for confirmation modal
   const [handleConfirmation, setHandleConfirmation] = useState(null);
+  // Stores the scale of canvas elements when user zoom in and out
+  const [canvasScale, setCanvasScale] = useState(1);
 
   // NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
@@ -136,7 +138,11 @@ function App() {
   }, []);
 
   // Handles node click
-  function handleNodeClick(e: any, selectedNodeData: NodeDataType, radius: number) {
+  function handleNodeClick(
+    e: any,
+    selectedNodeData: NodeDataType,
+    radius: number
+  ) {
     e.stopPropagation();
     setShowNodeClickModal(true);
 
@@ -173,7 +179,9 @@ function App() {
           radius;
       } else {
         xPosition =
-          Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 + radius;
+          Number(e.srcElement.cx.baseVal.valueAsString) +
+          dimensions.w / 2 +
+          radius;
       }
     } else {
       if (isRight) {
@@ -184,7 +192,9 @@ function App() {
           radius;
       } else {
         xPosition =
-          Number(e.srcElement.cx.baseVal.valueAsString) + dimensions.w / 2 - radius;
+          Number(e.srcElement.cx.baseVal.valueAsString) +
+          dimensions.w / 2 -
+          radius;
       }
     }
 
@@ -241,30 +251,30 @@ function App() {
   // Handles notification banner visibility
   function handleNotificationBanner(message: string, messageType: string) {
     setShowNotificationBanner(true);
-    
+
     setTimeout(() => {
       const current = notificationBannerRef!.current;
       current!.lastElementChild!.innerHTML = message;
       current!.style.left = dimensions.w / 2 - current?.offsetWidth! / 2 + "px";
       current!.style.opacity = "1";
-      
+
       if (messageType === ResponseStatus.OK) {
         current!.style.color = "green"; //
       } else {
         current!.style.color = "red";
       }
     }, 100); // 100 ms, to escape from null/undefined
-    
+
     setTimeout(() => {
       const current = notificationBannerRef!.current;
       current!.style.opacity = "0";
     }, 3000);
-    
+
     setTimeout(() => {
       setShowNotificationBanner(false);
     }, 3500);
   }
-  
+
   // Handles node edit
   //TODO update on backend
   function handleEdit() {
@@ -287,7 +297,7 @@ function App() {
         body: JSON.stringify({
           email: userInfo.email,
           nodeData: selectedNode,
-          operation: DataOperation.DELETE
+          operation: DataOperation.DELETE,
         }),
       })
         .then((response) => response.json())
@@ -343,6 +353,7 @@ function App() {
           handleDelete={handleDelete}
           setHandleConfirmation={setHandleConfirmation}
           setShowConfirmationModal={setShowConfirmationModal}
+          canvasScale={canvasScale}
         />
       </Container>
       {showNodeForm && (
@@ -368,6 +379,8 @@ function App() {
         setShowNodeClickModal={setShowNodeClickModal}
         mainRef={mainRef}
         setShowProfileModal={setShowProfileModal}
+        setCanvasScale={setCanvasScale}
+        canvasScale={canvasScale}
       />
     </div>
   );

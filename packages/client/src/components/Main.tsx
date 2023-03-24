@@ -6,7 +6,7 @@ import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
 import { Misc } from "./constants";
 
-const StyledWrapper = styled("div")({
+const StyledWrapper = styled("div")<{ canvasScale: number }>((canvasScale) => ({
   height: `calc(100vh - ${Misc.HEADER_HEIGHT}px)`,
   overflow: "hidden",
   backgroundColor: "rgba(0, 0, 0, 0.1)",
@@ -14,10 +14,11 @@ const StyledWrapper = styled("div")({
     "& g": {
       "& circle": {
         cursor: "pointer",
+        transform: `scale(${canvasScale})`,
       },
     },
   },
-});
+}));
 
 interface Props {
   savedData: NodeDataType[];
@@ -31,6 +32,8 @@ interface Props {
   };
   setShowNodeClickModal: any;
   setShowProfileModal: any;
+  setCanvasScale: any;
+  canvasScale: number;
 }
 
 const Main = (props: Props) => {
@@ -43,29 +46,24 @@ const Main = (props: Props) => {
     dimensions,
     setShowNodeClickModal,
     setShowProfileModal,
+    setCanvasScale,
+    canvasScale,
   } = props;
 
-  const zoomRef = useRef(1);
+  const handleWheel = (e: any) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
+      setCanvasScale((prev: number) => prev + zoomDelta);
+    }
+  };
 
   useEffect(() => {
-    const canvas = mainRef.current
-    function handleWheelChange(e: any) {
-      if (e.ctrlKey) {
-        e.preventDefault();
-        // canvas!.style.
-        const canvas = mainRef.current;
-        const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1; // adjust as needed
-        zoomRef.current += zoomDelta;
-        canvas!.style.transformOrigin = "top left"
-        canvas.style.transform = `scale(${zoomRef.current})`;
-      }
-    }
+    const canvas = mainRef.current;
+    canvas.addEventListener("wheel", handleWheel, { passive: false });
 
-    canvas!.addEventListener(
-      "wheel",
-      (e: any) => handleWheelChange(e),
-      { passive: false }
-    );
+    return () =>
+      canvas.removeEventListener("wheel", handleWheel);
   }, []);
 
   useEffect(() => {
@@ -90,7 +88,13 @@ const Main = (props: Props) => {
     setShowNodeClickModal(false);
   }
 
-  return <StyledWrapper onClick={handleClick} ref={mainRef}></StyledWrapper>;
+  return (
+    <StyledWrapper
+      onClick={handleClick}
+      ref={mainRef}
+      canvasScale={canvasScale}
+    ></StyledWrapper>
+  );
 };
 
 export default Main;
