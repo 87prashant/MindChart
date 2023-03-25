@@ -16,23 +16,24 @@ import NotificationBanner from "../NotificationBanner";
 import ConfirmationModal from "../ConfirmationModal";
 import { ObjectId } from "bson";
 
-const Container = styled("div")<{ showNodeClickModal: boolean }>(
-  ({ showNodeClickModal }) => ({
-    border: "1px solid rgba(0, 0, 0, 0.1)",
-    position: "absolute",
-    backgroundColor: "white",
-    // backgroundColor: "rgba(225, 225, 225, 1)",
-    visibility: showNodeClickModal ? "visible" : "hidden",
-    borderRadius: 7,
-    padding: 4,
-    maxWidth: 200,
-    maxHeight: 200,
-    overflow: "hidden",
-  })
-);
+const Container = styled("div")<{
+  showNodeClickModal: boolean;
+  canvasScale: number;
+}>(({ showNodeClickModal, canvasScale }) => ({
+  border: "1px solid rgba(0, 0, 0, 0.1)",
+  position: "absolute",
+  backgroundColor: "white",
+  visibility: showNodeClickModal ? "visible" : "hidden",
+  borderRadius: 7,
+  padding: 4,
+  maxWidth: 200,
+  maxHeight: 200,
+  overflow: "hidden",
+  transform: `scale(${canvasScale})`,
+}));
 
 // To restrict re-rendering of the chart on zoom in and out
-function debounce(fn: any, ms: number) {
+export function debounce(fn: any, ms: number) {
   let timer: any;
   return (_: any) => {
     clearTimeout(timer);
@@ -138,11 +139,11 @@ function App() {
   }, []);
 
   // Handles node click
-  function handleNodeClick(
+  const handleNodeClick = (
     e: any,
     selectedNodeData: NodeDataType,
     radius: number
-  ) {
+  ) => {
     e.stopPropagation();
     setShowNodeClickModal(true);
 
@@ -215,9 +216,12 @@ function App() {
         current!.offsetHeight;
     }
 
-    current!.style.left = xPosition + "px";
-    current!.style.top = yPosition < 70 ? "70px" : yPosition + "px";
-  }
+    current!.style.left = xPosition / canvasScale + "px";
+    current!.style.top =
+      yPosition < 70 ? "70px" : yPosition / canvasScale + "px";
+  };
+
+  // console.log(canvasScale);
 
   // Handles mouse-in for element to show tooltip
   function handleTooltipMouseIn(e: any) {
@@ -347,6 +351,7 @@ function App() {
       <Container
         showNodeClickModal={showNodeClickModal}
         ref={nodeClickModalRef}
+        canvasScale={canvasScale}
       >
         <NodeClickModal
           handleEdit={handleEdit}

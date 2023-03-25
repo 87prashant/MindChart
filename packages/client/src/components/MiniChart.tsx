@@ -13,10 +13,11 @@ interface Props {
   savedData: NodeDataType[];
   setShowNodeClickModal: any;
   handleNodeClick: any;
+  canvasScale: number;
 }
 
 const MiniChart = (props: Props) => {
-  const { w, h, savedData, handleNodeClick, setShowNodeClickModal } = props;
+  const { w, h, savedData, handleNodeClick, setShowNodeClickModal, canvasScale } = props;
   const findGroupArray = (data: Emotion) => {
     let arr: any = []; //give proper type
     for (let key in JSON.parse(JSON.stringify(data))) {
@@ -74,7 +75,7 @@ const MiniChart = (props: Props) => {
     .attr("height", h)
     .attr("width", w)
     .attr("viewBox", [-w / 2, -h / 2, w, h])
-    .attr("style", "max-width: 100%");
+    // .attr("style", "max-width: 100%");
 
   const simulation = d3
     .forceSimulation(nodes)
@@ -93,7 +94,7 @@ const MiniChart = (props: Props) => {
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)
-    .on("click", (e, { index: i}) => handleNodeClick(e, savedData[i!], R[i!]));
+    .on("click", (e, { index: i }) => handleNodeClick(e, savedData[i!], R[i!]));
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"

@@ -1,10 +1,6 @@
 import { useRef } from "react";
 import styled from "@emotion/styled";
 
-const Container = styled("div")<{ canvasScale: number }>(({ canvasScale }) => ({
-  transform: `scale(${canvasScale})`,
-}));
-
 const Header = styled("div")({
   display: "flex",
   flexDirection: "row-reverse",
@@ -54,11 +50,6 @@ const Content = styled("div")({
   },
 });
 
-const HackDataDiv = styled("div")({
-  position: "absolute",
-  userSelect: "none",
-});
-
 interface Props {
   handleEdit: any;
   handleDelete: any;
@@ -87,7 +78,7 @@ const NodeClickModal = (props: Props) => {
   }
 
   return (
-    <Container canvasScale={canvasScale}>
+    <div>
       <Header>
         <Button name={"delete"} onClick={handleDeleteNodeConfirm}>
           <img src="/delete.svg" alt="" />
@@ -97,7 +88,7 @@ const NodeClickModal = (props: Props) => {
         </Button>
       </Header>
       <Content ref={ref}></Content>
-    </Container>
+    </div>
   );
 };
 

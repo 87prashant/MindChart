@@ -160,7 +160,7 @@ const Header = (props: Props) => {
     setSavedData((prev: NodeDataType[]) =>
       !isDemoActive ? demoData : storedData
     );
-    
+
     setIsChartAdded(false);
   }
 

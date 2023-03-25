@@ -1,24 +1,28 @@
 // Optimize the resize feature
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
 import { Misc } from "./constants";
+import { debounce } from "./App/App";
 
-const StyledWrapper = styled("div")<{ canvasScale: number }>((canvasScale) => ({
-  height: `calc(100vh - ${Misc.HEADER_HEIGHT}px)`,
-  overflow: "hidden",
-  backgroundColor: "rgba(0, 0, 0, 0.1)",
-  "& svg": {
-    "& g": {
-      "& circle": {
-        cursor: "pointer",
-        transform: `scale(${canvasScale})`,
+const StyledWrapper = styled("div")<{ canvasScale: number }>(
+  ({ canvasScale }) => ({
+    height: `calc(100vh - ${Misc.HEADER_HEIGHT}px)`,
+    overflow: "hidden",
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    transformOrigin: 'top left',
+    transform: `scale(${canvasScale})`,
+    "& svg": {
+      "& g": {
+        "& circle": {
+          cursor: "pointer",
+        },
       },
     },
-  },
-}));
+  })
+);
 
 interface Props {
   savedData: NodeDataType[];
@@ -50,20 +54,27 @@ const Main = (props: Props) => {
     canvasScale,
   } = props;
 
-  const handleWheel = (e: any) => {
-    if (e.ctrlKey) {
-      e.preventDefault();
-      const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
-      setCanvasScale((prev: number) => prev + zoomDelta);
-    }
-  };
-
   useEffect(() => {
+    const handleWheel = (e: any) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        console.log("inside");
+        const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
+        setCanvasScale((prev: number) => {
+          const newVal = prev + zoomDelta;
+          if (newVal < 0.3) return 0.3;
+          else if (newVal > 1) return 1;
+          else return newVal;
+        });
+
+        setIsChartAdded(false);
+        setShowNodeClickModal(false);
+      }
+    };
     const canvas = mainRef.current;
     canvas.addEventListener("wheel", handleWheel, { passive: false });
 
-    return () =>
-      canvas.removeEventListener("wheel", handleWheel);
+    return () => canvas.removeEventListener("wheel", handleWheel);
   }, []);
 
   useEffect(() => {
@@ -76,12 +87,13 @@ const Main = (props: Props) => {
       savedData,
       handleNodeClick,
       setShowNodeClickModal,
+      canvasScale,
     };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
     mainRef.current!.innerHTML = "";
     mainRef.current!.append(svg);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedData, dimensions]);
+  }, [savedData, dimensions, canvasScale]);
 
   function handleClick(e: any) {
     setShowProfileModal(false);
