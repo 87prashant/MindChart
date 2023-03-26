@@ -12,8 +12,6 @@ const StyledWrapper = styled("div")<{ canvasScale: number }>(
     height: `calc(100vh - ${Misc.HEADER_HEIGHT}px)`,
     overflow: "hidden",
     backgroundColor: "rgba(0, 0, 0, 0.1)",
-    transformOrigin: 'top left',
-    transform: `scale(${canvasScale})`,
     "& svg": {
       "& g": {
         "& circle": {
@@ -58,7 +56,6 @@ const Main = (props: Props) => {
     const handleWheel = (e: any) => {
       if (e.ctrlKey) {
         e.preventDefault();
-        console.log("inside");
         const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
         setCanvasScale((prev: number) => {
           const newVal = prev + zoomDelta;

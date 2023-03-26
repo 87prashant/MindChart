@@ -37,7 +37,7 @@ const MiniChart = (props: Props) => {
   });
 
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
-  const R = d3.map(nodesArray, (d) => d.priority); //radius array
+  const R = d3.map(nodesArray, (d) => d.priority * canvasScale); //radius array
   const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array
 
   const nodes: d3.SimulationNodeDatum[] = d3.map(nodesArray, (_, i) => ({

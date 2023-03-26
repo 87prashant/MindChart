@@ -586,7 +586,6 @@ app.post("/modify-data", async function (req, res) {
       error: ErrorMessage.SERVER_ERROR,
     });
   }
-  console.log(nodeData);
 
   // Validation
 

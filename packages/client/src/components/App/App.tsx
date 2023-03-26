@@ -221,8 +221,6 @@ function App() {
       yPosition < 70 ? "70px" : yPosition / canvasScale + "px";
   };
 
-  // console.log(canvasScale);
-
   // Handles mouse-in for element to show tooltip
   function handleTooltipMouseIn(e: any) {
     setShowTooltip(true);
