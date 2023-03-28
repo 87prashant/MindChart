@@ -67,8 +67,8 @@ const MiniChart = (props: Props) => {
   const forceNode = d3.forceManyBody();
   const forceLink = d3.forceLink(links).id(({ index: i }) => N[i!]);
   const collisionForce = d3.forceCollide((_, i) => R[i]);
-  forceNode.strength(-1000);
-  forceLink.strength(0.13);
+  forceNode.strength(-(Math.pow(canvasScale, 2) * 800));
+  forceLink.strength(0.15);
 
   const svg = d3
     .create("svg")
