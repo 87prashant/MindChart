@@ -1,6 +1,6 @@
 // Optimize the resize feature
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
@@ -52,17 +52,27 @@ const Main = (props: Props) => {
     canvasScale,
   } = props;
 
+  const [scaleTimeoutId, setScaleTimeoutId] = useState<NodeJS.Timeout | undefined>();
+
   useEffect(() => {
     const handleWheel = (e: any) => {
       if (e.ctrlKey) {
         e.preventDefault();
         const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
-        setCanvasScale((prev: number) => {
-          const newVal = prev + zoomDelta;
-          if (newVal < 0.3) return 0.3;
-          else if (newVal > 1) return 1;
-          else return newVal;
-        });
+        console.log(canvasScale)
+        clearTimeout(scaleTimeoutId)
+        setScaleTimeoutId(() =>
+          setTimeout(
+            () =>
+              setCanvasScale((prev: number) => {
+                const newVal = prev + zoomDelta;
+                if (newVal < 0.3) return 0.3;
+                else if (newVal > 1) return 1;
+                else return newVal;
+              }),
+            200
+          )
+        );
 
         setIsChartAdded(false);
         setShowNodeClickModal(false);
@@ -72,7 +82,7 @@ const Main = (props: Props) => {
     canvas.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => canvas.removeEventListener("wheel", handleWheel);
-  }, []);
+  }, [scaleTimeoutId, canvasScale]);
 
   useEffect(() => {
     if (isChartAdded) return;

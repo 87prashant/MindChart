@@ -75,7 +75,7 @@ const MiniChart = (props: Props) => {
     .attr("height", h)
     .attr("width", w)
     .attr("viewBox", [-w / 2, -h / 2, w, h])
-    // .attr("style", "max-width: 100%");
+    .attr("style", "max-width: 100%");
 
   const simulation = d3
     .forceSimulation(nodes)
