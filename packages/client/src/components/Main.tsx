@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
 import { Misc } from "./constants";
+import useAdvancedEffect from "../hooks/useAdvancedEffect";
 
 const StyledWrapper = styled("div")({
   height: `calc(100vh - ${Misc.HEADER_HEIGHT}px)`,
@@ -74,7 +75,6 @@ const Main = (props: Props) => {
         });
         setIsChartAdded(false);
         setShowNodeClickModal(false);
-
         setShowCanvasScaleOverlay(true);
         clearTimeout(scaleTimeoutId.overlayTimeoutId);
         setScaleTimeoutId((prev: canvasTimeoutType) => {
@@ -87,21 +87,42 @@ const Main = (props: Props) => {
     canvas.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => canvas.removeEventListener("wheel", handleWheel);
-  }, [canvasScale]);
+  }, []);
 
-  useEffect(() => {
+  useAdvancedEffect({canvasScale, [savedData, dimensions], ()=> {
     if (isChartAdded) return;
     setIsChartAdded(true);
-    const { w, h } = dimensions;
-    const newProps = {
-      w,
-      h,
+    const chartProps = {
+      dimensions,
       savedData,
       handleNodeClick,
       setShowNodeClickModal,
       canvasScale,
     };
-    const svg = MiniChart(newProps) as unknown as HTMLDivElement;
+    const svg = MiniChart(chartProps) as unknown as HTMLDivElement;
+  }, () => {
+    clearTimeout(scaleTimeoutId.canvasTimeoutId);
+    setScaleTimeoutId((prev: canvasTimeoutType) => {
+      const temp = setTimeout(() => {
+        mainRef.current!.innerHTML = "";
+        mainRef.current!.append(svg);
+      }, 500);
+      return { ...prev, canvasTimeoutId: temp };
+    })
+  }, {        mainRef.current!.innerHTML = "";
+  mainRef.current!.append(svg);}})
+
+  useEffect(() => {
+    if (isChartAdded) return;
+    setIsChartAdded(true);
+    const chartProps = {
+      dimensions,
+      savedData,
+      handleNodeClick,
+      setShowNodeClickModal,
+      canvasScale,
+    };
+    const svg = MiniChart(chartProps) as unknown as HTMLDivElement;
     clearTimeout(scaleTimeoutId.canvasTimeoutId);
     setScaleTimeoutId((prev: canvasTimeoutType) => {
       const temp = setTimeout(() => {

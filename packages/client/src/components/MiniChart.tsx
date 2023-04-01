@@ -8,8 +8,7 @@ import { findColors } from "./findColors";
 import { Emotion, NodeDataType } from "./NodeForm";
 
 interface Props {
-  w: number;
-  h: number;
+  dimensions: { w: number; h: number };
   savedData: NodeDataType[];
   setShowNodeClickModal: any;
   handleNodeClick: any;
@@ -17,7 +16,13 @@ interface Props {
 }
 
 const MiniChart = (props: Props) => {
-  const { w, h, savedData, handleNodeClick, setShowNodeClickModal, canvasScale } = props;
+  const {
+    dimensions: { w, h },
+    savedData,
+    handleNodeClick,
+    setShowNodeClickModal,
+    canvasScale,
+  } = props;
   const findGroupArray = (data: Emotion) => {
     let arr: any = []; //give proper type
     for (let key in JSON.parse(JSON.stringify(data))) {
