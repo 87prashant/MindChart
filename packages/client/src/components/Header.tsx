@@ -30,13 +30,14 @@ const HelpButton = styled("a")({
 const AddButton = styled("button")({
   margin: "0 20px",
   padding: "1px 0 0 0",
+  fontSize: 13,
   textDecoration: "none",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   cursor: "pointer",
   border: "none",
-  borderRadius: "10px",
+  borderRadius: "5px",
   backgroundColor: "rgba(255,253,228, 1)",
   transition: "all ease 300ms",
   fontWeight: "bolder",
@@ -69,20 +70,22 @@ const DeleteAllData = styled(AddButton)({
 const DemoButton = styled("button")<{ isDemoActive: boolean }>(
   ({ isDemoActive }) => ({
     border: "none",
-    padding: "10px",
+    padding: "7px",
     margin: "0 20px",
     textDecoration: "none",
+    fontSize: 13,
     color: isDemoActive ? "rgba(0, 0, 0)" : "rgba(0, 0, 0, 0.3)",
     cursor: "pointer",
-    borderRadius: "10px",
+    borderRadius: "5px",
     fontWeight: "bolder",
   })
 );
 
 export const AuthenticationButton = styled("button")({
   margin: "0 20px",
-  padding: "10px",
+  padding: "7px",
   textDecoration: "none",
+  fontSize: 13,
   cursor: "pointer",
   border: "none",
   borderRadius: "10px",
@@ -96,8 +99,8 @@ export const AuthenticationButton = styled("button")({
 });
 
 const PlusIcon = styled("span")({
-  margin: "4px 10px 4px 10px",
-  fontSize: 25,
+  margin: "1px 10px 1px 10px",
+  fontSize: 22,
   color: "teal",
 });
 

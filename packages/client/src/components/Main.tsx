@@ -6,20 +6,18 @@ import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
 import { Misc } from "./constants";
 
-const StyledWrapper = styled("div")<{ canvasScale: number }>(
-  ({ canvasScale }) => ({
-    height: `calc(100vh - ${Misc.HEADER_HEIGHT}px)`,
-    overflow: "hidden",
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-    "& svg": {
-      "& g": {
-        "& circle": {
-          cursor: "pointer",
-        },
+const StyledWrapper = styled("div")({
+  height: `calc(100vh - ${Misc.HEADER_HEIGHT}px)`,
+  overflow: "hidden",
+  backgroundColor: "rgba(0, 0, 0, 0.1)",
+  "& svg": {
+    "& g": {
+      "& circle": {
+        cursor: "pointer",
       },
     },
-  })
-);
+  },
+});
 
 interface Props {
   savedData: NodeDataType[];
@@ -119,13 +117,7 @@ const Main = (props: Props) => {
     setShowNodeClickModal(false);
   }
 
-  return (
-    <StyledWrapper
-      onClick={handleClick}
-      ref={mainRef}
-      canvasScale={canvasScale}
-    ></StyledWrapper>
-  );
+  return <StyledWrapper onClick={handleClick} ref={mainRef}></StyledWrapper>;
 };
 
 export default Main;

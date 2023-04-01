@@ -3,23 +3,33 @@ import { Misc } from "./constants";
 
 const Container = styled("div")({
   width: 20,
-  minHeigth: 120,
+  height: 120,
   border: "none",
   position: "absolute",
   top: Misc.HEADER_HEIGHT + 10,
   left: 50,
   padding: 8,
-  backgroundColor: "white",
-  borderRadius: 8
+  backgroundColor: "#F4EBD0",
+  borderRadius: 8,
+  boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
+});
+
+const BehindBar = styled("div")({
+  position: "absolute",
+  border: "1px solid grey",
+  bottom: 8,
+  width: 5,
+  height: 104,
+  borderRadius: 4,
 });
 
 const Bar = styled("div")<{ canvasScale: number }>(({ canvasScale }) => ({
-  position: "relative",
-  bottom: 0,
+  position: "absolute",
+  bottom: 8,
   width: 5,
-  height: 100 * Math.pow(canvasScale,2),
+  height: 104 * Math.pow(canvasScale, 2),
   borderRadius: 4,
-  backgroundColor: "blue"
+  backgroundColor: "teal",
 }));
 
 interface Props {
@@ -31,6 +41,7 @@ const CanvasScaleOverlay = (props: Props) => {
 
   return (
     <Container>
+      <BehindBar />
       <Bar canvasScale={canvasScale} />
     </Container>
   );
