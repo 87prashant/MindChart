@@ -15,6 +15,7 @@ import Tooltip from "../Tooltip";
 import NotificationBanner from "../NotificationBanner";
 import ConfirmationModal from "../ConfirmationModal";
 import { ObjectId } from "bson";
+import CanvasScaleOverlay from "../CanvasScaleOverlay";
 
 const Container = styled("div")<{
   showNodeClickModal: boolean;
@@ -110,6 +111,8 @@ function App() {
   const [handleConfirmation, setHandleConfirmation] = useState(null);
   // Stores the scale of canvas elements when user zoom in and out
   const [canvasScale, setCanvasScale] = useState(1);
+  // Stores whether to show canvas scale overlay
+  const [showCanvasScaleOverlay, setShowCanvasScaleOverlay] = useState(false);
 
   // NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
@@ -326,6 +329,9 @@ function App() {
           setHandleConfirmation={setHandleConfirmation}
         />
       )}
+      {showCanvasScaleOverlay && (
+        <CanvasScaleOverlay canvasScale={canvasScale} />
+      )}
       <Header
         setIsDemoActive={setIsDemoActive}
         isDemoActive={isDemoActive}
@@ -384,6 +390,7 @@ function App() {
         setShowProfileModal={setShowProfileModal}
         setCanvasScale={setCanvasScale}
         canvasScale={canvasScale}
+        setShowCanvasScaleOverlay={setShowCanvasScaleOverlay}
       />
     </div>
   );

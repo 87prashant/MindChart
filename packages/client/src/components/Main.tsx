@@ -5,7 +5,6 @@ import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
 import { Misc } from "./constants";
-import { debounce } from "./App/App";
 
 const StyledWrapper = styled("div")<{ canvasScale: number }>(
   ({ canvasScale }) => ({
@@ -36,7 +35,13 @@ interface Props {
   setShowProfileModal: any;
   setCanvasScale: any;
   canvasScale: number;
+  setShowCanvasScaleOverlay: any;
 }
+
+type canvasTimeoutType = {
+  canvasTimeoutId: NodeJS.Timeout | undefined;
+  overlayTimeoutId: NodeJS.Timeout | undefined;
+};
 
 const Main = (props: Props) => {
   const {
@@ -50,11 +55,13 @@ const Main = (props: Props) => {
     setShowProfileModal,
     setCanvasScale,
     canvasScale,
+    setShowCanvasScaleOverlay,
   } = props;
 
-  const [scaleTimeoutId, setScaleTimeoutId] = useState<
-    NodeJS.Timeout | undefined
-  >();
+  const [scaleTimeoutId, setScaleTimeoutId] = useState<canvasTimeoutType>({
+    canvasTimeoutId: undefined,
+    overlayTimeoutId: undefined,
+  });
 
   useEffect(() => {
     const handleWheel = (e: any) => {
@@ -66,10 +73,16 @@ const Main = (props: Props) => {
           if (newVal < 0.3) return 0.3;
           else if (newVal > 1) return 1;
           else return newVal;
-        })
-
+        });
         setIsChartAdded(false);
         setShowNodeClickModal(false);
+
+        setShowCanvasScaleOverlay(true);
+        clearTimeout(scaleTimeoutId.overlayTimeoutId);
+        setScaleTimeoutId((prev: canvasTimeoutType) => {
+          const temp = setTimeout(() => setShowCanvasScaleOverlay(false), 1000);
+          return { ...prev, overlayTimeoutId: temp };
+        });
       }
     };
     const canvas = mainRef.current;
@@ -91,14 +104,14 @@ const Main = (props: Props) => {
       canvasScale,
     };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
-    clearTimeout(scaleTimeoutId)
-    setScaleTimeoutId(() =>
-      setTimeout(() => {
+    clearTimeout(scaleTimeoutId.canvasTimeoutId);
+    setScaleTimeoutId((prev: canvasTimeoutType) => {
+      const temp = setTimeout(() => {
         mainRef.current!.innerHTML = "";
         mainRef.current!.append(svg);
-      }, 200)
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, 500);
+      return { ...prev, canvasTimeoutId: temp };
+    });
   }, [savedData, dimensions, canvasScale]);
 
   function handleClick(e: any) {
