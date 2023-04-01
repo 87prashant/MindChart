@@ -52,27 +52,21 @@ const Main = (props: Props) => {
     canvasScale,
   } = props;
 
-  const [scaleTimeoutId, setScaleTimeoutId] = useState<NodeJS.Timeout | undefined>();
+  const [scaleTimeoutId, setScaleTimeoutId] = useState<
+    NodeJS.Timeout | undefined
+  >();
 
   useEffect(() => {
     const handleWheel = (e: any) => {
       if (e.ctrlKey) {
         e.preventDefault();
         const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
-        console.log(canvasScale)
-        clearTimeout(scaleTimeoutId)
-        setScaleTimeoutId(() =>
-          setTimeout(
-            () =>
-              setCanvasScale((prev: number) => {
-                const newVal = prev + zoomDelta;
-                if (newVal < 0.3) return 0.3;
-                else if (newVal > 1) return 1;
-                else return newVal;
-              }),
-            200
-          )
-        );
+        setCanvasScale((prev: number) => {
+          const newVal = prev + zoomDelta;
+          if (newVal < 0.3) return 0.3;
+          else if (newVal > 1) return 1;
+          else return newVal;
+        })
 
         setIsChartAdded(false);
         setShowNodeClickModal(false);
@@ -82,7 +76,7 @@ const Main = (props: Props) => {
     canvas.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => canvas.removeEventListener("wheel", handleWheel);
-  }, [scaleTimeoutId, canvasScale]);
+  }, [canvasScale]);
 
   useEffect(() => {
     if (isChartAdded) return;
@@ -97,8 +91,13 @@ const Main = (props: Props) => {
       canvasScale,
     };
     const svg = MiniChart(newProps) as unknown as HTMLDivElement;
-    mainRef.current!.innerHTML = "";
-    mainRef.current!.append(svg);
+    clearTimeout(scaleTimeoutId)
+    setScaleTimeoutId(() =>
+      setTimeout(() => {
+        mainRef.current!.innerHTML = "";
+        mainRef.current!.append(svg);
+      }, 200)
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedData, dimensions, canvasScale]);
 
