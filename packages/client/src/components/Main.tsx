@@ -1,11 +1,11 @@
 // Optimize the resize feature
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import MiniChart from "./MiniChart";
 import { NodeDataType } from "./NodeForm";
 import { Misc } from "./constants";
-import useAdvancedEffect from "../hooks/useAdvancedEffect";
+import useConditionalEffect from "../hooks/useConditionalEffect";
 
 const StyledWrapper = styled("div")({
   height: `calc(100vh - ${Misc.HEADER_HEIGHT}px)`,
@@ -89,7 +89,7 @@ const Main = (props: Props) => {
     return () => canvas.removeEventListener("wheel", handleWheel);
   }, []);
 
-  useAdvancedEffect({canvasScale, [savedData, dimensions], ()=> {
+  function commonCode() {
     if (isChartAdded) return;
     setIsChartAdded(true);
     const chartProps = {
@@ -100,38 +100,29 @@ const Main = (props: Props) => {
       canvasScale,
     };
     const svg = MiniChart(chartProps) as unknown as HTMLDivElement;
-  }, () => {
-    clearTimeout(scaleTimeoutId.canvasTimeoutId);
-    setScaleTimeoutId((prev: canvasTimeoutType) => {
-      const temp = setTimeout(() => {
-        mainRef.current!.innerHTML = "";
-        mainRef.current!.append(svg);
-      }, 500);
-      return { ...prev, canvasTimeoutId: temp };
-    })
-  }, {        mainRef.current!.innerHTML = "";
-  mainRef.current!.append(svg);}})
+    return svg;
+  }
 
-  useEffect(() => {
-    if (isChartAdded) return;
-    setIsChartAdded(true);
-    const chartProps = {
-      dimensions,
-      savedData,
-      handleNodeClick,
-      setShowNodeClickModal,
-      canvasScale,
-    };
-    const svg = MiniChart(chartProps) as unknown as HTMLDivElement;
-    clearTimeout(scaleTimeoutId.canvasTimeoutId);
-    setScaleTimeoutId((prev: canvasTimeoutType) => {
-      const temp = setTimeout(() => {
-        mainRef.current!.innerHTML = "";
-        mainRef.current!.append(svg);
-      }, 500);
-      return { ...prev, canvasTimeoutId: temp };
-    });
-  }, [savedData, dimensions, canvasScale]);
+  useConditionalEffect({
+    conditionalCode: () => {
+      const svg = commonCode();
+      clearTimeout(scaleTimeoutId.canvasTimeoutId);
+      setScaleTimeoutId((prev: canvasTimeoutType) => {
+        const temp = setTimeout(() => {
+          mainRef.current!.innerHTML = "";
+          mainRef.current!.append(svg);
+        }, 500);
+        return { ...prev, canvasTimeoutId: temp };
+      });
+    },
+    elseCode: () => {
+      const svg = commonCode();
+      mainRef.current!.innerHTML = "";
+      mainRef.current!.append(svg);
+    },
+    conditionalDep: [canvasScale, scaleTimeoutId],
+    elseDep: [savedData, dimensions],
+  });
 
   function handleClick(e: any) {
     setShowProfileModal(false);
