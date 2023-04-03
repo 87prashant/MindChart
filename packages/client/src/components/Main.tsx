@@ -77,9 +77,8 @@ const Main = (props: Props) => {
         setShowNodeClickModal(false);
         setShowCanvasScaleOverlay(true);
         clearTimeout(scaleTimeoutId.overlayTimeoutId);
-        console.log(scaleTimeoutId)
         setScaleTimeoutId((prev: canvasTimeoutType) => {
-          const temp = setTimeout(() => setShowCanvasScaleOverlay(false), 1000);
+          const temp = setTimeout(() => setShowCanvasScaleOverlay(false), 5000);
           return { ...prev, overlayTimeoutId: temp };
         });
       }
@@ -104,33 +103,33 @@ const Main = (props: Props) => {
     return svg;
   }
 
-  // if updated because of the canvasScale change then delay the chart updation and store the timeout Id
+  // if updated because of the canvasScale state change then delay the chart updation and store the timeout Id
   useConditionalEffect({
     conditionalCode: () => {
-      console.log(scaleTimeoutId)
-      console.log(canvasScale)
       const svg = commonCode();
-      clearTimeout(scaleTimeoutId.canvasTimeoutId);
-      setScaleTimeoutId((prev: canvasTimeoutType) => {
-        const temp = setTimeout(() => {
-          mainRef.current!.innerHTML = "";
-          mainRef.current!.append(svg);
-        }, 500);
-        return { ...prev, canvasTimeoutId: temp };
-      });
+      if (svg) {
+        clearTimeout(scaleTimeoutId.canvasTimeoutId);
+        setScaleTimeoutId((prev: canvasTimeoutType) => {
+          const temp = setTimeout(() => {
+            mainRef.current!.innerHTML = "";
+            mainRef.current!.append(svg);
+          }, 500);
+          return { ...prev, canvasTimeoutId: temp };
+        });
+      }
     },
     elseCode: () => {
-      console.log("else")
       const svg = commonCode();
-      mainRef.current!.innerHTML = "";
-      mainRef.current!.append(svg);
+      if (svg) {
+        mainRef.current!.innerHTML = "";
+        mainRef.current!.append(svg);
+      }
     },
     conditionalDep: [canvasScale],
     elseDep: [savedData, dimensions],
   });
 
   function handleClick(e: any) {
-    console.log(e)
     setShowProfileModal(false);
     setShowNodeClickModal(false);
   }
