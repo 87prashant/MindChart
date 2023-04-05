@@ -30,7 +30,8 @@ const Container = styled("div")<{
   maxWidth: 200,
   maxHeight: 200,
   overflow: "hidden",
-  transform: `scale(${canvasScale})`,
+  transform: `scale(${Math.pow(canvasScale, 0.4)})`,
+  transformOrigin: "top left",
 }));
 
 // To restrict re-rendering of the chart on zoom in and out
@@ -160,14 +161,16 @@ function App() {
     let isTop = false; //is node located on a position so that modal needs to be moved to the right of the node
     let isRight = false; //is the node located on a position so that the modal needs to be moved to the left of the node
     if (
-      current!.offsetHeight >
+      current!.offsetHeight * Math.pow(canvasScale, 0.4) >
       Number(e.srcElement.cy.baseVal.valueAsString) + dimensions.h / 2 - radius
     ) {
       isTop = true;
     }
     if (
       e.srcElement.cx.baseVal.value >
-      dimensions.w / 2 - radius - current!.offsetWidth 
+      dimensions.w / 2 -
+        radius -
+        current!.offsetWidth * Math.pow(canvasScale, 0.4)
     ) {
       isRight = true;
     }
@@ -179,7 +182,7 @@ function App() {
         xPosition =
           Number(e.srcElement.cx.baseVal.valueAsString) +
           dimensions.w / 2 -
-          current!.offsetWidth -
+          current!.offsetWidth * Math.pow(canvasScale, 0.4) -
           radius;
       } else {
         xPosition =
@@ -192,7 +195,7 @@ function App() {
         xPosition =
           Number(e.srcElement.cx.baseVal.valueAsString) +
           dimensions.w / 2 -
-          current!.offsetWidth -
+          current!.offsetWidth * Math.pow(canvasScale, 0.4) -
           radius;
       } else {
         xPosition =
@@ -209,18 +212,21 @@ function App() {
         Number(e.srcElement.cy.baseVal.valueAsString) +
         dimensions.h / 2 +
         Misc.HEADER_HEIGHT -
-        current!.offsetHeight;
+        current!.offsetHeight * Math.pow(canvasScale, 0.4);
     } else {
       yPosition =
         Number(e.srcElement.cy.baseVal.valueAsString) +
         dimensions.h / 2 -
         radius +
         Misc.HEADER_HEIGHT -
-        current!.offsetHeight;
+        current!.offsetHeight * Math.pow(canvasScale, 0.4);
     }
 
     current!.style.left = xPosition + "px";
-    current!.style.top = yPosition < Misc.HEADER_HEIGHT ? Misc.HEADER_HEIGHT + "px" : yPosition + "px";
+    current!.style.top =
+      yPosition < Misc.HEADER_HEIGHT
+        ? Misc.HEADER_HEIGHT + "px"
+        : yPosition + "px";
   };
 
   // Handles mouse-in for element to show tooltip
@@ -361,7 +367,6 @@ function App() {
           handleDelete={handleDelete}
           setHandleConfirmation={setHandleConfirmation}
           setShowConfirmationModal={setShowConfirmationModal}
-          canvasScale={canvasScale}
         />
       </Container>
       {showNodeForm && (

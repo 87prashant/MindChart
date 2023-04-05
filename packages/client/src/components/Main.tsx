@@ -37,7 +37,7 @@ interface Props {
   setShowCanvasScaleOverlay: any;
 }
 
-type canvasTimeoutType = {
+type CanvasTimeoutIdType = {
   canvasTimeoutId: NodeJS.Timeout | undefined;
   overlayTimeoutId: NodeJS.Timeout | undefined;
 };
@@ -57,7 +57,7 @@ const Main = (props: Props) => {
     setShowCanvasScaleOverlay,
   } = props;
 
-  const [scaleTimeoutId, setScaleTimeoutId] = useState<canvasTimeoutType>({
+  const [scaleTimeoutId, setScaleTimeoutId] = useState<CanvasTimeoutIdType>({
     canvasTimeoutId: undefined,
     overlayTimeoutId: undefined,
   });
@@ -77,8 +77,8 @@ const Main = (props: Props) => {
         setShowNodeClickModal(false);
         setShowCanvasScaleOverlay(true);
         clearTimeout(scaleTimeoutId.overlayTimeoutId);
-        setScaleTimeoutId((prev: canvasTimeoutType) => {
-          const temp = setTimeout(() => setShowCanvasScaleOverlay(false), 5000);
+        setScaleTimeoutId((prev: CanvasTimeoutIdType) => {
+          const temp = setTimeout(() => setShowCanvasScaleOverlay(false), 1500);
           return { ...prev, overlayTimeoutId: temp };
         });
       }
@@ -109,7 +109,7 @@ const Main = (props: Props) => {
       const svg = commonCode();
       if (svg) {
         clearTimeout(scaleTimeoutId.canvasTimeoutId);
-        setScaleTimeoutId((prev: canvasTimeoutType) => {
+        setScaleTimeoutId((prev: CanvasTimeoutIdType) => {
           const temp = setTimeout(() => {
             mainRef.current!.innerHTML = "";
             mainRef.current!.append(svg);

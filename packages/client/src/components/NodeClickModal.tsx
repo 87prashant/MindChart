@@ -55,7 +55,6 @@ interface Props {
   handleDelete: any;
   setShowConfirmationModal: any;
   setHandleConfirmation: any;
-  canvasScale: number;
 }
 
 const NodeClickModal = (props: Props) => {
@@ -64,7 +63,6 @@ const NodeClickModal = (props: Props) => {
     handleDelete,
     setShowConfirmationModal,
     setHandleConfirmation,
-    canvasScale,
   } = props;
 
   const ref = useRef<HTMLDivElement | null>(null);
