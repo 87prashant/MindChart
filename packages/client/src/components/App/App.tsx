@@ -167,7 +167,7 @@ function App() {
     }
     if (
       e.srcElement.cx.baseVal.value >
-      dimensions.w / 2 - radius - current!.offsetWidth
+      dimensions.w / 2 - radius - current!.offsetWidth 
     ) {
       isRight = true;
     }
@@ -219,9 +219,8 @@ function App() {
         current!.offsetHeight;
     }
 
-    current!.style.left = xPosition / canvasScale + "px";
-    current!.style.top =
-      yPosition < 70 ? "70px" : yPosition / canvasScale + "px";
+    current!.style.left = xPosition + "px";
+    current!.style.top = yPosition < Misc.HEADER_HEIGHT ? Misc.HEADER_HEIGHT + "px" : yPosition + "px";
   };
 
   // Handles mouse-in for element to show tooltip
