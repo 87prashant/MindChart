@@ -166,7 +166,6 @@ app.post("/register", async function (req, res) {
   // Authorization and Registration
   // Start the transaction
   session.startTransaction();
-
   let timeoutId = null;
   if (user) {
     if (user.status === AccountStatus.UNVERIFIED) {
@@ -180,9 +179,7 @@ app.post("/register", async function (req, res) {
       } catch (error) {
         logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
         clearTimeout(timeoutId);
-
         session.abortTransaction();
-
         return res.json({
           status: ResponseStatus.ERROR,
           error: ErrorMessage.SERVER_ERROR,
@@ -214,9 +211,7 @@ app.post("/register", async function (req, res) {
     } catch (error) {
       logger(ErrorMessage.UNABLE_TO_CREATE_USER, LogLevel.ERROR, error);
       clearTimeout(timeoutId);
-
       session.abortTransaction();
-
       return res.json({
         status: ResponseStatus.ERROR,
         error: ErrorMessage.SERVER_ERROR,
@@ -232,9 +227,7 @@ app.post("/register", async function (req, res) {
       subject: Message.VERIFICATION_MAIL,
       message: html,
     });
-
     session.commitTransaction();
-
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.VERIFICATION_MAIL,
@@ -242,9 +235,7 @@ app.post("/register", async function (req, res) {
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_SEND_MAIL, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
-
     session.abortTransaction();
-
     return res.json({
       status: ResponseStatus.ERROR,
       //EENVELOPE not working. Why?
@@ -303,9 +294,7 @@ app.post("/verify-email", async function (req, res) {
       { session }
     );
     await createUserData(email, await session);
-
     session.commitTransaction();
-
     logger(
       Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email),
       LogLevel.INFO
@@ -313,9 +302,7 @@ app.post("/verify-email", async function (req, res) {
     return res.json({ status: ResponseStatus.OK, username: user.username });
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
-
     session.abortTransaction();
-
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SERVER_ERROR,
@@ -368,7 +355,6 @@ app.post("/forget-password", async function (req, res) {
   // Mark status as forget password
   // Start the transaction
   session.startTransaction();
-
   let timeoutId = null;
   try {
     await User.updateMany(
@@ -382,9 +368,7 @@ app.post("/forget-password", async function (req, res) {
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
-
     session.abortTransaction();
-
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SERVER_ERROR,
@@ -399,9 +383,7 @@ app.post("/forget-password", async function (req, res) {
       subject: Message.FORGET_PASSWORD_MAIL,
       message: html,
     });
-
     session.commitTransaction();
-
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.FORGET_PASSWORD_MAIL,
@@ -409,9 +391,7 @@ app.post("/forget-password", async function (req, res) {
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_SEND_MAIL, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
-
     session.abortTransaction();
-
     return res.json({
       status: ResponseStatus.ERROR,
       error:
@@ -488,9 +468,7 @@ app.post("/forget-password-verify", async function (req, res) {
       { session }
     ); // why not working in one query?
     const userData = await getUserData(email);
-
     session.commitTransaction();
-
     logger(
       Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email),
       LogLevel.INFO
@@ -502,9 +480,7 @@ app.post("/forget-password-verify", async function (req, res) {
     });
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
-
     session.abortTransaction();
-
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SERVER_ERROR,
@@ -554,10 +530,8 @@ app.post("/login", async function (req, res) {
   // Login the user
   if (await bcrypt.compare(plainPassword, user.password)) {
     const { username, email } = user;
-
     try {
       const userData = await getUserData(email);
-
       return res.json({
         status: ResponseStatus.OK,
         userCredentials: { username, email },
@@ -653,13 +627,10 @@ app.post("/modify-data", async function (req, res) {
     }
 
     session.commitTransaction();
-
     return res.json({ status: ResponseStatus.OK });
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USERDATA, LogLevel.ERROR, error);
-
     session.abortTransaction();
-
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SERVER_ERROR,
