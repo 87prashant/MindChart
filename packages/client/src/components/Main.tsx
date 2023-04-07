@@ -129,7 +129,7 @@ const Main = (props: Props) => {
     elseDep: [savedData, dimensions],
   });
 
-  function handleClick(e: any) {
+  function handleClick() {
     setShowProfileModal(false);
     setShowNodeClickModal(false);
   }

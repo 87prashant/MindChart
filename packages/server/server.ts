@@ -48,7 +48,11 @@ mongoose.connect(process.env.MONGODB_URI, (error) => {
   else logger(Message.CONNECTED_DATABASE, LogLevel.INFO);
 });
 
-const session = mongoose.startSession() as unknown as ClientSession;
+let session: ClientSession
+async function getSession () {
+   session = await mongoose.startSession()
+}
+getSession()
 
 type UserType = mongoose.LeanDocument<
   {
@@ -96,7 +100,7 @@ function removeAccount(email: string) {
   return timeoutId;
 }
 
-// Remove token after particular time
+// Remove token after five minutes
 function removeToken(email: string) {
   const timeoutId = setTimeout(async () => {
     try {
@@ -161,7 +165,7 @@ app.post("/register", async function (req, res) {
 
   // Authorization and Registration
   // Start the transaction
-  (await session).startTransaction();
+  session.startTransaction();
 
   let timeoutId = null;
   if (user) {
@@ -177,7 +181,7 @@ app.post("/register", async function (req, res) {
         logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
         clearTimeout(timeoutId);
 
-        (await session).abortTransaction();
+        session.abortTransaction();
 
         return res.json({
           status: ResponseStatus.ERROR,
@@ -185,6 +189,7 @@ app.post("/register", async function (req, res) {
         });
       }
     } else {
+      session.abortTransaction()
       return res.json({
         status: ResponseStatus.ERROR,
         error: ErrorMessage.ALREADY_REGISTERED,
@@ -210,7 +215,7 @@ app.post("/register", async function (req, res) {
       logger(ErrorMessage.UNABLE_TO_CREATE_USER, LogLevel.ERROR, error);
       clearTimeout(timeoutId);
 
-      (await session).abortTransaction();
+      session.abortTransaction();
 
       return res.json({
         status: ResponseStatus.ERROR,
@@ -228,7 +233,7 @@ app.post("/register", async function (req, res) {
       message: html,
     });
 
-    (await session).commitTransaction();
+    session.commitTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -238,7 +243,7 @@ app.post("/register", async function (req, res) {
     logger(ErrorMessage.UNABLE_TO_SEND_MAIL, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
 
-    (await session).abortTransaction();
+    session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -290,7 +295,7 @@ app.post("/verify-email", async function (req, res) {
 
   // Update user as verified
   // Start the transaction
-  (await session).startTransaction();
+  session.startTransaction();
   try {
     await User.updateMany(
       { email },
@@ -299,7 +304,7 @@ app.post("/verify-email", async function (req, res) {
     );
     await createUserData(email, await session);
 
-    (await session).commitTransaction();
+    session.commitTransaction();
 
     logger(
       Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email),
@@ -309,7 +314,7 @@ app.post("/verify-email", async function (req, res) {
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
 
-    (await session).abortTransaction();
+    session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -362,7 +367,7 @@ app.post("/forget-password", async function (req, res) {
 
   // Mark status as forget password
   // Start the transaction
-  (await session).startTransaction();
+  session.startTransaction();
 
   let timeoutId = null;
   try {
@@ -378,7 +383,7 @@ app.post("/forget-password", async function (req, res) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
 
-    (await session).abortTransaction();
+    session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -395,7 +400,7 @@ app.post("/forget-password", async function (req, res) {
       message: html,
     });
 
-    (await session).commitTransaction();
+    session.commitTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -405,7 +410,7 @@ app.post("/forget-password", async function (req, res) {
     logger(ErrorMessage.UNABLE_TO_SEND_MAIL, LogLevel.ERROR, error);
     clearTimeout(timeoutId);
 
-    (await session).abortTransaction();
+    session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -468,7 +473,7 @@ app.post("/forget-password-verify", async function (req, res) {
 
   // Change password
   // Start the transaction
-  (await session).startTransaction();
+  session.startTransaction();
 
   const password = await bcrypt.hash(plainPassword, 10);
   try {
@@ -484,7 +489,7 @@ app.post("/forget-password-verify", async function (req, res) {
     ); // why not working in one query?
     const userData = await getUserData(email);
 
-    (await session).commitTransaction();
+    session.commitTransaction();
 
     logger(
       Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email),
@@ -498,7 +503,7 @@ app.post("/forget-password-verify", async function (req, res) {
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
 
-    (await session).abortTransaction();
+    session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
@@ -635,7 +640,7 @@ app.post("/modify-data", async function (req, res) {
 
   // Controller
   // Start the transaction
-  (await session).startTransaction();
+  session.startTransaction();
 
   try {
     if (operation === DataOperation.ADD) {
@@ -647,13 +652,13 @@ app.post("/modify-data", async function (req, res) {
       updateData(await session);
     }
 
-    (await session).commitTransaction();
+    session.commitTransaction();
 
     return res.json({ status: ResponseStatus.OK });
   } catch (error) {
     logger(ErrorMessage.UNABLE_TO_UPDATE_USERDATA, LogLevel.ERROR, error);
 
-    (await session).abortTransaction();
+    session.abortTransaction();
 
     return res.json({
       status: ResponseStatus.ERROR,
