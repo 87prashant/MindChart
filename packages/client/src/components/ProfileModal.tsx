@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import { HorizontalRule } from "./AuthenticationForm";
-import { NotificationMessage, ResponseStatus } from "./constants";
+import { Misc, NotificationMessage, ResponseStatus } from "./constants";
 
 const Container = styled("div")({
   position: "absolute",
   fontSize: 14,
   color: "rgba(0, 0, 0, 0.7)",
-  top: 60,
+  top: Misc.HEADER_HEIGHT - 5,
   right: 20,
   padding: 5,
   borderRadius: 8,

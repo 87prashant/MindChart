@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
+import { Misc } from "./constants";
 
 const Container = styled("div")({
-  width: 50,
-  height: 50,
+  width: Misc.HEADER_HEIGHT - 10,
+  height: Misc.HEADER_HEIGHT - 10,
   borderRadius: "50%",
   backgroundColor: "teal",
   display: "flex",
