@@ -554,7 +554,6 @@ app.post("/login", async function (req, res) {
  * @api Modify user data
  */
 app.post("/modify-data", async function (req, res) {
-  //currently there is no immutable field in nodeData to find required nodeData. So need to send the two nodeData to distinguish between the oldNodeData to be deleted and newNodeData to be added
   const { email, data, operation } = req.body;
   // check if user data present or not
   if (!(await UserData.findOne({ email }).lean())) {
@@ -611,7 +610,6 @@ app.post("/modify-data", async function (req, res) {
   // Controller
   // Start the transaction
   session.startTransaction();
-
   try {
     if (operation === DataOperation.ADD) {
       addData(session);
