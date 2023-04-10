@@ -114,6 +114,8 @@ function App() {
   const [canvasScale, setCanvasScale] = useState(1);
   // Stores whether to show canvas scale overlay
   const [showCanvasScaleOverlay, setShowCanvasScaleOverlay] = useState(false);
+  // Stores if updating the existing nodes
+  const [isEditing, setIsEditing] = useState(false);
 
   // NodeClickModal reference
   const nodeClickModalRef = useRef<HTMLDivElement | null>(null);
@@ -291,6 +293,7 @@ function App() {
     setNodeData(selectedNode!);
     setShowNodeForm(true);
     setShowNodeClickModal(false);
+    setIsEditing(true);
   }
 
   // Handles node delete
@@ -381,6 +384,8 @@ function App() {
           isDemoActive={isDemoActive}
           userInfo={userInfo}
           isLoggedIn={isLoggedIn}
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
         />
       )}
       <Main

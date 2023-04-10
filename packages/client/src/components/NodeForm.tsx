@@ -123,6 +123,8 @@ interface Props {
   userInfo: { username: string; email: string };
   isLoggedIn: boolean;
   showNodeForm: boolean;
+  isEditing: boolean;
+  setIsEditing: any;
 }
 
 export interface Emotion {
@@ -170,7 +172,9 @@ const NodeForm: any = (props: Props) => {
     isDemoActive,
     userInfo: { email },
     isLoggedIn,
-    showNodeForm
+    showNodeForm,
+    isEditing,
+    setIsEditing,
   } = props;
 
   const [nodeFormErrors, setNodeFormErrors] = useState({
@@ -213,6 +217,7 @@ const NodeForm: any = (props: Props) => {
     refreshNodeData();
     refreshFormErrors();
     setIsEarlySubmit(false);
+    setIsChartAdded(false);
   };
 
   const handleChange = (e: any) => {
@@ -271,7 +276,8 @@ const NodeForm: any = (props: Props) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          toBeAdded: nodeData,
+          data: nodeData,
+          operation: isEditing ? DataOperation.UPDATE : DataOperation.ADD,
           // toBeDeleted: hackedNodeData,
           // operation: hackedNodeData ? DataOperation.UPDATE : DataOperation.ADD,
         }),
@@ -286,6 +292,7 @@ const NodeForm: any = (props: Props) => {
     setShowNodeForm(false);
     setIsChartAdded(false);
     setIsEarlySubmit(false);
+    setIsEditing(false);
   };
 
   useEffect(() => {

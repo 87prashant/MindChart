@@ -48,11 +48,11 @@ mongoose.connect(process.env.MONGODB_URI, (error) => {
   else logger(Message.CONNECTED_DATABASE, LogLevel.INFO);
 });
 
-let session: ClientSession
-async function getSession () {
-   session = await mongoose.startSession()
+let session: ClientSession;
+async function getSession() {
+  session = await mongoose.startSession();
 }
-getSession()
+getSession();
 
 type UserType = mongoose.LeanDocument<
   {
@@ -186,7 +186,7 @@ app.post("/register", async function (req, res) {
         });
       }
     } else {
-      session.abortTransaction()
+      session.abortTransaction();
       return res.json({
         status: ResponseStatus.ERROR,
         error: ErrorMessage.ALREADY_REGISTERED,
@@ -293,7 +293,7 @@ app.post("/verify-email", async function (req, res) {
       { $unset: { verificationToken: "", status: "" } }, // no status means verified
       { session }
     );
-    await createUserData(email, await session);
+    await createUserData(email, session);
     session.commitTransaction();
     logger(
       Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email),
@@ -555,8 +555,8 @@ app.post("/login", async function (req, res) {
  */
 app.post("/modify-data", async function (req, res) {
   //currently there is no immutable field in nodeData to find required nodeData. So need to send the two nodeData to distinguish between the oldNodeData to be deleted and newNodeData to be added
-  const { email, nodeData, operation } = req.body;
-
+  const { email, data, operation } = req.body;
+  console.log("DATA is: ", data);
   // check if user data present or not
   if (!(await UserData.findOne({ email }).lean())) {
     logger(ErrorMessage.UNABLE_TO_FIND_USERDATA, LogLevel.ERROR);
@@ -575,7 +575,7 @@ app.post("/modify-data", async function (req, res) {
     try {
       await UserData.updateOne(
         { email },
-        { $addToSet: { data: nodeData } },
+        { $addToSet: { data: data } },
         { session }
       );
     } catch (error) {
@@ -590,7 +590,7 @@ app.post("/modify-data", async function (req, res) {
         { email },
         {
           $pull: {
-            data: nodeData,
+            data: data,
           },
         },
         { session }
@@ -603,9 +603,9 @@ app.post("/modify-data", async function (req, res) {
   const updateData = async (session: ClientSession) => {
     try {
       await UserData.updateOne(
-        { email, "data._id": nodeData._id },
-        { $set: { "grades.$": nodeData } },
-        {session}
+        { email, "data._id": data._id },
+        { $set: { "grades.$": data } },
+        { session }
       );
     } catch (error) {
       throw error;
@@ -618,12 +618,11 @@ app.post("/modify-data", async function (req, res) {
 
   try {
     if (operation === DataOperation.ADD) {
-      addData(await session);
+      addData(session);
     } else if (operation === DataOperation.DELETE) {
-      deleteData(await session);
-    } else {
-      // updating existing one
-      updateData(await session);
+      deleteData(session);
+    } else if (operation === DataOperation.UPDATE) {
+      updateData(session);
     }
 
     session.commitTransaction();
