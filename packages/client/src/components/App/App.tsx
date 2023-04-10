@@ -309,7 +309,7 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: userInfo.email,
-          nodeData: selectedNode,
+          data: selectedNode,
           operation: DataOperation.DELETE,
         }),
       })
