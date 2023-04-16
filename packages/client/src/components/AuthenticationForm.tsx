@@ -12,16 +12,29 @@ import {
 import { ResponseStatus, UserChoiceList, Misc, Errors } from "./constants";
 import LoadingAnimation from "./Animations/LoadingAnimation";
 import { ObjectId } from "bson";
+import GoogleSvg from "./SvgComponent/GoogleSvg"
 
 const Container = styled(StyledDiv)({
   backdropFilter: "blur(10px)",
+  position: "absolute",
 });
 
 const Wrapper = styled(StyledWrapper)({
   width: 250,
   height: 320,
-  overflow: "hidden",
   backgroundColor: "white",
+});
+
+const GoogleAuthentication = styled("div")({
+  position: "absolute",
+  padding: 8,
+  right: -35,
+  top: 35,
+  width: 40,
+  height: 40,
+  backgroundColor: "white",
+  borderRadius: 5,
+  boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
 });
 
 const FormContainer = styled("div")({
@@ -214,7 +227,7 @@ const AuthenticationForm = (props: Props) => {
             const fixedUserData = userData.map((d: NodeDataType) => {
               return { ...d, _id: new ObjectId(d._id) };
             });
-            
+
             setShowAuthenticationForm(false);
             setSavedData(() => fixedUserData);
             setIsChartAdded(false);
@@ -265,6 +278,11 @@ const AuthenticationForm = (props: Props) => {
   return (
     <Container>
       <Wrapper>
+        <GoogleAuthentication>
+          <a href=''>
+            <GoogleSvg/>
+          </a>
+        </GoogleAuthentication>
         <FormContainer>
           {userChoice === UserChoiceList.REGISTER && (
             <RegisterForm>
