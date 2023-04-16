@@ -12,7 +12,8 @@ import {
 import { ResponseStatus, UserChoiceList, Misc, Errors } from "./constants";
 import LoadingAnimation from "./Animations/LoadingAnimation";
 import { ObjectId } from "bson";
-import GoogleSvg from "./SvgComponent/GoogleSvg"
+import GoogleSvg from "./SvgComponent/GoogleSvg";
+import { useGoogleLogin } from '@react-oauth/google';
 
 const Container = styled(StyledDiv)({
   backdropFilter: "blur(10px)",
@@ -25,7 +26,7 @@ const Wrapper = styled(StyledWrapper)({
   backgroundColor: "white",
 });
 
-const GoogleAuthentication = styled("div")({
+const GoogleAuthentication = styled("button")({
   position: "absolute",
   padding: 8,
   right: -35,
@@ -34,6 +35,8 @@ const GoogleAuthentication = styled("div")({
   height: 40,
   backgroundColor: "white",
   borderRadius: 5,
+  border: "none",
+  cursor: "pointer",
   boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
 });
 
@@ -229,7 +232,7 @@ const AuthenticationForm = (props: Props) => {
             });
 
             setShowAuthenticationForm(false);
-            setSavedData(() => fixedUserData);
+            setSavedData(fixedUserData);
             setIsChartAdded(false);
             setIsRegistered(true);
             setUserInfo(() => ({ username, email }));
@@ -275,13 +278,15 @@ const AuthenticationForm = (props: Props) => {
     setLoading(false);
   }
 
+  const login = useGoogleLogin({
+    onSuccess: tokenResponse => console.log(tokenResponse),
+  });
+  
   return (
     <Container>
       <Wrapper>
-        <GoogleAuthentication>
-          <a href=''>
-            <GoogleSvg/>
-          </a>
+        <GoogleAuthentication onClick={() => login()}>
+            <GoogleSvg />
         </GoogleAuthentication>
         <FormContainer>
           {userChoice === UserChoiceList.REGISTER && (
