@@ -88,7 +88,7 @@ const StyledCancelButton = styled(CancelButton)({
 
 const StyledStatus = styled("div")({
   fontSize: 11,
-  height: 20,
+  height: 35,
   color: "red",
   fontWeight: "bold",
 });
@@ -110,6 +110,17 @@ export const HorizontalRule = styled("hr")({
   borderTop: "1px",
   borderColor: "rgba(192, 192, 192)",
 });
+
+interface GoogleAuthData {
+  email: string;
+  email_verified: boolean;
+  family_name: string;
+  given_name: string;
+  locale: string;
+  name: string;
+  picture: string;
+  sub: string;
+}
 
 interface Props {
   setShowAuthenticationForm: any;
@@ -278,21 +289,25 @@ const AuthenticationForm = (props: Props) => {
   }
 
   const googleAuth = useGoogleLogin({
-    onSuccess: (respose) => {
+    onSuccess: (response) => {
       try {
         fetch(Misc.GOOGE_AUTH_USER_INFO, {
           method: "get",
           headers: {
-            Authorization: `Bearer ${respose.access_token}`,
+            Authorization: `Bearer ${response.access_token}`,
           },
         })
           .then((response) => response.json())
-          .then((data) => {
+          .then((data: GoogleAuthData) => {
             fetch(process.env.REACT_APP_GOOGLE_AUTH!, {
               method: "post",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                data,
+                username: data.name,
+                email: data.email,
+                emailVerified: data.email_verified,
+                picture: data.picture,
+                uid: data.sub,
               }),
             })
               .then((response) => response.json())
@@ -306,12 +321,12 @@ const AuthenticationForm = (props: Props) => {
                   } = data;
 
                   // because _id returned here is of string type
-                  const fixedUserData = userData.map((d: NodeDataType) => {
+                  const fixedUserData = userData?.map((d: NodeDataType) => {
                     return { ...d, _id: new ObjectId(d._id) };
                   });
 
                   setShowAuthenticationForm(false);
-                  setSavedData(fixedUserData);
+                  userData && setSavedData(fixedUserData);
                   setIsChartAdded(false);
                   setIsRegistered(true);
                   setUserInfo(() => ({ username, email }));
@@ -324,53 +339,10 @@ const AuthenticationForm = (props: Props) => {
         handleStatus(Errors.GOOGLE_AUTH_ERROR);
       }
     },
-    onError: (errorResponse) => {
+    onError: () => {
       handleStatus(Errors.GOOGLE_AUTH_ERROR);
     },
   });
-
-  // const googleAuth = useGoogleLogin({
-  //   onSuccess: (tokenResponse) => {
-  //     const { access_token: encryptedData } = tokenResponse;
-  //     console.log(encryptedData);
-  //     console.log(tokenResponse);
-  //     fetch(process.env.REACT_APP_GOOGLE_AUTH!, {
-  //       method: "post",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         encryptedData,
-  //       }),
-  //     })
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setLoading(false);
-  //         const { status } = data;
-  //         if (status === ResponseStatus.OK) {
-  //           const {
-  //             userCredentials: { username, email },
-  //             userData,
-  //           } = data;
-
-  //           // because _id returned here is of string type
-  //           const fixedUserData = userData.map((d: NodeDataType) => {
-  //             return { ...d, _id: new ObjectId(d._id) };
-  //           });
-
-  //           setShowAuthenticationForm(false);
-  //           setSavedData(fixedUserData);
-  //           setIsChartAdded(false);
-  //           setIsRegistered(true);
-  //           setUserInfo(() => ({ username, email }));
-  //         } else {
-  //           handleStatus(data.error);
-  //         }
-  //       });
-  //   },
-  //   onError: (errorResponse) => {
-  //     handleStatus(errorResponse.error_description || Errors.GOOGLE_AUTH_ERROR);
-  //   },
-  //   scope: "email profile",
-  // });
 
   return (
     <Container>

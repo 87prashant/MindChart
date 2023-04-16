@@ -167,6 +167,7 @@ app.post("/google-auth", async function (req, res) {
       }
     } else {
       try {
+        session.startTransaction();
         await User.updateOne(
           { email },
           {
@@ -176,10 +177,19 @@ app.post("/google-auth", async function (req, res) {
               imageUrl: picture,
               uid,
             },
-          }
+          },
+          { session }
         );
+        const userData = await getUserData(email);
+        session.commitTransaction();
+        return res.json({
+          status: ResponseStatus.OK,
+          userCredentials: { username, email },
+          userData,
+        });
       } catch (error) {
         logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
+        session.abortTransaction();
         return res.json({
           status: ResponseStatus.ERROR,
           error: ErrorMessage.SERVER_ERROR,
@@ -203,16 +213,20 @@ app.post("/google-auth", async function (req, res) {
         ],
         { session }
       );
-      await createUserData(email, session)
-      session.commitTransaction();
+      await createUserData(email, session);
       logger(
         `${Message.NEW_USER_ADDED}, through ${AuthProvider.GOOGLE}`,
         LogLevel.INFO
       );
-      return res.json({ status: ResponseStatus.OK, username: user.username });
+      session.commitTransaction();
+      return res.json({
+        status: ResponseStatus.OK,
+        userCredentials: { username, email },
+        userData: null,
+      });
     } catch (error) {
-      session.abortTransaction();
       logger(ErrorMessage.UNABLE_TO_CREATE_USER, LogLevel.ERROR, error);
+      session.abortTransaction();
       return res.json({
         status: ResponseStatus.ERROR,
         error: ErrorMessage.SERVER_ERROR,
@@ -569,11 +583,11 @@ app.post("/forget-password-verify", async function (req, res) {
       { session }
     ); // why not working in one query?
     const userData = await getUserData(email);
-    session.commitTransaction();
     logger(
       Message.VERIFY_SUCCESS.replace("#USEREMAIL#", user.email),
       LogLevel.INFO
     );
+    session.commitTransaction();
     return res.json({
       status: ResponseStatus.OK,
       username: user.username,
