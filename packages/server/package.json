@@ -23,6 +23,7 @@
     "mongoose": "^6.7.3",
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
+    "password-generator": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^4.9.5"

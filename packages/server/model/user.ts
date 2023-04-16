@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: true },
     provider: { type: String },
     imageUrl: { type: String },
+    uid: { type: String },
     createdAt: { type: String, required: true, immutable: true },
     status: { type: String },
     verificationToken: { type: String },

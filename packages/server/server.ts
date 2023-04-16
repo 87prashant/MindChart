@@ -30,9 +30,11 @@ import {
   AccountStatus,
   ResponseStatus,
   DataOperation,
+  AuthProvider,
 } from "./constants";
 import { ClientSession } from "mongodb";
-import jwtDecode from "jwt-decode";
+import { Document } from "mongoose";
+import passwordGenerator from "password-generator";
 
 const app = express();
 
@@ -57,16 +59,17 @@ async function getSession() {
 }
 getSession();
 
-type UserType = mongoose.LeanDocument<
-  {
-    username: string;
-    email: string;
-    password: string;
-    createdAt: string;
-    status?: string;
-    verificationToken?: string;
-  } & { _id: mongoose.Types.ObjectId }
->;
+interface UserType extends Document {
+  username: string;
+  email: string;
+  password: string;
+  provider?: string;
+  imageUrl?: string;
+  uid?: string;
+  createdAt: string;
+  status?: string;
+  verificationToken?: string;
+}
 
 // Create new user empty data
 async function createUserData(email: string, session: ClientSession) {
@@ -123,23 +126,99 @@ function removeToken(email: string) {
   return timeoutId;
 }
 
-interface GoogleAuthData {
-  email: string;
-  email_verified: boolean;
-  family_name: string;
-  given_name: string;
-  locale: string;
-  name: string;
-  picture: string;
-  sub: string;
-}
-
 /**
  * @api Google Auth
  */
 app.post("/google-auth", async function (req, res) {
-  const { data }: { data: GoogleAuthData } = req.body;
-  console.log(data);
+  const { email, username, emailVerified, picture, uid } = req.body;
+
+  if (!emailVerified) {
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: ErrorMessage.GOOGLE_AUTH_EMAIL_UNVERIFIED,
+    });
+  }
+
+  let user: UserType;
+  try {
+    user = await User.findOne({ email }).lean();
+  } catch (error) {
+    logger(ErrorMessage.UNABLE_TO_FIND_USER, LogLevel.ERROR, error);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: ErrorMessage.SERVER_ERROR,
+    });
+  }
+  if (user) {
+    if (user.uid === uid && user.provider === AuthProvider.GOOGLE) {
+      try {
+        const userData = await getUserData(email);
+        return res.json({
+          status: ResponseStatus.OK,
+          userCredentials: { username, email },
+          userData,
+        });
+      } catch (error) {
+        logger(ErrorMessage.UNABLE_TO_FIND_USERDATA, LogLevel.ERROR, error);
+        return res.json({
+          status: ResponseStatus.ERROR,
+          error: ErrorMessage.SERVER_ERROR,
+        });
+      }
+    } else {
+      try {
+        await User.updateOne(
+          { email },
+          {
+            $set: {
+              username,
+              provider: AuthProvider.GOOGLE,
+              imageUrl: picture,
+              uid,
+            },
+          }
+        );
+      } catch (error) {
+        logger(ErrorMessage.UNABLE_TO_UPDATE_USER, LogLevel.ERROR, error);
+        return res.json({
+          status: ResponseStatus.ERROR,
+          error: ErrorMessage.SERVER_ERROR,
+        });
+      }
+    }
+  } else {
+    session.startTransaction();
+    try {
+      await User.create(
+        [
+          {
+            username,
+            email,
+            password: passwordGenerator(10),
+            createdAt: new Date(),
+            provider: AuthProvider.GOOGLE,
+            uid,
+            imageUrl: picture,
+          },
+        ],
+        { session }
+      );
+      await createUserData(email, session)
+      session.commitTransaction();
+      logger(
+        `${Message.NEW_USER_ADDED}, through ${AuthProvider.GOOGLE}`,
+        LogLevel.INFO
+      );
+      return res.json({ status: ResponseStatus.OK, username: user.username });
+    } catch (error) {
+      session.abortTransaction();
+      logger(ErrorMessage.UNABLE_TO_CREATE_USER, LogLevel.ERROR, error);
+      return res.json({
+        status: ResponseStatus.ERROR,
+        error: ErrorMessage.SERVER_ERROR,
+      });
+    }
+  }
 });
 
 /**
@@ -560,6 +639,7 @@ app.post("/login", async function (req, res) {
         userData,
       });
     } catch (error) {
+      logger(ErrorMessage.UNABLE_TO_FIND_USERDATA, LogLevel.ERROR, error);
       return res.json({
         status: ResponseStatus.ERROR,
         error: ErrorMessage.SERVER_ERROR,

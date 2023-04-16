@@ -6,6 +6,7 @@
  * 5. User Account Status: {@link AccountStatus}
  * 6. Response Status: {@link ResponseStatus}
  * 7. Data operation: {@link DataOperation}
+ * 8. Authentication Provider: {@link AuthProvider}
  */
 
 export const ErrorMessage = {
@@ -35,6 +36,7 @@ export const ErrorMessage = {
   UNABLE_TO_CREATE_USER: "Unable to create new user",
   UNABLE_TO_SEND_MAIL: "Unable to send mail",
   UNABLE_TO_UPDATE_USERDATA: "Unable to update user data",
+  GOOGLE_AUTH_EMAIL_UNVERIFIED: "Unable to authenticate, email not verified",
 };
 
 export const Message = {
@@ -70,4 +72,8 @@ export const DataOperation = {
   ADD: "Add",
   DELETE: "Delete",
   UPDATE: "Update",
+};
+
+export const AuthProvider = {
+  GOOGLE: "Google",
 };
