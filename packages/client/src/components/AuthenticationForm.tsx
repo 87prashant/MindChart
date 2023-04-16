@@ -13,7 +13,7 @@ import { ResponseStatus, UserChoiceList, Misc, Errors } from "./constants";
 import LoadingAnimation from "./Animations/LoadingAnimation";
 import { ObjectId } from "bson";
 import GoogleSvg from "./SvgComponent/GoogleSvg";
-import { useGoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 
 const Container = styled(StyledDiv)({
   backdropFilter: "blur(10px)",
@@ -187,10 +187,9 @@ const AuthenticationForm = (props: Props) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setLoading(false);
           // always status error
           const { error } = data;
-          setStatus(error);
+          handleStatus(error);
         });
     }
     //Login
@@ -237,7 +236,7 @@ const AuthenticationForm = (props: Props) => {
             setIsRegistered(true);
             setUserInfo(() => ({ username, email }));
           } else {
-            setStatus(data.error);
+            handleStatus(data.error);
           }
         });
     }
@@ -278,15 +277,112 @@ const AuthenticationForm = (props: Props) => {
     setLoading(false);
   }
 
-  const login = useGoogleLogin({
-    onSuccess: tokenResponse => console.log(tokenResponse),
+  const googleAuth = useGoogleLogin({
+    onSuccess: (respose) => {
+      try {
+        fetch(Misc.GOOGE_AUTH_USER_INFO, {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${respose.access_token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            fetch(process.env.REACT_APP_GOOGLE_AUTH!, {
+              method: "post",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                data,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                setLoading(false);
+                const { status } = data;
+                if (status === ResponseStatus.OK) {
+                  const {
+                    userCredentials: { username, email },
+                    userData,
+                  } = data;
+
+                  // because _id returned here is of string type
+                  const fixedUserData = userData.map((d: NodeDataType) => {
+                    return { ...d, _id: new ObjectId(d._id) };
+                  });
+
+                  setShowAuthenticationForm(false);
+                  setSavedData(fixedUserData);
+                  setIsChartAdded(false);
+                  setIsRegistered(true);
+                  setUserInfo(() => ({ username, email }));
+                } else {
+                  handleStatus(data.error);
+                }
+              });
+          });
+      } catch (err) {
+        handleStatus(Errors.GOOGLE_AUTH_ERROR);
+      }
+    },
+    onError: (errorResponse) => {
+      handleStatus(Errors.GOOGLE_AUTH_ERROR);
+    },
   });
-  
+
+  // const googleAuth = useGoogleLogin({
+  //   onSuccess: (tokenResponse) => {
+  //     const { access_token: encryptedData } = tokenResponse;
+  //     console.log(encryptedData);
+  //     console.log(tokenResponse);
+  //     fetch(process.env.REACT_APP_GOOGLE_AUTH!, {
+  //       method: "post",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         encryptedData,
+  //       }),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setLoading(false);
+  //         const { status } = data;
+  //         if (status === ResponseStatus.OK) {
+  //           const {
+  //             userCredentials: { username, email },
+  //             userData,
+  //           } = data;
+
+  //           // because _id returned here is of string type
+  //           const fixedUserData = userData.map((d: NodeDataType) => {
+  //             return { ...d, _id: new ObjectId(d._id) };
+  //           });
+
+  //           setShowAuthenticationForm(false);
+  //           setSavedData(fixedUserData);
+  //           setIsChartAdded(false);
+  //           setIsRegistered(true);
+  //           setUserInfo(() => ({ username, email }));
+  //         } else {
+  //           handleStatus(data.error);
+  //         }
+  //       });
+  //   },
+  //   onError: (errorResponse) => {
+  //     handleStatus(errorResponse.error_description || Errors.GOOGLE_AUTH_ERROR);
+  //   },
+  //   scope: "email profile",
+  // });
+
   return (
     <Container>
       <Wrapper>
-        <GoogleAuthentication onClick={() => login()}>
-            <GoogleSvg />
+        <GoogleAuthentication
+          onClick={() => {
+            setLoading(true);
+            setStatus(null);
+            googleAuth();
+          }}
+        >
+          <GoogleSvg />
         </GoogleAuthentication>
         <FormContainer>
           {userChoice === UserChoiceList.REGISTER && (

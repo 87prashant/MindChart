@@ -1,11 +1,13 @@
 /**
  * Apis:
- * 1. Register user
- * 2. Registered user verification
- * 3. Forget password
- * 4. Forget password verification
- * 5. Login
- * 6. Modify user data
+ * 1. Google Auth
+ * 2. Register user
+ * 3. Registered user verification
+ * 4. Forget password
+ * 5. Forget password verification
+ * 6. Login
+ * 7. Modify user data
+ *
  */
 
 import express from "express";
@@ -30,6 +32,7 @@ import {
   DataOperation,
 } from "./constants";
 import { ClientSession } from "mongodb";
+import jwtDecode from "jwt-decode";
 
 const app = express();
 
@@ -119,6 +122,25 @@ function removeToken(email: string) {
   }, fiveMinutes);
   return timeoutId;
 }
+
+interface GoogleAuthData {
+  email: string;
+  email_verified: boolean;
+  family_name: string;
+  given_name: string;
+  locale: string;
+  name: string;
+  picture: string;
+  sub: string;
+}
+
+/**
+ * @api Google Auth
+ */
+app.post("/google-auth", async function (req, res) {
+  const { data }: { data: GoogleAuthData } = req.body;
+  console.log(data);
+});
 
 /**
  * @api Register user
