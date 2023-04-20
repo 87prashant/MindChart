@@ -47,17 +47,17 @@ export const demoData: NodeDataType[] = [
     description: "Random text 4 for demo",
     _id: new ObjectId(),
   },
-  {
-    thoughts: {
-      creative: true,
-    },
-    emotions: {
-      neutral: 10,
-    },
-    priority: 19,
-    description: "Random text 5 for demo",
-    _id: new ObjectId(),
-  },
+  // {
+  //   thoughts: {
+  //     creative: true,
+  //   },
+  //   emotions: {
+  //     neutral: 10,
+  //   },
+  //   priority: 19,
+  //   description: "Random text 5 for demo",
+  //   _id: new ObjectId(),
+  // },
   {
     thoughts: {
       creative: true,
