@@ -5,7 +5,7 @@ import CommonBackground from "./CommonBackground";
 import { StyledWrapper } from "./NodeForm";
 import { AuthenticationButton } from "./Header";
 import { StyledInput, StyledInputName } from "./AuthenticationForm";
-import { ResponseStatus, Errors } from "./constants";
+import { ResponseStatus, Errors, Apis } from "./constants";
 import LoadingAnimation from "./Animations/LoadingAnimation";
 
 const Wrapper = styled(StyledWrapper)({
@@ -78,7 +78,7 @@ const ForgetPasswordPage = () => {
       return;
     }
 
-    fetch(process.env.REACT_APP_FORGET_PASSWORD_VERIFY_API!, {
+    fetch(Apis.FORGET_PASSWORD_VERIFY_API, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, verificationToken, password: passwordOne }),

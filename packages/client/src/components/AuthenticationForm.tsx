@@ -9,7 +9,7 @@ import {
   CancelButton,
   NodeDataType,
 } from "./NodeForm";
-import { ResponseStatus, UserChoiceList, Misc, Errors } from "./constants";
+import { ResponseStatus, UserChoiceList, Misc, Errors, Apis } from "./constants";
 import LoadingAnimation from "./Animations/LoadingAnimation";
 import { ObjectId } from "bson";
 import GoogleSvg from "./SvgComponent/GoogleSvg";
@@ -187,7 +187,7 @@ const AuthenticationForm = (props: Props) => {
         return;
       }
 
-      fetch(process.env.REACT_APP_REGISTER_API!, {
+      fetch(Apis.REGISTER_API!, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -218,7 +218,7 @@ const AuthenticationForm = (props: Props) => {
         return;
       }
 
-      fetch(process.env.REACT_APP_LOGIN_API!, {
+      fetch(Apis.LOGIN_API, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -265,7 +265,7 @@ const AuthenticationForm = (props: Props) => {
         return;
       }
 
-      fetch(process.env.REACT_APP_FORGET_PASSWORD_API!, {
+      fetch(Apis.FORGET_PASSWORD_API, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -299,7 +299,7 @@ const AuthenticationForm = (props: Props) => {
         })
           .then((response) => response.json())
           .then((data: GoogleAuthData) => {
-            fetch(process.env.REACT_APP_GOOGLE_AUTH!, {
+            fetch(Apis.GOOGLE_AUTH, {
               method: "post",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

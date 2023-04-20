@@ -7,7 +7,6 @@
  * 5. Forget password verification
  * 6. Login
  * 7. Modify user data
- *
  */
 
 import express from "express";

@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import { StyledWrapper } from "./NodeForm";
 import { AuthenticationButton } from "./Header";
 import LoadingAnimation from "./Animations/LoadingAnimation";
+import { Apis } from "./constants";
 
 const Wrapper = styled(StyledWrapper)({
   width: 380,
@@ -58,7 +59,7 @@ const VerifyEmailPage = () => {
     setLoading(true);
     setStatus(null);
 
-    fetch(process.env.REACT_APP_VERIFICATION_API!, {
+    fetch(Apis.VERIFICATION_API, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

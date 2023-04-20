@@ -9,7 +9,7 @@ import { NodeDataType } from "../NodeForm";
 import "../../App.css";
 import NodeForm from "../NodeForm";
 import NodeClickModal from "../NodeClickModal";
-import { DataOperation, Misc, ResponseStatus } from "../constants";
+import { Apis, DataOperation, Misc, ResponseStatus } from "../constants";
 import { demoData } from "./demoData";
 import Tooltip from "../Tooltip";
 import NotificationBanner from "../NotificationBanner";
@@ -304,7 +304,7 @@ function App() {
     setSavedData([...newSavedData]);
 
     if (isLoggedIn) {
-      fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
+      fetch(Apis.MODIFY_DATA_API, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

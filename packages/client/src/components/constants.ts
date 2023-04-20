@@ -102,6 +102,16 @@ const Misc = {
   TOOLTIP_DELAY: 750,
 };
 
+const Apis = {
+  REGISTER_API: "/register",
+  LOGIN_API: "/login",
+  MODIFY_DATA_API: "/modify-data",
+  VERIFICATION_API: "/verify-email",
+  FORGET_PASSWORD_API: "/forget-password",
+  FORGET_PASSWORD_VERIFY_API: "/forget-password-verify",
+  GOOGLE_AUTH: "/google-auth",
+};
+
 export {
   AccountStatus,
   ResponseStatus,
@@ -115,4 +125,5 @@ export {
   TooltipMessage,
   NotificationMessage,
   Misc,
+  Apis
 };

@@ -4,7 +4,7 @@ import Emotions from "./Emotions";
 import Thoughts from "./Thoughts";
 import { validateNodeData } from "./nodeFormValidation";
 import Tips from "./Tips";
-import { DataOperation } from "./constants";
+import { Apis, DataOperation } from "./constants";
 import { ObjectId } from "bson";
 
 export const StyledWrapper = styled("div")({
@@ -271,7 +271,7 @@ const NodeForm: any = (props: Props) => {
     }
 
     if (isLoggedIn) {
-      fetch(process.env.REACT_APP_MODIFY_DATA_API!, {
+      fetch(Apis.MODIFY_DATA_API, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
