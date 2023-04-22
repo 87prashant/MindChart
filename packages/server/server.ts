@@ -37,6 +37,10 @@ import passwordGenerator from "password-generator";
 
 const app = express();
 
+mongoose.set('strictQuery', true)
+
+console.log("This is the testing string")
+
 require("dotenv").config({ path: "../../.env" });
 app.use(express.static(path.join(__dirname, "build")));
 app.use(bodyParser.json());
