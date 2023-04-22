@@ -291,7 +291,7 @@ const AuthenticationForm = (props: Props) => {
   const googleAuth = useGoogleLogin({
     onSuccess: (response) => {
       try {
-        fetch(Misc.GOOGE_AUTH_USER_INFO, {
+        fetch(Misc.GOOGlE_AUTH_USER_INFO, {
           method: "get",
           headers: {
             Authorization: `Bearer ${response.access_token}`,
@@ -299,7 +299,7 @@ const AuthenticationForm = (props: Props) => {
         })
           .then((response) => response.json())
           .then((data: GoogleAuthData) => {
-            fetch(Apis.GOOGLE_AUTH, {
+            fetch(`${process.env.BASE_URL!}/${Apis.GOOGLE_AUTH}`, {
               method: "post",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

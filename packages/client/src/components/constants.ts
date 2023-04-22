@@ -96,7 +96,7 @@ const NotificationMessage = {
 
 const Misc = {
   GITHUB_LINK: "https://github.com/87prashant/MindChart",
-  GOOGE_AUTH_USER_INFO: "https://www.googleapis.com/oauth2/v3/userinfo",
+  GOOGlE_AUTH_USER_INFO: "https://www.googleapis.com/oauth2/v3/userinfo",
   EMAIL_PATTERN: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
   HEADER_HEIGHT: 40,
   TOOLTIP_DELAY: 750,
