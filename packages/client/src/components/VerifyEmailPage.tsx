@@ -59,7 +59,7 @@ const VerifyEmailPage = () => {
     setLoading(true);
     setStatus(null);
 
-    fetch(Apis.VERIFICATION_API, {
+    fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.VERIFICATION_API}`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

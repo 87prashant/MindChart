@@ -78,7 +78,7 @@ const ForgetPasswordPage = () => {
       return;
     }
 
-    fetch(Apis.FORGET_PASSWORD_VERIFY_API, {
+    fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.FORGET_PASSWORD_VERIFY_API}`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, verificationToken, password: passwordOne }),

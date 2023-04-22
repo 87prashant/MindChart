@@ -187,7 +187,7 @@ const AuthenticationForm = (props: Props) => {
         return;
       }
 
-      fetch(Apis.REGISTER_API!, {
+      fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.REGISTER_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -218,7 +218,7 @@ const AuthenticationForm = (props: Props) => {
         return;
       }
 
-      fetch(Apis.LOGIN_API, {
+      fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.LOGIN_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -265,7 +265,7 @@ const AuthenticationForm = (props: Props) => {
         return;
       }
 
-      fetch(Apis.FORGET_PASSWORD_API, {
+      fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.FORGET_PASSWORD_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -299,7 +299,7 @@ const AuthenticationForm = (props: Props) => {
         })
           .then((response) => response.json())
           .then((data: GoogleAuthData) => {
-            fetch(`${process.env.BASE_URL!}/${Apis.GOOGLE_AUTH}`, {
+            fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.GOOGLE_AUTH}`, {
               method: "post",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

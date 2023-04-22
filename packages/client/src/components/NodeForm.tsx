@@ -271,7 +271,7 @@ const NodeForm: any = (props: Props) => {
     }
 
     if (isLoggedIn) {
-      fetch(Apis.MODIFY_DATA_API, {
+      fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.MODIFY_DATA_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

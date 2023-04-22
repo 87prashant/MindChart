@@ -19,7 +19,7 @@ import User from "./model/user";
 import UserData from "./model/userdata";
 import logger from "./logger";
 import mailSender from "./mailSender";
-import generateUniqueVerificationToken from "./generateUniqueVerificationToken";
+import getVerificationToken from "./getVerificationToken";
 import registrationMailString from "./build/RegistrationMail";
 import forgetPasswordMailString from "./build/ForgetPasswordMail";
 import {
@@ -43,6 +43,8 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const fiveMinutes = 1000 * 300;
+
+app.get("/", (req, res) => res.send("The server is runnig"))
 
 if (!process.env.MONGODB_URI)
   logger(ErrorMessage.EMPTY_MONGODB_URI, LogLevel.ERROR);
@@ -272,7 +274,7 @@ app.post("/register", async function (req, res) {
   }
 
   const password = await bcrypt.hash(plainPassword, 10);
-  const verificationToken = generateUniqueVerificationToken();
+  const verificationToken = getVerificationToken();
   const createdAt = new Date();
   const uniqueUrl = `${process.env.ORIGIN}/verify-email/${email}/${verificationToken}`;
   const status = AccountStatus.UNVERIFIED;
@@ -463,7 +465,7 @@ app.post("/forget-password", async function (req, res) {
     });
   }
 
-  const verificationToken = generateUniqueVerificationToken();
+  const verificationToken = getVerificationToken();
   const uniqueUrl = `${process.env.ORIGIN}/forget-password-verify/${email}/${verificationToken}`;
 
   // Mark status as forget password

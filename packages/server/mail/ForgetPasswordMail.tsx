@@ -11,10 +11,10 @@ const ForgetPasswordMail = (props) => {
   );
 };
 
-const forgetPasswordMailString = ({ username, uniqueUrl }) => {
+const forgetPassMailString = ({ username, uniqueUrl }) => {
   return ReactDOMServer.renderToString(
     <ForgetPasswordMail username={username} uniqueUrl={uniqueUrl} />
   );
 };
 
-export default forgetPasswordMailString;
+export default forgetPassMailString;
