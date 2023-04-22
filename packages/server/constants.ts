@@ -36,16 +36,20 @@ export const ErrorMessage = {
   UNABLE_TO_CREATE_USER: "Unable to create new user",
   UNABLE_TO_SEND_MAIL: "Unable to send mail",
   UNABLE_TO_UPDATE_USERDATA: "Unable to update user data",
+  UNABLE_TO_FORGET_PASSWORD: "Unable to complete forget password process",
+  UNABLE_TO_REGISTER: "Unable to complete the register user process",
   GOOGLE_AUTH_EMAIL_UNVERIFIED: "Unable to authenticate, email not verified",
 };
 
 export const Message = {
   NEW_USER_ADDED: "New user registered",
   FORGET_PASSWORD_MAIL: "Forget Password Mail",
-  VERIFY_SUCCESS: "#USEREMAIL#, verified successfully!",
+  VERIFY_SUCCESS: "Email verified successfully",
   VERIFICATION_MAIL: "Verification Mail",
   MAIL_SENT: "Mail Sent...",
   CONNECTED_DATABASE: "Connected to database successfully",
+  LOGIN_SUCCESS: "Login successful",
+  USER_DATA_UPDATED: "Userdata updated successfully",
 };
 
 export const LogLevel = {

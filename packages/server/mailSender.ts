@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import logger from "./logger";
 require("dotenv").config({ path: "../../.env" });
-import { LogLevel, Message } from "./constants";
+import { ErrorMessage, LogLevel, Message } from "./constants";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -13,9 +13,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const mailSender = async (data: { to: string; subject: string; message: string; }) => {
+const mailSender = async (data: {
+  to: string;
+  subject: string;
+  message: string;
+}) => {
   const { to, subject, message } = data;
-  
+
   const email = {
     from: process.env.EMAIL_ADDRESS,
     to,
@@ -25,9 +29,17 @@ const mailSender = async (data: { to: string; subject: string; message: string; 
 
   try {
     const result = await transporter.sendMail(email);
-    logger(`${Message.MAIL_SENT} \n${JSON.stringify(result.envelope)}`, LogLevel.INFO);
+    logger(
+      `${Message.MAIL_SENT} \n${JSON.stringify(result.envelope)}`,
+      LogLevel.INFO
+    );
   } catch (error) {
-    throw error
+    logger(
+      `${ErrorMessage.UNABLE_TO_SEND_MAIL}, email: ${email}`,
+      LogLevel.ERROR,
+      error
+    );
+    throw error;
   }
 };
 
