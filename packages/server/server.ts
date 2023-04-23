@@ -107,10 +107,11 @@ async function getUserData(email: string) {
 function removeAccount(email: string) {
   const timeoutId = setTimeout(async () => {
     try {
-      await User.deleteOne({
+      const deleteRes = await User.deleteOne({
         $and: [{ email }, { status: AccountStatus.UNVERIFIED }],
       });
-      logger(`Account removed, email: ${email}`, LogLevel.INFO);
+      if (deleteRes.deletedCount > 0)
+        logger(`Account removed, email: ${email}`, LogLevel.INFO);
     } catch (error) {
       logger(
         `${ErrorMessage.UNABLE_TO_REMOVE_USER}, email: ${email}`,
@@ -157,7 +158,7 @@ app.post("/google-auth", async function (req, res) {
     LogLevel.INFO
   );
   if (!emailVerified) {
-    logger(`Email not verified, email: ${email}`, LogLevel.ERROR);
+    logger(`Email not verified, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.GOOGLE_AUTH_EMAIL_UNVERIFIED,
@@ -302,7 +303,7 @@ app.post("/register", async function (req, res) {
   if (!plainPassword || !email || !username) {
     logger(
       `${ErrorMessage.ALL_FIELDS_COMPULSORY}, email: ${email}`,
-      LogLevel.ERROR
+      LogLevel.INFO
     );
     return res.json({
       status: ResponseStatus.ERROR,
@@ -310,14 +311,14 @@ app.post("/register", async function (req, res) {
     });
   }
   if (username.length < 5) {
-    logger(`${ErrorMessage.SHORT_USERNAME}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.SHORT_USERNAME}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SHORT_USERNAME,
     });
   }
   if (plainPassword.length < 8) {
-    logger(`${ErrorMessage.SHORT_PASSWORD}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.SHORT_PASSWORD}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SHORT_PASSWORD,
@@ -375,7 +376,7 @@ app.post("/register", async function (req, res) {
       session.abortTransaction();
       logger(
         `${ErrorMessage.ALREADY_REGISTERED}, email: ${email}`,
-        LogLevel.ERROR
+        LogLevel.INFO
       );
       return res.json({
         status: ResponseStatus.ERROR,
@@ -467,21 +468,21 @@ app.post("/verify-email", async function (req, res) {
 
   // Authorization
   if (!user) {
-    logger(`${ErrorMessage.NOT_REGISTERED}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.NOT_REGISTERED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_REGISTERED,
     });
   }
   if (user.status !== AccountStatus.UNVERIFIED) {
-    logger(`${ErrorMessage.NOT_ALLOWED}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.NOT_ALLOWED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_ALLOWED,
     });
   }
   if (user.verificationToken !== verificationToken) {
-    logger(`${ErrorMessage.INVALID_TOKEN}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.INVALID_TOKEN}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.INVALID_TOKEN,
@@ -524,7 +525,7 @@ app.post("/forget-password", async function (req, res) {
 
   // Validation
   if (!email.trim()) {
-    logger(`${ErrorMessage.EMPTY_MAIL}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.EMPTY_MAIL}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.EMPTY_MAIL,
@@ -537,7 +538,7 @@ app.post("/forget-password", async function (req, res) {
   } catch (error) {
     logger(
       `${ErrorMessage.UNABLE_TO_FIND_USER}, email: ${email}`,
-      LogLevel.ERROR,
+      LogLevel.INFO,
       error
     );
     return res.json({
@@ -548,14 +549,14 @@ app.post("/forget-password", async function (req, res) {
 
   // Authorization
   if (!user) {
-    logger(`${ErrorMessage.NOT_REGISTERED}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.NOT_REGISTERED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_REGISTERED,
     });
   }
   if (user.status === AccountStatus.UNVERIFIED) {
-    logger(`${ErrorMessage.NOT_VERIFIED}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.NOT_VERIFIED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_VERIFIED,
@@ -632,7 +633,7 @@ app.post("/forget-password-verify", async function (req, res) {
 
   // Validation
   if (plainPassword.length < 8) {
-    logger(`${ErrorMessage.SHORT_PASSWORD}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.SHORT_PASSWORD}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.SHORT_PASSWORD,
@@ -656,26 +657,26 @@ app.post("/forget-password-verify", async function (req, res) {
 
   // Authorization
   if (!user) {
-    logger(`${ErrorMessage.NOT_REGISTERED}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.NOT_REGISTERED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_REGISTERED,
     });
   }
   if (!user.status) {
-    logger(`${ErrorMessage.NOT_ALLOWED}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.NOT_ALLOWED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_ALLOWED,
     });
   } else if (user.status == AccountStatus.UNVERIFIED) {
-    logger(`${ErrorMessage.NOT_VERIFIED}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.NOT_VERIFIED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_VERIFIED,
     });
   } else if (user.verificationToken !== verificationToken) {
-    logger(`${ErrorMessage.INVALID_TOKEN}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.INVALID_TOKEN}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.INVALID_TOKEN,
@@ -730,7 +731,7 @@ app.post("/login", async function (req, res) {
   if (!plainPassword || !email) {
     logger(
       `${ErrorMessage.ALL_FIELDS_COMPULSORY}, email: ${email}`,
-      LogLevel.ERROR
+      LogLevel.INFO
     );
     return res.json({
       status: ResponseStatus.ERROR,
@@ -755,14 +756,14 @@ app.post("/login", async function (req, res) {
 
   // Authorization
   if (!user) {
-    logger(`${ErrorMessage.NOT_REGISTERED}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.NOT_REGISTERED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_REGISTERED,
     });
   }
   if (user.status === AccountStatus.UNVERIFIED) {
-    logger(`${ErrorMessage.NOT_VERIFIED}, email: ${email}`, LogLevel.ERROR);
+    logger(`${ErrorMessage.NOT_VERIFIED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_VERIFIED,
@@ -792,7 +793,7 @@ app.post("/login", async function (req, res) {
       });
     }
   }
-  logger(`${ErrorMessage.INCORRECT_PASSWORD}, email: ${email}`, LogLevel.ERROR);
+  logger(`${ErrorMessage.INCORRECT_PASSWORD}, email: ${email}`, LogLevel.INFO);
   return res.json({
     status: ResponseStatus.ERROR,
     error: ErrorMessage.INCORRECT_PASSWORD,
@@ -813,7 +814,7 @@ app.post("/modify-data", async function (req, res) {
   if (!(await UserData.findOne({ email }).lean())) {
     logger(
       `${ErrorMessage.UNABLE_TO_FIND_USERDATA}, email: ${email}`,
-      LogLevel.ERROR
+      LogLevel.INFO
     );
     return res.json({
       status: ResponseStatus.ERROR,
