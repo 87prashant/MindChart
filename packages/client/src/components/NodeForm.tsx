@@ -120,7 +120,6 @@ interface Props {
   nodeData: NodeDataType;
   setNodeData: any;
   isDemoActive: boolean;
-  userInfo: { username: string; email: string };
   isLoggedIn: boolean;
   showNodeForm: boolean;
   isEditing: boolean;
@@ -170,7 +169,6 @@ const NodeForm: any = (props: Props) => {
     setNodeData,
     savedData,
     isDemoActive,
-    userInfo: { email },
     isLoggedIn,
     showNodeForm,
     isEditing,
@@ -275,11 +273,9 @@ const NodeForm: any = (props: Props) => {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
+          email: JSON.parse(window.localStorage.getItem("userInfo")!).email,
           data: nodeData,
           operation: isEditing ? DataOperation.UPDATE : DataOperation.ADD,
-          // toBeDeleted: hackedNodeData,
-          // operation: hackedNodeData ? DataOperation.UPDATE : DataOperation.ADD,
         }),
       })
         .then((response) => response.json())

@@ -121,8 +121,6 @@ interface Props {
   setShowProfileModal: any;
   showProfileModal: boolean;
   setShowNodeClickModal: any;
-  userInfo: { username: string; email: string };
-  setUserInfo: any;
   handleTooltipMouseIn: any;
   handleTooltipMouseOut: any;
   handleNotificationBanner: any;
@@ -143,8 +141,6 @@ const Header = (props: Props) => {
     setShowProfileModal,
     setShowNodeClickModal,
     showProfileModal,
-    userInfo,
-    setUserInfo,
     handleTooltipMouseIn,
     handleTooltipMouseOut,
     handleNotificationBanner,
@@ -218,7 +214,6 @@ const Header = (props: Props) => {
         <AuthenticationForm
           setShowAuthenticationForm={setShowAuthenticationForm}
           setIsRegistered={setIsRegistered}
-          setUserInfo={setUserInfo}
           setSavedData={setSavedData}
           setIsChartAdded={setIsChartAdded}
         />
@@ -226,13 +221,11 @@ const Header = (props: Props) => {
       {isLoggedIn && (
         <ProfileButton
           setShowProfileModal={setShowProfileModal}
-          userInfo={userInfo}
         />
       )}
       {isLoggedIn && showProfileModal && (
         <ProfileModal
           setIsRegistered={setIsRegistered}
-          userInfo={userInfo}
           setSavedData={setSavedData}
           setIsChartAdded={setIsChartAdded}
           setShowProfileModal={setShowProfileModal}

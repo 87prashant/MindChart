@@ -9,11 +9,17 @@ import {
   CancelButton,
   NodeDataType,
 } from "./NodeForm";
-import { ResponseStatus, UserChoiceList, Misc, Errors, Apis } from "./constants";
+import {
+  ResponseStatus,
+  UserChoiceList,
+  Misc,
+  Errors,
+  Apis,
+} from "./constants";
 import LoadingAnimation from "./Animations/LoadingAnimation";
 import { ObjectId } from "bson";
 import GoogleSvg from "./SvgComponent/GoogleSvg";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const Container = styled(StyledDiv)({
   backdropFilter: "blur(10px)",
@@ -125,7 +131,6 @@ interface GoogleAuthData {
 interface Props {
   setShowAuthenticationForm: any;
   setIsRegistered: any;
-  setUserInfo: any;
   setSavedData: any;
   setIsChartAdded: any;
 }
@@ -134,7 +139,6 @@ const AuthenticationForm = (props: Props) => {
   const {
     setShowAuthenticationForm,
     setIsRegistered,
-    setUserInfo,
     setSavedData,
     setIsChartAdded,
   } = props;
@@ -232,7 +236,7 @@ const AuthenticationForm = (props: Props) => {
           const { status } = data;
           if (status === ResponseStatus.OK) {
             const {
-              userCredentials: { username, email },
+              userCredentials: { username, email, imageUrl },
               userData,
             } = data;
 
@@ -245,7 +249,10 @@ const AuthenticationForm = (props: Props) => {
             setSavedData(fixedUserData);
             setIsChartAdded(false);
             setIsRegistered(true);
-            setUserInfo(() => ({ username, email }));
+            window.localStorage.setItem(
+              "userInfo",
+              JSON.stringify({ username, email, imageUrl })
+            );
           } else {
             handleStatus(data.error);
           }
@@ -316,20 +323,22 @@ const AuthenticationForm = (props: Props) => {
                 const { status } = data;
                 if (status === ResponseStatus.OK) {
                   const {
-                    userCredentials: { username, email },
+                    userCredentials: { username, email, imageUrl },
                     userData,
                   } = data;
-
                   // because _id returned here is of string type
-                  const fixedUserData = userData?.map((d: NodeDataType) => {
+                  const updatedUserData = userData?.map((d: NodeDataType) => {
                     return { ...d, _id: new ObjectId(d._id) };
                   });
 
                   setShowAuthenticationForm(false);
-                  userData && setSavedData(fixedUserData);
+                  userData && setSavedData(updatedUserData);
                   setIsChartAdded(false);
                   setIsRegistered(true);
-                  setUserInfo(() => ({ username, email }));
+                  window.localStorage.setItem(
+                    "userInfo",
+                    JSON.stringify({ username, email, imageUrl })
+                  );
                 } else {
                   handleStatus(data.error);
                 }

@@ -31,10 +31,6 @@ const Button = styled("input")({
 });
 
 interface Props {
-  userInfo: {
-    username: string;
-    email: string;
-  };
   setIsRegistered: any;
   setSavedData: any;
   setIsChartAdded: any;
@@ -46,7 +42,6 @@ interface Props {
 
 const ProfileModal = (props: Props) => {
   const {
-    userInfo,
     setIsRegistered,
     setSavedData,
     setIsChartAdded,
@@ -73,7 +68,7 @@ const ProfileModal = (props: Props) => {
 
   return (
     <Container onClick={(e) => e.stopPropagation()}>
-      <Info>{userInfo.email}</Info>
+      <Info>{JSON.parse(window.localStorage.getItem("userInfo")!).email}</Info>
       <HorizontalRule />
       <Button value="Log out" type="button" onClick={handleLogoutConfirm} />
     </Container>

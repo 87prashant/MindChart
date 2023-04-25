@@ -58,6 +58,7 @@ type State =
       isLoggedIn: boolean;
       username: string;
       email: string;
+      imageUrl: string;
       userData?: NodeDataType[];
     }
   | undefined;
@@ -80,10 +81,12 @@ function App() {
     state?.isLoggedIn ? state.userData ?? [] : getStoredData()
   );
   // Stores info of logged-in user
-  const [userInfo, setUserInfo] = useState({
-    username: !!state ? state.username : "",
-    email: !!state ? state.email : "",
-  });
+  // const [userInfo, setUserInfo] = useState({
+  //   username: !!state ? state.username : "",
+  //   email: !!state ? state.email : "",
+  //   imageUrl: !!state ? state.imageUrl : ""
+  // });
+
   // Stores if the chart is added/updated or not
   const [isChartAdded, setIsChartAdded] = useState(false);
   // Stores the dimensions of the window to update the chart on zoom in/out
@@ -129,6 +132,15 @@ function App() {
   const confirmationModalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    console.log("saving.............");
+    window.localStorage.setItem(
+      "userInfo",
+      JSON.stringify({
+        username: state?.username,
+        email: state?.email,
+        imageUrl: state?.imageUrl,
+      })
+    );
     setDimensions({
       w: mainRef.current!.getBoundingClientRect().width,
       h: mainRef.current!.getBoundingClientRect().height,
@@ -302,13 +314,13 @@ function App() {
       return !d!._id.equals(selectedNode!._id);
     });
     setSavedData([...newSavedData]);
-
+    const userInfo = window.localStorage.getItem("userInfo")
     if (isLoggedIn) {
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.MODIFY_DATA_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: userInfo.email,
+          email: JSON.parse(window.localStorage.getItem("userInfo")!).email,
           data: selectedNode,
           operation: DataOperation.DELETE,
         }),
@@ -352,8 +364,6 @@ function App() {
         setShowProfileModal={setShowProfileModal}
         showProfileModal={showProfileModal}
         setShowNodeClickModal={setShowNodeClickModal}
-        userInfo={userInfo}
-        setUserInfo={setUserInfo}
         handleTooltipMouseIn={handleTooltipMouseIn}
         handleTooltipMouseOut={handleTooltipMouseOut}
         handleNotificationBanner={handleNotificationBanner}
@@ -382,7 +392,6 @@ function App() {
           nodeData={nodeData}
           setNodeData={setNodeData}
           isDemoActive={isDemoActive}
-          userInfo={userInfo}
           isLoggedIn={isLoggedIn}
           isEditing={isEditing}
           setIsEditing={setIsEditing}

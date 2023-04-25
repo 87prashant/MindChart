@@ -15,21 +15,26 @@ const Container = styled("div")({
   cursor: "pointer",
 });
 
+// const Image = styled("img")({
+//   width: Misc.HEADER_HEIGHT - 10,
+//   height: Misc.HEADER_HEIGHT - 10,
+// });
+
 interface Props {
-  userInfo: { username: string; email: string };
   setShowProfileModal: any;
 }
 
 const ProfileButton = (props: Props) => {
-  const {
-    userInfo: { username },
-    setShowProfileModal,
-  } = props;
+  const { setShowProfileModal } = props;
 
   function handleClick(e: any) {
     e.stopPropagation();
     setShowProfileModal(true);
   }
+
+  const { username, imageUrl } = JSON.parse(
+    window.localStorage.getItem("userInfo")!
+  );
 
   let i: any = 0;
   let surnameFirstLetter: string = "";
@@ -38,7 +43,11 @@ const ProfileButton = (props: Props) => {
   }
   const userInitial = (username.slice(0, 1) + surnameFirstLetter).toUpperCase();
 
-  return <Container onClick={handleClick}>{userInitial}</Container>;
+  return (
+    <Container onClick={handleClick}>
+      {imageUrl ? <img src={imageUrl} alt="img" /> : userInitial}
+    </Container>
+  );
 };
 
 export default ProfileButton;

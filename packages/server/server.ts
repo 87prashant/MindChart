@@ -44,7 +44,8 @@ app.use(cors());
 
 const fiveMinutes = 1000 * 300;
 
-app.get("/", (req, res) => res.send("The server is runnig"));
+app.get("/", (req, res) => res.send("The server is running"));
+
 
 if (!process.env.MONGODB_URI)
   logger(ErrorMessage.EMPTY_MONGODB_URI, LogLevel.ERROR);
@@ -123,7 +124,7 @@ function removeAccount(email: string) {
   return timeoutId;
 }
 
-// Remove token after five minutes (for password reset)
+// Remove token after five minutes (for password reset flow)
 function removeToken(email: string) {
   const timeoutId = setTimeout(async () => {
     try {
@@ -189,7 +190,7 @@ app.post("/google-auth", async function (req, res) {
         );
         return res.json({
           status: ResponseStatus.OK,
-          userCredentials: { username, email },
+          userCredentials: { username, email, imageUrl: picture },
           userData,
         });
       } catch (error) {
@@ -226,7 +227,7 @@ app.post("/google-auth", async function (req, res) {
         );
         return res.json({
           status: ResponseStatus.OK,
-          userCredentials: { username, email },
+          userCredentials: { username, email, imageUrl: picture },
           userData,
         });
       } catch (error) {
@@ -772,13 +773,13 @@ app.post("/login", async function (req, res) {
 
   // Login the user
   if (await bcrypt.compare(plainPassword, user.password)) {
-    const { username, email } = user;
+    const { username, email, imageUrl } = user;
     try {
       const userData = await getUserData(email);
       logger(`${Message.LOGIN_SUCCESS}, email: ${email}`, LogLevel.INFO);
       return res.json({
         status: ResponseStatus.OK,
-        userCredentials: { username, email },
+        userCredentials: { username, email, imageUrl },
         userData,
       });
     } catch (error) {
