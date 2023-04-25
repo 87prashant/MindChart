@@ -15,10 +15,12 @@ const Container = styled("div")({
   cursor: "pointer",
 });
 
-// const Image = styled("img")({
-//   width: Misc.HEADER_HEIGHT - 10,
-//   height: Misc.HEADER_HEIGHT - 10,
-// });
+const Image = styled("img")({
+  width: Misc.HEADER_HEIGHT - 10,
+  height: Misc.HEADER_HEIGHT - 10,
+  borderRadius: "50%",
+
+});
 
 interface Props {
   setShowProfileModal: any;
@@ -36,6 +38,7 @@ const ProfileButton = (props: Props) => {
     window.localStorage.getItem("userInfo")!
   );
 
+  console.log(imageUrl)
   let i: any = 0;
   let surnameFirstLetter: string = "";
   for (i in username as any) {
@@ -45,7 +48,7 @@ const ProfileButton = (props: Props) => {
 
   return (
     <Container onClick={handleClick}>
-      {imageUrl ? <img src={imageUrl} alt="img" /> : userInitial}
+      {imageUrl ? <Image src={imageUrl} alt="img" /> : userInitial}
     </Container>
   );
 };

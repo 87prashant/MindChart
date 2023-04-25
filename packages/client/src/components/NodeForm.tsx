@@ -291,11 +291,13 @@ const NodeForm: any = (props: Props) => {
     setIsEditing(false);
   };
 
+  // why useEffect is running on every render???
   useEffect(() => {
+    console.log("something changed")
     if (!isDemoActive && !isLoggedIn) {
       window.localStorage.setItem("savedData", JSON.stringify(savedData));
     }
-  }, [isDemoActive, isLoggedIn, savedData]);
+  }, [isLoggedIn, isDemoActive, savedData]);
 
   return (
     <StyledDiv>

@@ -80,13 +80,6 @@ function App() {
   const [savedData, setSavedData] = useState(
     state?.isLoggedIn ? state.userData ?? [] : getStoredData()
   );
-  // Stores info of logged-in user
-  // const [userInfo, setUserInfo] = useState({
-  //   username: !!state ? state.username : "",
-  //   email: !!state ? state.email : "",
-  //   imageUrl: !!state ? state.imageUrl : ""
-  // });
-
   // Stores if the chart is added/updated or not
   const [isChartAdded, setIsChartAdded] = useState(false);
   // Stores the dimensions of the window to update the chart on zoom in/out
@@ -132,7 +125,10 @@ function App() {
   const confirmationModalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    console.log("saving.............");
+    console.log("savedData changed")
+  }, [savedData])
+
+  useEffect(() => {
     window.localStorage.setItem(
       "userInfo",
       JSON.stringify({
