@@ -78,27 +78,37 @@ const ForgetPasswordPage = () => {
       return;
     }
 
-    fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.FORGET_PASSWORD_VERIFY_API}`, {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, verificationToken, password: passwordOne }),
-    })
+    fetch(
+      `${process.env.REACT_APP_BASE_URL!}${Apis.FORGET_PASSWORD_VERIFY_API}`,
+      {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          verificationToken,
+          password: passwordOne,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         setLoading(false);
         const { status } = data;
         if (status === ResponseStatus.ERROR) {
           setStatus(data.error);
-          return;
+        } else {
+          navigate("/", {
+            state: {
+              isLoggedIn: true,
+              userInfo: {
+                username: data.username,
+                email,
+                imageUrl: data.imageUrl,
+              },
+              userData: data.userData,
+            },
+          });
         }
-        navigate("/", {
-          state: {
-            isLoggedIn: true,
-            username: data.username,
-            email,
-            userData: data.userData,
-          },
-        });
       });
   }
 

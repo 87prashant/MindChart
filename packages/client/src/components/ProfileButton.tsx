@@ -19,7 +19,6 @@ const Image = styled("img")({
   width: Misc.HEADER_HEIGHT - 10,
   height: Misc.HEADER_HEIGHT - 10,
   borderRadius: "50%",
-
 });
 
 interface Props {
@@ -38,7 +37,6 @@ const ProfileButton = (props: Props) => {
     window.localStorage.getItem("userInfo")!
   );
 
-  console.log(imageUrl)
   let i: any = 0;
   let surnameFirstLetter: string = "";
   for (i in username as any) {

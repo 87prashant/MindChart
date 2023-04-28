@@ -46,7 +46,6 @@ const fiveMinutes = 1000 * 300;
 
 app.get("/", (req, res) => res.send("The server is running"));
 
-
 if (!process.env.MONGODB_URI)
   logger(ErrorMessage.EMPTY_MONGODB_URI, LogLevel.ERROR);
 
@@ -502,7 +501,11 @@ app.post("/verify-email", async function (req, res) {
     await createUserData(email, session);
     session.commitTransaction();
     logger(`${Message.VERIFY_SUCCESS}, email: ${email}`, LogLevel.INFO);
-    return res.json({ status: ResponseStatus.OK, username: user.username });
+    return res.json({
+      status: ResponseStatus.OK,
+      username: user.username,
+      imageUrl: user.imageUrl,
+    });
   } catch (error) {
     session.abortTransaction();
     logger(
@@ -705,6 +708,7 @@ app.post("/forget-password-verify", async function (req, res) {
     return res.json({
       status: ResponseStatus.OK,
       username: user.username,
+      imageUrl: user.imageUrl,
       userData,
     });
   } catch (error) {

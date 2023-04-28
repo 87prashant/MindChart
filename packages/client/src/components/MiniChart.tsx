@@ -41,6 +41,8 @@ const MiniChart = (props: Props) => {
     };
   });
 
+  console.log("Im in minichart", canvasScale)
+
   const N = d3.map(nodesArray, (d) => JSON.stringify(d)).map(intern);
   const R = d3.map(nodesArray, (d) => d.priority * canvasScale); //radius array
   const C = d3.map(nodesArray, (d) => findColors(d.emotions)).map(intern); //colors array

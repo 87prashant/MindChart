@@ -119,7 +119,6 @@ interface Props {
   setIsChartAdded: any;
   nodeData: NodeDataType;
   setNodeData: any;
-  isDemoActive: boolean;
   isLoggedIn: boolean;
   showNodeForm: boolean;
   isEditing: boolean;
@@ -168,7 +167,6 @@ const NodeForm: any = (props: Props) => {
     nodeData,
     setNodeData,
     savedData,
-    isDemoActive,
     isLoggedIn,
     showNodeForm,
     isEditing,
@@ -290,14 +288,6 @@ const NodeForm: any = (props: Props) => {
     setIsEarlySubmit(false);
     setIsEditing(false);
   };
-
-  // why useEffect is running on every render???
-  useEffect(() => {
-    console.log("something changed")
-    if (!isDemoActive && !isLoggedIn) {
-      window.localStorage.setItem("savedData", JSON.stringify(savedData));
-    }
-  }, [isLoggedIn, isDemoActive, savedData]);
 
   return (
     <StyledDiv>

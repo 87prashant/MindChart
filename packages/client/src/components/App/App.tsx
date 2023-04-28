@@ -48,7 +48,7 @@ export function debounce(fn: any, ms: number) {
 
 // Returns saved Data in case of not logged in
 function getStoredData() {
-  return window.localStorage.getItem("savedData")
+  return !!window.localStorage.getItem("savedData")
     ? JSON.parse(window.localStorage.getItem("savedData")!)
     : ([] as NodeDataType[]);
 }
@@ -56,9 +56,7 @@ function getStoredData() {
 type State =
   | {
       isLoggedIn: boolean;
-      username: string;
-      email: string;
-      imageUrl: string;
+      userInfo: { username: string; email: string; imageUrl: string };
       userData?: NodeDataType[];
     }
   | undefined;
@@ -67,7 +65,9 @@ function App() {
   // It is passed in case routed from verification and forget-password page
   const state: State = useLocation().state;
   // Stores if user is Logged in or not
-  const [isLoggedIn, setIsRegistered] = useState(!!state);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!state?.isLoggedIn || !!window.localStorage.getItem("userInfo")
+  );
   // Stores if the demo mode is active or not
   const [isDemoActive, setIsDemoActive] = useState(false);
   // Stores if node form should be visible to create/edit nodes
@@ -125,18 +125,24 @@ function App() {
   const confirmationModalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    console.log("savedData changed")
-  }, [savedData])
+    if (!isDemoActive) {
+      window.localStorage.setItem("savedData", JSON.stringify(savedData));
+    }
+  }, [savedData]);
 
   useEffect(() => {
-    window.localStorage.setItem(
-      "userInfo",
-      JSON.stringify({
-        username: state?.username,
-        email: state?.email,
-        imageUrl: state?.imageUrl,
-      })
-    );
+    if (!isDemoActive) {
+      setSavedData(JSON.parse(window.localStorage.getItem("savedData")!));
+    }
+  }, [isDemoActive]);
+
+  useEffect(() => {
+    if (isLoggedIn && !!state) {
+      window.localStorage.setItem("userInfo", JSON.stringify(state.userInfo));
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
     setDimensions({
       w: mainRef.current!.getBoundingClientRect().width,
       h: mainRef.current!.getBoundingClientRect().height,
@@ -296,7 +302,6 @@ function App() {
   }
 
   // Handles node edit
-  //TODO update on backend
   function handleEdit() {
     setNodeData(selectedNode!);
     setShowNodeForm(true);
@@ -310,7 +315,6 @@ function App() {
       return !d!._id.equals(selectedNode!._id);
     });
     setSavedData([...newSavedData]);
-    const userInfo = window.localStorage.getItem("userInfo")
     if (isLoggedIn) {
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.MODIFY_DATA_API}`, {
         method: "post",
@@ -356,7 +360,7 @@ function App() {
         setIsChartAdded={setIsChartAdded}
         demoData={demoData}
         isLoggedIn={isLoggedIn}
-        setIsRegistered={setIsRegistered}
+        setIsLoggedIn={setIsLoggedIn}
         setShowProfileModal={setShowProfileModal}
         showProfileModal={showProfileModal}
         setShowNodeClickModal={setShowNodeClickModal}

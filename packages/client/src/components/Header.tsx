@@ -116,7 +116,7 @@ interface Props {
   setSavedData: any;
   setIsChartAdded: any;
   demoData: NodeDataType[];
-  setIsRegistered: any;
+  setIsLoggedIn: any;
   isLoggedIn: boolean;
   setShowProfileModal: any;
   showProfileModal: boolean;
@@ -136,7 +136,7 @@ const Header = (props: Props) => {
     setSavedData,
     demoData,
     setIsChartAdded,
-    setIsRegistered,
+    setIsLoggedIn,
     isLoggedIn,
     setShowProfileModal,
     setShowNodeClickModal,
@@ -213,7 +213,7 @@ const Header = (props: Props) => {
       {!isLoggedIn && showAuthenticationForm && (
         <AuthenticationForm
           setShowAuthenticationForm={setShowAuthenticationForm}
-          setIsRegistered={setIsRegistered}
+          setIsLoggedIn={setIsLoggedIn}
           setSavedData={setSavedData}
           setIsChartAdded={setIsChartAdded}
         />
@@ -225,7 +225,7 @@ const Header = (props: Props) => {
       )}
       {isLoggedIn && showProfileModal && (
         <ProfileModal
-          setIsRegistered={setIsRegistered}
+        setIsLoggedIn={setIsLoggedIn}
           setSavedData={setSavedData}
           setIsChartAdded={setIsChartAdded}
           setShowProfileModal={setShowProfileModal}

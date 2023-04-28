@@ -31,7 +31,7 @@ const Button = styled("input")({
 });
 
 interface Props {
-  setIsRegistered: any;
+  setIsLoggedIn: any;
   setSavedData: any;
   setIsChartAdded: any;
   setShowProfileModal: any;
@@ -42,7 +42,7 @@ interface Props {
 
 const ProfileModal = (props: Props) => {
   const {
-    setIsRegistered,
+    setIsLoggedIn,
     setSavedData,
     setIsChartAdded,
     setShowProfileModal,
@@ -56,9 +56,11 @@ const ProfileModal = (props: Props) => {
     setHandleConfirmation(() => () => {
       setShowConfirmationModal(false);
       setShowProfileModal(false);
-      setIsRegistered(false);
+      setIsLoggedIn(false);
       setSavedData([]);
       setIsChartAdded(false);
+      window.localStorage.removeItem("savedData");
+      window.localStorage.removeItem("userInfo");
       handleNotificationBanner(
         NotificationMessage.LOGGED_OUT,
         ResponseStatus.OK

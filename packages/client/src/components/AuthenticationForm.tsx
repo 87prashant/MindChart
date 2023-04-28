@@ -130,7 +130,7 @@ interface GoogleAuthData {
 
 interface Props {
   setShowAuthenticationForm: any;
-  setIsRegistered: any;
+  setIsLoggedIn: any;
   setSavedData: any;
   setIsChartAdded: any;
 }
@@ -138,7 +138,7 @@ interface Props {
 const AuthenticationForm = (props: Props) => {
   const {
     setShowAuthenticationForm,
-    setIsRegistered,
+    setIsLoggedIn,
     setSavedData,
     setIsChartAdded,
   } = props;
@@ -248,7 +248,7 @@ const AuthenticationForm = (props: Props) => {
             setShowAuthenticationForm(false);
             setSavedData(fixedUserData);
             setIsChartAdded(false);
-            setIsRegistered(true);
+            setIsLoggedIn(true);
             window.localStorage.setItem(
               "userInfo",
               JSON.stringify({ username, email, imageUrl })
@@ -334,7 +334,7 @@ const AuthenticationForm = (props: Props) => {
                   setShowAuthenticationForm(false);
                   userData && setSavedData(updatedUserData);
                   setIsChartAdded(false);
-                  setIsRegistered(true);
+                  setIsLoggedIn(true);
                   window.localStorage.setItem(
                     "userInfo",
                     JSON.stringify({ username, email, imageUrl })

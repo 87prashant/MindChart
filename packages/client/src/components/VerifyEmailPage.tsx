@@ -76,7 +76,14 @@ const VerifyEmailPage = () => {
           return;
         }
         navigate("/", {
-          state: { isLoggedIn: true, username: data.username, email },
+          state: {
+            isLoggedIn: true,
+            userInfo: {
+              username: data.username,
+              email,
+              imageUrl: data.imageUrl,
+            },
+          },
         });
       });
   }
