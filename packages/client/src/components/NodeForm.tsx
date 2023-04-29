@@ -219,7 +219,6 @@ const NodeForm: any = (props: Props) => {
   const handleChange = (e: any) => {
     setNodeData((nodeData: NodeDataType) => {
       const { type, value, name, id } = e.target;
-
       // Handles thought change
       if (type === "checkbox") {
         return {
@@ -230,7 +229,6 @@ const NodeForm: any = (props: Props) => {
           },
         };
       }
-
       // Handles priority change
       if (name === "priority") {
         return {
@@ -238,7 +236,6 @@ const NodeForm: any = (props: Props) => {
           [name]: Number(value),
         };
       }
-
       // Handles description change
       return {
         ...nodeData,
@@ -247,9 +244,15 @@ const NodeForm: any = (props: Props) => {
     });
   };
 
+  // update the savedData so that it trigger the useEffect because nested property change is not triggering the useEffect
+  const updatedSavedData = (data: NodeDataType[]) => {
+    return JSON.parse(JSON.stringify(data)).map((d:NodeDataType) => {
+      return { ...d, _id: new ObjectId(d._id)}
+    })
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!validateNodeData(nodeData, setNodeFormErrors)) {
       setIsEarlySubmit(true);
       return;
@@ -259,13 +262,12 @@ const NodeForm: any = (props: Props) => {
       return d._id.equals(nodeData._id);
     });
     if (existingNodeIndex !== -1) {
-      const newSavedData = savedData;
+      const newSavedData = updatedSavedData(savedData);
       newSavedData[existingNodeIndex] = nodeData;
       setSavedData(newSavedData);
     } else {
       setSavedData([...savedData, nodeData]);
     }
-
     if (isLoggedIn) {
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.MODIFY_DATA_API}`, {
         method: "post",
@@ -280,7 +282,6 @@ const NodeForm: any = (props: Props) => {
         //do something if error comes for example delete and inform the user
         .then((data) => {});
     }
-
     refreshNodeData();
     refreshFormErrors();
     setShowNodeForm(false);

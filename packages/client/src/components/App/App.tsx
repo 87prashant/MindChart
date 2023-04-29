@@ -49,7 +49,11 @@ export function debounce(fn: any, ms: number) {
 // Returns saved Data in case of not logged in
 function getStoredData() {
   return !!window.localStorage.getItem("savedData")
-    ? JSON.parse(window.localStorage.getItem("savedData")!)
+    ? JSON.parse(window.localStorage.getItem("savedData")!).map(
+        (d: NodeDataType) => {
+          return { ...d, _id: new ObjectId(d._id) };
+        }
+      )
     : ([] as NodeDataType[]);
 }
 
@@ -83,7 +87,10 @@ function App() {
   // Stores if the chart is added/updated or not
   const [isChartAdded, setIsChartAdded] = useState(false);
   // Stores the dimensions of the window to update the chart on zoom in/out
-  const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
+  const [dimensions, setDimensions] = useState({
+    w: window.innerWidth,
+    h: window.innerHeight - Misc.HEADER_HEIGHT,
+  });
   // Store whether to show the profile modal or not
   const [showProfileModal, setShowProfileModal] = useState(false);
   // Stores the node form data when creating new node or editing existing data
@@ -125,16 +132,23 @@ function App() {
   const confirmationModalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!isDemoActive) {
-      window.localStorage.setItem("savedData", JSON.stringify(savedData));
+    if (!isDemoActive && !!window.localStorage.getItem("savedData")) {
+      setIsChartAdded(false);
+      setSavedData(
+        JSON.parse(window.localStorage.getItem("savedData")!).map(
+          (d: NodeDataType) => {
+            return { ...d, _id: new ObjectId(d._id) };
+          }
+        )
+      );
     }
-  }, [savedData]);
+  }, [isDemoActive]);
 
   useEffect(() => {
     if (!isDemoActive) {
-      setSavedData(JSON.parse(window.localStorage.getItem("savedData")!));
-    }
-  }, [isDemoActive]);
+      window.localStorage.setItem("savedData", JSON.stringify(savedData));
+      }
+  }, [savedData, isDemoActive]);
 
   useEffect(() => {
     if (isLoggedIn && !!state) {
@@ -143,16 +157,12 @@ function App() {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    setDimensions({
-      w: mainRef.current!.getBoundingClientRect().width,
-      h: mainRef.current!.getBoundingClientRect().height,
-    });
     const handleDebounceResize = debounce(function handleResize() {
       setIsChartAdded(false);
       setShowNodeClickModal(false);
       setDimensions({
-        w: mainRef.current!.getBoundingClientRect().width,
-        h: mainRef.current!.getBoundingClientRect().height,
+        w: window.innerWidth,
+        h: window.innerHeight - Misc.HEADER_HEIGHT,
       });
     }, 300);
     window.addEventListener("resize", handleDebounceResize);
@@ -166,14 +176,11 @@ function App() {
   ) => {
     e.stopPropagation();
     setShowNodeClickModal(true);
-
     setSelectedNode(selectedNodeData);
-
     const current = nodeClickModalRef.current;
     // Add description of node to modal
     current!.firstElementChild!.lastElementChild!.innerHTML! =
       selectedNodeData.description;
-
     let isTop = false; //is node located on a position so that modal needs to be moved to the right of the node
     let isRight = false; //is the node located on a position so that the modal needs to be moved to the left of the node
     if (
@@ -190,7 +197,6 @@ function App() {
     ) {
       isRight = true;
     }
-
     // X-position of nodeClickModal
     let xPosition;
     if (isTop) {
@@ -220,7 +226,6 @@ function App() {
           radius;
       }
     }
-
     // Y-position of nodeClickModal
     let yPosition;
     if (isTop || isRight) {
@@ -237,7 +242,6 @@ function App() {
         Misc.HEADER_HEIGHT -
         current!.offsetHeight * Math.pow(canvasScale, 0.4);
     }
-
     current!.style.left = xPosition + "px";
     current!.style.top =
       yPosition < Misc.HEADER_HEIGHT
@@ -249,19 +253,15 @@ function App() {
   function handleTooltipMouseIn(e: any) {
     setShowTooltip(true);
     const content = e.currentTarget.getAttribute("data-tooltip");
-
     setTooltipTimeoutId(() =>
       setTimeout(() => {
         const current = tooltipRef.current as HTMLDivElement;
         current.lastElementChild!.innerHTML = content;
-
         const tooltipWidth = current!.offsetWidth;
         let shiftToLeft = 0;
-
         if (tooltipWidth > dimensions.w - e.pageX) {
           shiftToLeft = tooltipWidth - dimensions.w + e.pageX;
         }
-
         current!.style.left = e.pageX - shiftToLeft + "px";
         current!.style.top = e.pageY + 15 + "px"; // extra 15 px to put it below the element
       }, Misc.TOOLTIP_DELAY)
@@ -277,25 +277,21 @@ function App() {
   // Handles notification banner visibility
   function handleNotificationBanner(message: string, messageType: string) {
     setShowNotificationBanner(true);
-
     setTimeout(() => {
       const current = notificationBannerRef!.current;
       current!.lastElementChild!.innerHTML = message;
       current!.style.left = dimensions.w / 2 - current?.offsetWidth! / 2 + "px";
       current!.style.opacity = "1";
-
       if (messageType === ResponseStatus.OK) {
         current!.style.color = "green"; //
       } else {
         current!.style.color = "red";
       }
     }, 100); // 100 ms, to escape from null/undefined
-
     setTimeout(() => {
       const current = notificationBannerRef!.current;
       current!.style.opacity = "0";
     }, 3000);
-
     setTimeout(() => {
       setShowNotificationBanner(false);
     }, 3500);
@@ -330,7 +326,6 @@ function App() {
           //if status is error, inform the user
         });
     }
-
     setIsChartAdded(false);
     setShowNodeClickModal(false);
   }

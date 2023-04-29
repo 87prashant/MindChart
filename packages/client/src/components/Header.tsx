@@ -6,6 +6,7 @@ import ProfileButton from "./ProfileButton";
 import ProfileModal from "./ProfileModal";
 import { Misc, TooltipMessage } from "./constants";
 import DeleteSvg from "./SvgComponent/DeleteSvg";
+import { ObjectId } from "bson";
 
 const StyledHeader = styled("div")({
   height: `${Misc.HEADER_HEIGHT}px`,
@@ -152,8 +153,14 @@ const Header = (props: Props) => {
 
   function handleClick() {
     setIsDemoActive((isDemoActive: boolean) => (isDemoActive ? false : true));
-    const storedData: NodeDataType[] = window.localStorage.getItem("savedData")
-      ? JSON.parse(window.localStorage.getItem("savedData")!)
+    const storedData: NodeDataType[] = !!window.localStorage.getItem(
+      "savedData"
+    )
+      ? JSON.parse(window.localStorage.getItem("savedData")!).map(
+          (d: NodeDataType) => {
+            return { ...d, _id: new ObjectId(d._id) };
+          }
+        )
       : [];
     //"!isDemoActive" because I am updating isDemoActive at the same time above. Maybe there is other right way to do it.
     setSavedData((prev: NodeDataType[]) =>
@@ -219,13 +226,11 @@ const Header = (props: Props) => {
         />
       )}
       {isLoggedIn && (
-        <ProfileButton
-          setShowProfileModal={setShowProfileModal}
-        />
+        <ProfileButton setShowProfileModal={setShowProfileModal} />
       )}
       {isLoggedIn && showProfileModal && (
         <ProfileModal
-        setIsLoggedIn={setIsLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
           setSavedData={setSavedData}
           setIsChartAdded={setIsChartAdded}
           setShowProfileModal={setShowProfileModal}

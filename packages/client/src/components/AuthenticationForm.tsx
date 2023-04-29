@@ -20,6 +20,7 @@ import LoadingAnimation from "./Animations/LoadingAnimation";
 import { ObjectId } from "bson";
 import GoogleSvg from "./SvgComponent/GoogleSvg";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled(StyledDiv)({
   backdropFilter: "blur(10px)",
@@ -149,6 +150,8 @@ const AuthenticationForm = (props: Props) => {
   const [userChoice, setUserChoice] = useState(UserChoiceList.REGISTER);
   //Store if the response from backend has come or not
   const [loading, setLoading] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const registerNameRef = useRef<HTMLInputElement | null>(null);
   const registerEmailRef = useRef<HTMLInputElement | null>(null);
@@ -329,6 +332,14 @@ const AuthenticationForm = (props: Props) => {
                   // because _id returned here is of string type
                   const updatedUserData = userData?.map((d: NodeDataType) => {
                     return { ...d, _id: new ObjectId(d._id) };
+                  });
+
+                  navigate("/", {
+                    state: {
+                      setIsLoggedIn: true,
+                      userInfo: { email, username, imageUrl },
+                      userData: updatedUserData,
+                    },
                   });
 
                   setShowAuthenticationForm(false);
