@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Emotions from "./Emotions";
 import Thoughts from "./Thoughts";
 import { validateNodeData } from "./nodeFormValidation";
 import Tips from "./Tips";
-import { Apis, DataOperation } from "./constants";
+import { Apis, DataOperation, Errors, Misc, ResponseStatus } from "./constants";
 import { ObjectId } from "bson";
 
 export const StyledWrapper = styled("div")({
@@ -123,6 +123,7 @@ interface Props {
   showNodeForm: boolean;
   isEditing: boolean;
   setIsEditing: any;
+  handleNotificationBanner: (message: string, messageType: string) => void;
 }
 
 export interface Emotion {
@@ -171,6 +172,7 @@ const NodeForm: any = (props: Props) => {
     showNodeForm,
     isEditing,
     setIsEditing,
+    handleNotificationBanner,
   } = props;
 
   const [nodeFormErrors, setNodeFormErrors] = useState({
@@ -178,7 +180,11 @@ const NodeForm: any = (props: Props) => {
     emotionsError: "",
     descriptionError: "",
   });
+  
   const [isEarlySubmit, setIsEarlySubmit] = useState(false);
+  // Server timeout id
+  const serverTimeoutId = useRef<number | undefined>(undefined);
+
 
   const refreshNodeData = () => {
     setNodeData(() => {
@@ -246,10 +252,10 @@ const NodeForm: any = (props: Props) => {
 
   // update the savedData so that it trigger the useEffect because nested property change is not triggering the useEffect
   const updatedSavedData = (data: NodeDataType[]) => {
-    return JSON.parse(JSON.stringify(data)).map((d:NodeDataType) => {
-      return { ...d, _id: new ObjectId(d._id)}
-    })
-  }
+    return JSON.parse(JSON.stringify(data)).map((d: NodeDataType) => {
+      return { ...d, _id: new ObjectId(d._id) };
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -269,6 +275,9 @@ const NodeForm: any = (props: Props) => {
       setSavedData([...savedData, nodeData]);
     }
     if (isLoggedIn) {
+      serverTimeoutId.current = setTimeout(() => {
+        handleStatus();
+      }, Misc.MODIFY_DATA_API_TIMEOUT) as unknown as number;
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.MODIFY_DATA_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -280,7 +289,14 @@ const NodeForm: any = (props: Props) => {
       })
         .then((response) => response.json())
         //do something if error comes for example delete and inform the user
-        .then((data) => {});
+        .then((data) => {
+          if (data.status === ResponseStatus.OK) {
+            // do nothing for now
+          } else {
+            handleNotificationBanner(Errors.SERVER_ERROR, ResponseStatus.ERROR);
+          }
+          clearTimeout(serverTimeoutId.current);
+        });
     }
     refreshNodeData();
     refreshFormErrors();
@@ -289,6 +305,10 @@ const NodeForm: any = (props: Props) => {
     setIsEarlySubmit(false);
     setIsEditing(false);
   };
+
+  function handleStatus() {
+    handleNotificationBanner(Errors.SERVER_ERROR, ResponseStatus.ERROR);
+  }
 
   return (
     <StyledDiv>

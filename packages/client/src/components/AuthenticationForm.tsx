@@ -151,6 +151,10 @@ const AuthenticationForm = (props: Props) => {
   //Store if the response from backend has come or not
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Server timeout id
+  const serverTimeoutId = useRef<number | undefined>(undefined);
+
+  // To navigate after login
   const navigate = useNavigate();
 
   const registerNameRef = useRef<HTMLInputElement | null>(null);
@@ -165,10 +169,20 @@ const AuthenticationForm = (props: Props) => {
     setStatus(message);
   }
 
+  function handleUserChoice(choice: string) {
+    setUserChoice(choice);
+    setStatus(null);
+    setLoading(false);
+  }
+
   function handleFormSubmit(e: any) {
     e.preventDefault();
     setLoading(true);
     setStatus(null);
+    serverTimeoutId.current = setTimeout(() => {
+      setLoading(false);
+      handleStatus(Errors.SERVER_ERROR);
+    }, Misc.AUTH_API_TIMEOUT) as unknown as number;
 
     //Register
     if (userChoice === UserChoiceList.REGISTER) {
@@ -176,11 +190,9 @@ const AuthenticationForm = (props: Props) => {
         handleStatus(Errors.INVALID_EMAIL);
         return;
       }
-
       const username = registerNameRef.current!.value;
       const email = registerEmailRef.current!.value.toLowerCase();
       const password = registerPassRef.current!.value;
-
       if (!password || !email || !username) {
         handleStatus(Errors.ALL_FIELDS_COMPULSORY);
         return;
@@ -193,7 +205,6 @@ const AuthenticationForm = (props: Props) => {
         handleStatus(Errors.SHORT_PASSWORD);
         return;
       }
-
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.REGISTER_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -208,23 +219,22 @@ const AuthenticationForm = (props: Props) => {
           // always status error
           const { error } = data;
           handleStatus(error);
+          clearTimeout(serverTimeoutId.current);
         });
     }
+
     //Login
     else if (userChoice === UserChoiceList.LOGIN) {
       if (!Misc.EMAIL_PATTERN.test(loginEmailRef.current!.value)) {
         handleStatus(Errors.INVALID_EMAIL);
         return;
       }
-
       const email = loginEmailRef.current!.value.toLowerCase();
       const password = loginPassRef.current!.value;
-
       if (!password || !email) {
         handleStatus(Errors.ALL_FIELDS_COMPULSORY);
         return;
       }
-
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.LOGIN_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -242,12 +252,10 @@ const AuthenticationForm = (props: Props) => {
               userCredentials: { username, email, imageUrl },
               userData,
             } = data;
-
             // because _id returned here is of string type
             const fixedUserData = userData.map((d: NodeDataType) => {
               return { ...d, _id: new ObjectId(d._id) };
             });
-
             setShowAuthenticationForm(false);
             setSavedData(fixedUserData);
             setIsChartAdded(false);
@@ -259,22 +267,21 @@ const AuthenticationForm = (props: Props) => {
           } else {
             handleStatus(data.error);
           }
+          clearTimeout(serverTimeoutId.current);
         });
     }
+
     //Forget Password
     else {
       if (!Misc.EMAIL_PATTERN.test(forgetPasswordEmailRef.current!.value)) {
         handleStatus(Errors.INVALID_EMAIL);
         return;
       }
-
       const email = forgetPasswordEmailRef.current!.value.toLowerCase();
-
       if (!email) {
         handleStatus(Errors.ALL_FIELDS_COMPULSORY);
         return;
       }
-
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.FORGET_PASSWORD_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -288,14 +295,9 @@ const AuthenticationForm = (props: Props) => {
           const { error } = data;
           setLoading(false);
           setStatus(error);
+          clearTimeout(serverTimeoutId.current);
         });
     }
-  }
-
-  function handleUserChoice(choice: string) {
-    setUserChoice(choice);
-    setStatus(null);
-    setLoading(false);
   }
 
   const googleAuth = useGoogleLogin({
@@ -309,6 +311,10 @@ const AuthenticationForm = (props: Props) => {
         })
           .then((response) => response.json())
           .then((data: GoogleAuthData) => {
+            serverTimeoutId.current = setTimeout(() => {
+              setLoading(false);
+              handleStatus(Errors.SERVER_ERROR);
+            }, Misc.AUTH_API_TIMEOUT) as unknown as number;
             fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.GOOGLE_AUTH}`, {
               method: "post",
               headers: { "Content-Type": "application/json" },
@@ -333,15 +339,6 @@ const AuthenticationForm = (props: Props) => {
                   const updatedUserData = userData?.map((d: NodeDataType) => {
                     return { ...d, _id: new ObjectId(d._id) };
                   });
-
-                  navigate("/", {
-                    state: {
-                      setIsLoggedIn: true,
-                      userInfo: { email, username, imageUrl },
-                      userData: updatedUserData,
-                    },
-                  });
-
                   setShowAuthenticationForm(false);
                   userData && setSavedData(updatedUserData);
                   setIsChartAdded(false);
@@ -353,6 +350,7 @@ const AuthenticationForm = (props: Props) => {
                 } else {
                   handleStatus(data.error);
                 }
+                clearTimeout(serverTimeoutId.current);
               });
           });
       } catch (err) {

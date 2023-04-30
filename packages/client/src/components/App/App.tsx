@@ -9,7 +9,13 @@ import { NodeDataType } from "../NodeForm";
 import "../../App.css";
 import NodeForm from "../NodeForm";
 import NodeClickModal from "../NodeClickModal";
-import { Apis, DataOperation, Misc, ResponseStatus } from "../constants";
+import {
+  Apis,
+  DataOperation,
+  Errors,
+  Misc,
+  ResponseStatus,
+} from "../constants";
 import { demoData } from "./demoData";
 import Tooltip from "../Tooltip";
 import NotificationBanner from "../NotificationBanner";
@@ -130,6 +136,8 @@ function App() {
   const notificationBannerRef = useRef<HTMLDivElement | null>(null);
   // ConfirmationModal reference
   const confirmationModalRef = useRef<HTMLDivElement | null>(null);
+  // Server timeout id
+  const serverTimeoutId = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     if (!isDemoActive && !!window.localStorage.getItem("savedData")) {
@@ -147,7 +155,7 @@ function App() {
   useEffect(() => {
     if (!isDemoActive) {
       window.localStorage.setItem("savedData", JSON.stringify(savedData));
-      }
+    }
   }, [savedData, isDemoActive]);
 
   useEffect(() => {
@@ -312,6 +320,9 @@ function App() {
     });
     setSavedData([...newSavedData]);
     if (isLoggedIn) {
+      serverTimeoutId.current = setTimeout(() => {
+        handleStatus();
+      }, Misc.MODIFY_DATA_API_TIMEOUT) as unknown as number;
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.MODIFY_DATA_API}`, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -323,11 +334,20 @@ function App() {
       })
         .then((response) => response.json())
         .then((data) => {
-          //if status is error, inform the user
+          if (data.status === ResponseStatus.OK) {
+            // do nothing for now
+          } else {
+            handleNotificationBanner(Errors.SERVER_ERROR, ResponseStatus.ERROR);
+          }
+          clearTimeout(serverTimeoutId.current);
         });
     }
     setIsChartAdded(false);
     setShowNodeClickModal(false);
+  }
+
+  function handleStatus() {
+    handleNotificationBanner(Errors.SERVER_ERROR, ResponseStatus.ERROR);
   }
 
   return (
@@ -390,6 +410,7 @@ function App() {
           isLoggedIn={isLoggedIn}
           isEditing={isEditing}
           setIsEditing={setIsEditing}
+          handleNotificationBanner={handleNotificationBanner}
         />
       )}
       <Main

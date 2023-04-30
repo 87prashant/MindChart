@@ -13,23 +13,23 @@
  * 12. Misc: {@link Misc}
  */
 
-const AccountStatus = {
+export const AccountStatus = {
   UNVERIFIED: "Unverified",
   FORGET_PASSWORD: "Forget_Password",
 };
 
-const ResponseStatus = {
+export const ResponseStatus = {
   ERROR: "error",
   OK: "ok",
 };
 
-const DataOperation = {
+export const DataOperation = {
   ADD: "Add",
   DELETE: "Delete",
   UPDATE: "Update",
 };
 
-const ThoughtsList = {
+export const ThoughtsList = {
   CREATIVE: "creative",
   ANALYTICAL: "analytical",
   CRITICAL: "critical",
@@ -38,7 +38,7 @@ const ThoughtsList = {
   UNKNOWN: "unknown",
 };
 
-const EmotionsList = {
+export const EmotionsList = {
   NEUTRAL: "neutral",
   FEAR: "fear",
   ANGER: "anger",
@@ -49,7 +49,7 @@ const EmotionsList = {
   TRUST: "trust",
 };
 
-const EmotionsColor = {
+export const EmotionsColor = {
   NEUTRAL: "#808080",
   FEAR: "#000000",
   ANGER: "#FF0000",
@@ -61,7 +61,7 @@ const EmotionsColor = {
   DEFAULT: "#000000",
 };
 
-const Errors = {
+export const Errors = {
   UNMATCHED_PASSWORD: "Password not matched",
   THOUGHT_REQUIRED: "At least select one thought",
   EMOTION_REQUIRED: "At least select one emotion",
@@ -74,35 +74,37 @@ const Errors = {
   GOOGLE_AUTH_ERROR: "Unable to authenticate through google, try again",
 };
 
-const UserChoiceList = {
+export const UserChoiceList = {
   LOGIN: "Login",
   REGISTER: "Register",
   FORGET_PASSWORD: "Forget_Password",
 };
 
-const TipsArray = [
+export const TipsArray = [
   "Larger size means high priority",
   "Color of node represents its highest intensity emotion",
   "Similar emotion nodes are closer to each other",
 ];
 
-const TooltipMessage = {
+export const TooltipMessage = {
   DELETE_ALL_BUTTON: "It will delete all the nodes on the chart permanently",
 };
 
-const NotificationMessage = {
+export const NotificationMessage = {
   LOGGED_OUT: "Logged out successfully",
 };
 
-const Misc = {
+export const Misc = {
   GITHUB_LINK: "https://github.com/87prashant/MindChart",
   GOOGlE_AUTH_USER_INFO: "https://www.googleapis.com/oauth2/v3/userinfo",
   EMAIL_PATTERN: /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
   HEADER_HEIGHT: 40,
   TOOLTIP_DELAY: 750,
+  AUTH_API_TIMEOUT: 10000,
+  MODIFY_DATA_API_TIMEOUT: 4000,
 };
 
-const Apis = {
+export const Apis = {
   REGISTER_API: "/register",
   LOGIN_API: "/login",
   MODIFY_DATA_API: "/modify-data",
@@ -110,20 +112,4 @@ const Apis = {
   FORGET_PASSWORD_API: "/forget-password",
   FORGET_PASSWORD_VERIFY_API: "/forget-password-verify",
   GOOGLE_AUTH: "/google-auth",
-};
-
-export {
-  AccountStatus,
-  ResponseStatus,
-  DataOperation,
-  ThoughtsList,
-  EmotionsList,
-  EmotionsColor,
-  Errors,
-  UserChoiceList,
-  TipsArray,
-  TooltipMessage,
-  NotificationMessage,
-  Misc,
-  Apis
 };

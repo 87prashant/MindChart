@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommonBackground from "./CommonBackground";
 import styled from "@emotion/styled";
 import { StyledWrapper } from "./NodeForm";
 import { AuthenticationButton } from "./Header";
 import LoadingAnimation from "./Animations/LoadingAnimation";
-import { Apis } from "./constants";
+import { Apis, Errors, Misc, ResponseStatus } from "./constants";
 
 const Wrapper = styled(StyledWrapper)({
   width: 380,
@@ -48,17 +48,22 @@ const StyledStatus = styled("div")({
 });
 
 const VerifyEmailPage = () => {
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { email, verificationToken } = useParams();
+  // Server timeout id
+  const serverTimeoutId = useRef<number | undefined>(undefined);
 
+  const { email, verificationToken } = useParams();
   const navigate = useNavigate();
 
   function handleClick() {
     setLoading(true);
     setStatus(null);
-
+    serverTimeoutId.current = setTimeout(() => {
+      setLoading(false);
+      handleStatus(Errors.SERVER_ERROR);
+    }, Misc.AUTH_API_TIMEOUT) as unknown as number;
     fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.VERIFICATION_API}`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -71,21 +76,28 @@ const VerifyEmailPage = () => {
       .then((data) => {
         setLoading(false);
         const { status } = data;
-        if (status === "error") {
-          setStatus(data.error);
-          return;
-        }
-        navigate("/", {
-          state: {
-            isLoggedIn: true,
-            userInfo: {
-              username: data.username,
-              email,
-              imageUrl: data.imageUrl,
+        if (status === ResponseStatus.ERROR) {
+          handleStatus(data.error);
+          clearTimeout(serverTimeoutId.current);
+        } else {
+          clearTimeout(serverTimeoutId.current);
+          navigate("/", {
+            state: {
+              isLoggedIn: true,
+              userInfo: {
+                username: data.username,
+                email,
+                imageUrl: data.imageUrl,
+              },
             },
-          },
-        });
+          });
+        }
       });
+  }
+
+  function handleStatus(message: string) {
+    setLoading(false);
+    setStatus(message);
   }
 
   return (

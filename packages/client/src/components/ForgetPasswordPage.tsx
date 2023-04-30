@@ -5,7 +5,7 @@ import CommonBackground from "./CommonBackground";
 import { StyledWrapper } from "./NodeForm";
 import { AuthenticationButton } from "./Header";
 import { StyledInput, StyledInputName } from "./AuthenticationForm";
-import { ResponseStatus, Errors, Apis } from "./constants";
+import { ResponseStatus, Errors, Apis, Misc } from "./constants";
 import LoadingAnimation from "./Animations/LoadingAnimation";
 
 const Wrapper = styled(StyledWrapper)({
@@ -57,6 +57,8 @@ const ForgetPasswordPage = () => {
 
   const passOneRef = useRef<HTMLInputElement | null>(null);
   const passTwoRef = useRef<HTMLInputElement | null>(null);
+  // Server timeout id
+  const serverTimeoutId = useRef<number | undefined>(undefined);
 
   const { email, verificationToken } = useParams();
   const navigate = useNavigate();
@@ -71,13 +73,15 @@ const ForgetPasswordPage = () => {
       setStatus(Errors.UNMATCHED_PASSWORD);
       return;
     }
-
     if (passwordOne.length < 8) {
       setLoading(false);
       setStatus(Errors.SHORT_PASSWORD);
       return;
     }
-
+    serverTimeoutId.current = setTimeout(() => {
+      setLoading(false);
+      handleStatus(Errors.SERVER_ERROR);
+    }, Misc.AUTH_API_TIMEOUT) as unknown as number;
     fetch(
       `${process.env.REACT_APP_BASE_URL!}${Apis.FORGET_PASSWORD_VERIFY_API}`,
       {
@@ -95,8 +99,10 @@ const ForgetPasswordPage = () => {
         setLoading(false);
         const { status } = data;
         if (status === ResponseStatus.ERROR) {
-          setStatus(data.error);
+          handleStatus(data.error);
+          clearTimeout(serverTimeoutId.current);
         } else {
+          clearTimeout(serverTimeoutId.current);
           navigate("/", {
             state: {
               isLoggedIn: true,
@@ -110,6 +116,11 @@ const ForgetPasswordPage = () => {
           });
         }
       });
+  }
+
+  function handleStatus(message: string) {
+    setLoading(false);
+    setStatus(message);
   }
 
   return (
