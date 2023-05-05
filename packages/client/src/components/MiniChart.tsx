@@ -2,10 +2,10 @@
 //TODO: Optimize the links
 
 import * as d3 from "d3";
-import { Misc } from "./constants";
 import { emotions } from "./Emotions";
 import { findColors } from "./findColors";
 import { Emotion, NodeDataType } from "./NodeForm";
+import { Misc } from "./constants";
 
 interface Props {
   dimensions: { w: number; h: number };
@@ -99,7 +99,7 @@ const MiniChart = (props: Props) => {
     .attr("r", ({ index: i }) => R[i!])
     .attr("fill", ({ index: i }) => C[i!]) // highest intensity emotion color
     .call(drag(simulation) as any)
-    // .on("click", (e, { index: i }) => handleNodeClick(e, savedData[i!], R[i!]));
+    .on("click", (e, { index: i }) => handleNodeClick(e, savedData[i!], R[i!]));
 
   function intern(value: { valueOf: () => any } | null) {
     return value !== null && typeof value === "object"
@@ -137,7 +137,6 @@ const MiniChart = (props: Props) => {
   function drag(simulation: d3.Simulation<d3.SimulationNodeDatum, undefined>) {
     function dragstarted(event: any) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
-      console.log(event)
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
       handleOtherNodes("fixOtherNodes");
@@ -145,10 +144,9 @@ const MiniChart = (props: Props) => {
     }
 
     function dragged(event: any) {
-      console.log("event", event)
       handleOtherNodes();
-      event.subject.fx = event.x;
-      event.subject.fy = event.y;
+      event.subject.fx = event.sourceEvent.touches! ? event.sourceEvent.touches[0].clientX - w/2 : event.sourceEvent.clientX - w/2;  // check if it is touch event or not
+      event.subject.fy = event.sourceEvent.touches! ? event.sourceEvent.touches[0].clientY - h/2 - Misc.HEADER_HEIGHT : event.sourceEvent.clientY - h/2 - Misc.HEADER_HEIGHT;
       setShowNodeClickModal(false);
     }
 
