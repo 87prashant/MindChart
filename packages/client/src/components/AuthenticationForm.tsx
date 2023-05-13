@@ -20,7 +20,6 @@ import LoadingAnimation from "./Animations/LoadingAnimation";
 import { ObjectId } from "bson";
 import GoogleSvg from "./SvgComponent/GoogleSvg";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useNavigate } from "react-router-dom";
 
 const Container = styled(StyledDiv)({
   backdropFilter: "blur(10px)",
@@ -154,9 +153,6 @@ const AuthenticationForm = (props: Props) => {
   // Server timeout id
   const serverTimeoutId = useRef<number | undefined>(undefined);
 
-  // To navigate after login
-  const navigate = useNavigate();
-
   const registerNameRef = useRef<HTMLInputElement | null>(null);
   const registerEmailRef = useRef<HTMLInputElement | null>(null);
   const registerPassRef = useRef<HTMLInputElement | null>(null);
@@ -188,6 +184,7 @@ const AuthenticationForm = (props: Props) => {
     if (userChoice === UserChoiceList.REGISTER) {
       if (!Misc.EMAIL_PATTERN.test(registerEmailRef.current!.value)) {
         handleStatus(Errors.INVALID_EMAIL);
+        clearTimeout(serverTimeoutId.current);
         return;
       }
       const username = registerNameRef.current!.value;
@@ -195,14 +192,17 @@ const AuthenticationForm = (props: Props) => {
       const password = registerPassRef.current!.value;
       if (!password || !email || !username) {
         handleStatus(Errors.ALL_FIELDS_COMPULSORY);
+        clearTimeout(serverTimeoutId.current);
         return;
       }
       if (username.length < 5) {
         handleStatus(Errors.SHORT_USERNAME);
+        clearTimeout(serverTimeoutId.current);
         return;
       }
       if (password.length < 8) {
         handleStatus(Errors.SHORT_PASSWORD);
+        clearTimeout(serverTimeoutId.current);
         return;
       }
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.REGISTER_API}`, {
@@ -227,12 +227,14 @@ const AuthenticationForm = (props: Props) => {
     else if (userChoice === UserChoiceList.LOGIN) {
       if (!Misc.EMAIL_PATTERN.test(loginEmailRef.current!.value)) {
         handleStatus(Errors.INVALID_EMAIL);
+        clearTimeout(serverTimeoutId.current);
         return;
       }
       const email = loginEmailRef.current!.value.toLowerCase();
       const password = loginPassRef.current!.value;
       if (!password || !email) {
         handleStatus(Errors.ALL_FIELDS_COMPULSORY);
+        clearTimeout(serverTimeoutId.current);
         return;
       }
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.LOGIN_API}`, {
@@ -275,11 +277,13 @@ const AuthenticationForm = (props: Props) => {
     else {
       if (!Misc.EMAIL_PATTERN.test(forgetPasswordEmailRef.current!.value)) {
         handleStatus(Errors.INVALID_EMAIL);
+        clearTimeout(serverTimeoutId.current);
         return;
       }
       const email = forgetPasswordEmailRef.current!.value.toLowerCase();
       if (!email) {
         handleStatus(Errors.ALL_FIELDS_COMPULSORY);
+        clearTimeout(serverTimeoutId.current);
         return;
       }
       fetch(`${process.env.REACT_APP_BASE_URL!}${Apis.FORGET_PASSWORD_API}`, {
