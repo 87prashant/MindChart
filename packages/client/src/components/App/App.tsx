@@ -1,6 +1,6 @@
 // TODO two source of truths: 1. database 2. savedData might be inconsistent, Use database only
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import Main from "../Main";
@@ -158,11 +158,12 @@ function App() {
     }
   }, [savedData, isDemoActive]);
 
-  useEffect(() => {
+  // using useMemo because useEffect and useLayoutEffect runs after the parent and child components render, but I need userInfo in ProfileButton before that
+  useMemo(() => {
     if (isLoggedIn && !!state) {
-      window.localStorage.setItem("userInfo", JSON.stringify(state.userInfo));
+      window.localStorage.setItem("userInfo", JSON.stringify(state?.userInfo));
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, state]);
 
   useEffect(() => {
     const handleDebounceResize = debounce(function handleResize() {
