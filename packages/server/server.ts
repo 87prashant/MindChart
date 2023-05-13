@@ -11,7 +11,7 @@
 
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import path from "path";
 import cors from "cors";
 import bcrypt from "bcryptjs";
@@ -29,11 +29,10 @@ import {
   AccountStatus,
   ResponseStatus,
   DataOperation,
-  AuthProvider,
 } from "./constants";
 import { ClientSession } from "mongodb";
 import { Document } from "mongoose";
-import passwordGenerator from "password-generator";
+import { GoogleAuth} from "./routes/GoogleAuth"
 
 const app = express();
 
@@ -55,13 +54,13 @@ mongoose.connect(process.env.MONGODB_URI, (error) => {
   else logger(Message.CONNECTED_DATABASE, LogLevel.INFO);
 });
 
-let session: ClientSession;
+export let session: ClientSession;
 async function getSession() {
   session = await mongoose.startSession();
 }
 getSession();
 
-interface UserType extends Document {
+export interface UserType extends Document {
   username: string;
   email: string;
   password: string;
@@ -74,7 +73,7 @@ interface UserType extends Document {
 }
 
 // Create new user empty data
-async function createUserData(email: string, session: ClientSession) {
+export async function createUserData(email: string, session: ClientSession) {
   try {
     await UserData.create([{ email, data: [] }], { session });
     logger(`UserData created, email: ${email}`, LogLevel.INFO);
@@ -89,7 +88,7 @@ async function createUserData(email: string, session: ClientSession) {
 }
 
 // Fetch user data
-async function getUserData(email: string) {
+export async function getUserData(email: string) {
   try {
     const userData = (await UserData.findOne({ email }).lean()).data;
     return userData;
@@ -104,7 +103,7 @@ async function getUserData(email: string) {
 }
 
 // Remove unverified account after particular time
-function removeAccount(email: string) {
+export function removeAccount(email: string) {
   const timeoutId = setTimeout(async () => {
     try {
       const deleteRes = await User.deleteOne({
@@ -124,7 +123,7 @@ function removeAccount(email: string) {
 }
 
 // Remove token after five minutes (for password reset flow)
-function removeToken(email: string) {
+export function removeToken(email: string) {
   const timeoutId = setTimeout(async () => {
     try {
       await User.updateOne(
@@ -151,143 +150,7 @@ function removeToken(email: string) {
 /**
  * @api Google Auth
  */
-app.post("/google-auth", async function (req, res) {
-  const { email, username, emailVerified, picture, uid } = req.body;
-  logger(
-    `Request received for google authentication, email: ${email}`,
-    LogLevel.INFO
-  );
-  if (!emailVerified) {
-    logger(`Email not verified, email: ${email}`, LogLevel.INFO);
-    return res.json({
-      status: ResponseStatus.ERROR,
-      error: ErrorMessage.GOOGLE_AUTH_EMAIL_UNVERIFIED,
-    });
-  }
-
-  let user: UserType;
-  try {
-    user = await User.findOne({ email }).lean();
-  } catch (error) {
-    logger(
-      `${ErrorMessage.UNABLE_TO_FIND_USER}, email: ${email}`,
-      LogLevel.ERROR,
-      error
-    );
-    return res.json({
-      status: ResponseStatus.ERROR,
-      error: ErrorMessage.SERVER_ERROR,
-    });
-  }
-  if (user) {
-    if (user.uid === uid && user.provider === AuthProvider.GOOGLE) {
-      try {
-        const userData = await getUserData(email);
-        logger(
-          `Google authentication successful, email: ${email}`,
-          LogLevel.INFO
-        );
-        return res.json({
-          status: ResponseStatus.OK,
-          userCredentials: { username, email, imageUrl: picture },
-          userData,
-        });
-      } catch (error) {
-        logger(
-          `${ErrorMessage.UNABLE_TO_FIND_USERDATA}, email: ${email}`,
-          LogLevel.ERROR,
-          error
-        );
-        return res.json({
-          status: ResponseStatus.ERROR,
-          error: ErrorMessage.SERVER_ERROR,
-        });
-      }
-    } else {
-      try {
-        session.startTransaction();
-        await User.updateOne(
-          { email },
-          {
-            $set: {
-              username,
-              provider: AuthProvider.GOOGLE,
-              imageUrl: picture,
-              uid,
-            },
-          },
-          { session }
-        );
-        const userData = await getUserData(email);
-        session.commitTransaction();
-        logger(
-          `Google authentication successful, email: ${email}`,
-          LogLevel.INFO
-        );
-        return res.json({
-          status: ResponseStatus.OK,
-          userCredentials: { username, email, imageUrl: picture },
-          userData,
-        });
-      } catch (error) {
-        session.abortTransaction();
-        logger(
-          `${ErrorMessage.UNABLE_TO_UPDATE_USER} for google authentication, email: ${email}`,
-          LogLevel.ERROR,
-          error
-        );
-        return res.json({
-          status: ResponseStatus.ERROR,
-          error: ErrorMessage.SERVER_ERROR,
-        });
-      }
-    }
-  } else {
-    session.startTransaction();
-    try {
-      await User.create(
-        [
-          {
-            username,
-            email,
-            password: passwordGenerator(10),
-            createdAt: new Date(),
-            provider: AuthProvider.GOOGLE,
-            uid,
-            imageUrl: picture,
-          },
-        ],
-        { session }
-      );
-      await createUserData(email, session);
-      session.commitTransaction();
-      logger(
-        `${Message.NEW_USER_ADDED}, through ${AuthProvider.GOOGLE}`,
-        LogLevel.INFO
-      );
-      logger(
-        `Google authentication successful, email: ${email}`,
-        LogLevel.INFO
-      );
-      return res.json({
-        status: ResponseStatus.OK,
-        userCredentials: { username, email },
-        userData: null,
-      });
-    } catch (error) {
-      session.abortTransaction();
-      logger(
-        `${ErrorMessage.UNABLE_TO_CREATE_USER} for google authentication, email: ${email}`,
-        LogLevel.ERROR,
-        error
-      );
-      return res.json({
-        status: ResponseStatus.ERROR,
-        error: ErrorMessage.SERVER_ERROR,
-      });
-    }
-  }
-});
+app.post("/google-auth", GoogleAuth);
 
 /**
  * @api Register user
