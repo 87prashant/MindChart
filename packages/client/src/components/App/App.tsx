@@ -140,19 +140,6 @@ function App() {
   const serverTimeoutId = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    if (!isDemoActive && !!window.localStorage.getItem("savedData")) {
-      setIsChartAdded(false);
-      setSavedData(
-        JSON.parse(window.localStorage.getItem("savedData")!).map(
-          (d: NodeDataType) => {
-            return { ...d, _id: new ObjectId(d._id) };
-          }
-        )
-      );
-    }
-  }, [isDemoActive]);
-
-  useEffect(() => {
     if (!isDemoActive) {
       window.localStorage.setItem("savedData", JSON.stringify(savedData));
     }
