@@ -63,6 +63,12 @@ function getStoredData() {
     : ([] as NodeDataType[]);
 }
 
+export interface UserInfoType {
+  username: string;
+  email: string;
+  imageUrl: string;
+}
+
 type State =
   | {
       isLoggedIn: boolean;
@@ -74,10 +80,15 @@ type State =
 function App() {
   // It is passed in case routed from verification and forget-password page
   const state: State = useLocation().state;
-  // Stores if user is Logged in or not
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    !!state?.isLoggedIn || !!window.localStorage.getItem("userInfo")
+  // Stores userInfo: email, username, imageUrl
+  const [userInfo, setUserInfo] = useState<UserInfoType | null>(
+    !!state?.userInfo
+      ? state.userInfo
+      : !!window.localStorage.getItem("userInfo")
+      ? JSON.parse(window.localStorage.getItem("userInfo")!)
+      : null
   );
+
   // Stores if the demo mode is active or not
   const [isDemoActive, setIsDemoActive] = useState(false);
   // Stores if node form should be visible to create/edit nodes
@@ -145,12 +156,9 @@ function App() {
     }
   }, [savedData, isDemoActive]);
 
-  // using useMemo because useEffect and useLayoutEffect runs after the parent and child components render, but I need userInfo in ProfileButton before that
-  useMemo(() => {
-    if (isLoggedIn && !!state) {
-      window.localStorage.setItem("userInfo", JSON.stringify(state?.userInfo));
-    }
-  }, [isLoggedIn, state]);
+  useEffect(() => {
+    window.localStorage.setItem("userInfo", JSON.stringify(userInfo));
+  }, [userInfo]);
 
   useEffect(() => {
     const handleDebounceResize = debounce(function handleResize() {
@@ -307,7 +315,7 @@ function App() {
       return !d!._id.equals(selectedNode!._id);
     });
     setSavedData([...newSavedData]);
-    if (isLoggedIn) {
+    if (!!userInfo) {  // check is logged in ?
       serverTimeoutId.current = setTimeout(() => {
         handleStatus();
       }, Misc.MODIFY_DATA_API_TIMEOUT) as unknown as number;
@@ -361,9 +369,7 @@ function App() {
         setShowNodeForm={setShowNodeForm}
         setSavedData={setSavedData}
         setIsChartAdded={setIsChartAdded}
-        demoData={demoData}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
+        isLoggedIn={!!userInfo}
         setShowProfileModal={setShowProfileModal}
         showProfileModal={showProfileModal}
         setShowNodeClickModal={setShowNodeClickModal}
@@ -372,6 +378,8 @@ function App() {
         handleNotificationBanner={handleNotificationBanner}
         setShowConfirmationModal={setShowConfirmationModal}
         setHandleConfirmation={setHandleConfirmation}
+        setUserInfo={setUserInfo}
+        userInfo={userInfo}
       />
       <Container
         showNodeClickModal={showNodeClickModal}
@@ -395,7 +403,7 @@ function App() {
           nodeData={nodeData}
           setNodeData={setNodeData}
           isDemoActive={isDemoActive}
-          isLoggedIn={isLoggedIn}
+          isLoggedIn={!!userInfo}
           isEditing={isEditing}
           setIsEditing={setIsEditing}
           handleNotificationBanner={handleNotificationBanner}

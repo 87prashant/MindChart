@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Misc } from "./constants";
+import { UserInfoType } from "./App/App";
 
 const Container = styled("div")({
   width: Misc.HEADER_HEIGHT - 10,
@@ -23,30 +24,24 @@ const Image = styled("img")({
 
 interface Props {
   setShowProfileModal: any;
+  userInfo: UserInfoType | null;
 }
 
 const ProfileButton = (props: Props) => {
-  const { setShowProfileModal } = props;
+  const { setShowProfileModal, userInfo } = props;
 
   function handleClick(e: any) {
     e.stopPropagation();
     setShowProfileModal(true);
   }
 
-  const { username, imageUrl } = JSON.parse(
-    window.localStorage.getItem("userInfo")!
-  );
-
-  let i: any = 0;
-  let surnameFirstLetter: string = "";
-  for (i in username as any) {
-    if (username[i] === " ") surnameFirstLetter = username[++i];
-  }
-  const userInitial = (username.slice(0, 1) + surnameFirstLetter).toUpperCase();
-
   return (
     <Container onClick={handleClick}>
-      {imageUrl ? <Image src={imageUrl} alt="img" /> : userInitial}
+      {userInfo?.imageUrl ? (
+        <Image src={userInfo.imageUrl} alt="img" />
+      ) : (
+        userInfo?.username.slice(0, 1)
+      )}
     </Container>
   );
 };

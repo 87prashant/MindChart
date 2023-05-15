@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { HorizontalRule } from "./AuthenticationForm";
 import { Misc, NotificationMessage, ResponseStatus } from "./constants";
+import { UserInfoType } from "./App/App";
 
 const Container = styled("div")({
   position: "absolute",
@@ -31,24 +32,26 @@ const Button = styled("input")({
 });
 
 interface Props {
-  setIsLoggedIn: any;
   setSavedData: any;
   setIsChartAdded: any;
   setShowProfileModal: any;
   handleNotificationBanner: any;
   setShowConfirmationModal: any;
   setHandleConfirmation: any;
+  setUserInfo: any;
+  userInfo: UserInfoType | null
 }
 
 const ProfileModal = (props: Props) => {
   const {
-    setIsLoggedIn,
     setSavedData,
     setIsChartAdded,
     setShowProfileModal,
     handleNotificationBanner,
     setShowConfirmationModal,
     setHandleConfirmation,
+    setUserInfo,
+    userInfo
   } = props;
 
   const handleLogoutConfirm = () => {
@@ -56,11 +59,9 @@ const ProfileModal = (props: Props) => {
     setHandleConfirmation(() => () => {
       setShowConfirmationModal(false);
       setShowProfileModal(false);
-      setIsLoggedIn(false);
       setSavedData([]);
       setIsChartAdded(false);
-      window.localStorage.removeItem("savedData");
-      window.localStorage.removeItem("userInfo");
+      setUserInfo(null);
       handleNotificationBanner(
         NotificationMessage.LOGGED_OUT,
         ResponseStatus.OK
@@ -70,7 +71,7 @@ const ProfileModal = (props: Props) => {
 
   return (
     <Container onClick={(e) => e.stopPropagation()}>
-      <Info>{JSON.parse(window.localStorage.getItem("userInfo")!).email}</Info>
+      <Info>{userInfo?.email}</Info>
       <HorizontalRule />
       <Button value="Log out" type="button" onClick={handleLogoutConfirm} />
     </Container>

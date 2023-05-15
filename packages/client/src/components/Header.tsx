@@ -7,6 +7,8 @@ import ProfileModal from "./ProfileModal";
 import { Misc, TooltipMessage } from "./constants";
 import DeleteSvg from "./SvgComponent/DeleteSvg";
 import { ObjectId } from "bson";
+import { UserInfoType } from "./App/App";
+import { demoData } from "./App/demoData";
 
 const StyledHeader = styled("div")({
   height: `${Misc.HEADER_HEIGHT}px`,
@@ -116,8 +118,6 @@ interface Props {
   setIsDemoActive: any;
   setSavedData: any;
   setIsChartAdded: any;
-  demoData: NodeDataType[];
-  setIsLoggedIn: any;
   isLoggedIn: boolean;
   setShowProfileModal: any;
   showProfileModal: boolean;
@@ -127,6 +127,8 @@ interface Props {
   handleNotificationBanner: any;
   setShowConfirmationModal: any;
   setHandleConfirmation: any;
+  setUserInfo: any;
+  userInfo: UserInfoType | null;
 }
 
 const Header = (props: Props) => {
@@ -135,9 +137,7 @@ const Header = (props: Props) => {
     isDemoActive,
     setIsDemoActive,
     setSavedData,
-    demoData,
     setIsChartAdded,
-    setIsLoggedIn,
     isLoggedIn,
     setShowProfileModal,
     setShowNodeClickModal,
@@ -147,6 +147,8 @@ const Header = (props: Props) => {
     handleNotificationBanner,
     setShowConfirmationModal,
     setHandleConfirmation,
+    setUserInfo,
+    userInfo,
   } = props;
 
   const [showAuthenticationForm, setShowAuthenticationForm] = useState(false);
@@ -220,23 +222,27 @@ const Header = (props: Props) => {
       {!isLoggedIn && showAuthenticationForm && (
         <AuthenticationForm
           setShowAuthenticationForm={setShowAuthenticationForm}
-          setIsLoggedIn={setIsLoggedIn}
           setSavedData={setSavedData}
           setIsChartAdded={setIsChartAdded}
+          setUserInfo={setUserInfo}
         />
       )}
       {isLoggedIn && (
-        <ProfileButton setShowProfileModal={setShowProfileModal} />
+        <ProfileButton
+          setShowProfileModal={setShowProfileModal}
+          userInfo={userInfo}
+        />
       )}
       {isLoggedIn && showProfileModal && (
         <ProfileModal
-          setIsLoggedIn={setIsLoggedIn}
           setSavedData={setSavedData}
           setIsChartAdded={setIsChartAdded}
           setShowProfileModal={setShowProfileModal}
           handleNotificationBanner={handleNotificationBanner}
           setShowConfirmationModal={setShowConfirmationModal}
           setHandleConfirmation={setHandleConfirmation}
+          setUserInfo={setUserInfo}
+          userInfo={userInfo}
         />
       )}
     </StyledHeader>
