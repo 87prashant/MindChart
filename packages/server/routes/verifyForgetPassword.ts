@@ -6,15 +6,26 @@ import {
   ResponseStatus,
 } from "../constants";
 import logger from "../logger";
-import { UserType, createUserData, session } from "../server";
+import { UserType, getUserData, session } from "../server";
 import User from "../model/user";
+import bcrypt from "bcryptjs";
 
-const EmailVerification = async (req, res) => {
-  const { email, verificationToken } = req.body;
+const verifyForgetPassword = async (req, res) => {
+  const { email, verificationToken, password: plainPassword } = req.body;
   logger(
-    `Request received for email verification, email: ${email}`,
+    `Request received for password reset verification, email:  ${email}`,
     LogLevel.INFO
   );
+
+  // Validation
+  if (plainPassword.length < 8) {
+    logger(`${ErrorMessage.SHORT_PASSWORD}, email: ${email}`, LogLevel.INFO);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: ErrorMessage.SHORT_PASSWORD,
+    });
+  }
+
   let user: UserType;
   try {
     user = await User.findOne({ email }).lean();
@@ -38,14 +49,19 @@ const EmailVerification = async (req, res) => {
       error: ErrorMessage.NOT_REGISTERED,
     });
   }
-  if (user.status !== AccountStatus.UNVERIFIED) {
+  if (!user.status) {
     logger(`${ErrorMessage.NOT_ALLOWED}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
       error: ErrorMessage.NOT_ALLOWED,
     });
-  }
-  if (user.verificationToken !== verificationToken) {
+  } else if (user.status == AccountStatus.UNVERIFIED) {
+    logger(`${ErrorMessage.NOT_VERIFIED}, email: ${email}`, LogLevel.INFO);
+    return res.json({
+      status: ResponseStatus.ERROR,
+      error: ErrorMessage.NOT_VERIFIED,
+    });
+  } else if (user.verificationToken !== verificationToken) {
     logger(`${ErrorMessage.INVALID_TOKEN}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.ERROR,
@@ -53,27 +69,34 @@ const EmailVerification = async (req, res) => {
     });
   }
 
-  // Update user as verified
+  // Change password
   // Start the transaction
   session.startTransaction();
+  const password = await bcrypt.hash(plainPassword, 10);
   try {
     await User.updateMany(
       { email },
-      { $unset: { verificationToken: "", status: "" } }, // no status means verified
+      { $unset: { status: "", verificationToken: "" } },
       { session }
     );
-    await createUserData(email, session);
+    await User.updateMany(
+      { email },
+      { $set: { password: password } },
+      { session }
+    ); // why not working in one query?
+    const userData = await getUserData(email);
     session.commitTransaction();
     logger(`${Message.VERIFY_SUCCESS}, email: ${email}`, LogLevel.INFO);
     return res.json({
       status: ResponseStatus.OK,
       username: user.username,
       imageUrl: user.imageUrl,
+      userData,
     });
   } catch (error) {
     session.abortTransaction();
     logger(
-      `${ErrorMessage.UNABLE_TO_UPDATE_USER}, email: ${email}`,
+      `${ErrorMessage.UNABLE_TO_UPDATE_USER} to reset password, email: ${email}`,
       LogLevel.ERROR,
       error
     );
@@ -84,4 +107,4 @@ const EmailVerification = async (req, res) => {
   }
 };
 
-export default EmailVerification;
+export default verifyForgetPassword;

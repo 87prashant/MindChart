@@ -10,7 +10,7 @@ import { UserType, getUserData } from "../server";
 import User from "../model/user";
 import bcrypt from "bcryptjs";
 
-const Login = async (req, res) => {
+const login = async (req, res) => {
   const { email, password: plainPassword } = req.body;
   logger(`Request received for login, email: ${email}`, LogLevel.INFO);
 
@@ -87,4 +87,4 @@ const Login = async (req, res) => {
   });
 };
 
-export default Login;
+export default login;

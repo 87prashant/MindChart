@@ -17,22 +17,16 @@ import cors from "cors";
 import User from "./model/user";
 import UserData from "./model/userdata";
 import logger from "./logger";
-import {
-  ErrorMessage,
-  Message,
-  LogLevel,
-  AccountStatus,
-  ResponseStatus,
-  DataOperation,
-} from "./constants";
+import { ErrorMessage, Message, LogLevel, AccountStatus } from "./constants";
 import { ClientSession } from "mongodb";
 import { Document } from "mongoose";
-import GoogleAuth from "./routes/GoogleAuth";
-import Register from "./routes/Register";
-import EmailVerification from "./routes/EmailVerification";
-import ForgetPassword from "./routes/ForgetPassword";
-import ForgetPasswordVerification from "./routes/ForgetPasswordVerification";
-import Login from "./routes/Login";
+import googleAuth from "./routes/googleAuth";
+import register from "./routes/register";
+import verifyEmail from "./routes/verifyEmail";
+import requestPasswordReset from "./routes/requestPasswordReset";
+import verifyForgetPassword from "./routes/verifyForgetPassword";
+import login from "./routes/login";
+import modifyUserData from "./routes/modifyUserData";
 
 const app = express();
 
@@ -150,36 +144,36 @@ export function removeToken(email: string) {
 /**
  * @api Google Auth
  */
-app.post("/google-auth", GoogleAuth);
+app.post("/google-auth", googleAuth);
 
 /**
  * @api Register user
  */
-app.post("/register", Register);
+app.post("/register", register);
 
 /**
  * @api Email verification
  */
-app.post("/verify-email", EmailVerification);
+app.post("/verify-email", verifyEmail);
 
 /**
  * @api Forget password
  */
-app.post("/forget-password", ForgetPassword);
+app.post("/forget-password", requestPasswordReset);
 
 /**
  * @api Forget password verification
  */
-app.post("/forget-password-verify", ForgetPasswordVerification);
+app.post("/forget-password-verify", verifyForgetPassword);
 
 /**
  * @api Login user
  */
-app.post("/login", Login);
+app.post("/login", login);
 
 /**
  * @api Modify user data
  */
-app.post("/modify-data", ModifyUserData);
+app.post("/modify-data", modifyUserData);
 
 app.listen(8000);

@@ -13,7 +13,7 @@ import getVerificationToken from "../getVerificationToken";
 import registrationMailString from "../build/RegistrationMail";
 import mailSender from "../mailSender";
 
-const Register = async (req, res) => {
+const register = async (req, res) => {
   const { username, email, password: plainPassword } = req.body;
   logger(
     `Request received for user registration, email: ${email}`,
@@ -163,4 +163,4 @@ const Register = async (req, res) => {
   }
 };
 
-export default Register;
+export default register;

@@ -10,7 +10,7 @@ import { UserType, createUserData, getUserData, session } from "../server";
 import User from "../model/user";
 import passwordGenerator from "password-generator";
 
-const GoogleAuth = async (req, res) => {
+const googleAuth = async (req, res) => {
   const { email, username, emailVerified, picture, uid } = req.body;
   logger(
     `Request received for google authentication, email: ${email}`,
@@ -148,4 +148,4 @@ const GoogleAuth = async (req, res) => {
   }
 };
 
-export default GoogleAuth;
+export default googleAuth;

@@ -10,7 +10,7 @@ import { session } from "../server";
 import UserData from "../model/userdata";
 import { ClientSession } from "mongoose";
 
-const ModifyUserData = async (req, res) => {
+const modifyUserData = async (req, res) => {
   const { email, data, operation } = req.body;
   logger(
     `Request received for user data modification, email: ${email}`,
@@ -100,4 +100,4 @@ const ModifyUserData = async (req, res) => {
   }
 };
 
-export default ModifyUserData;
+export default modifyUserData;

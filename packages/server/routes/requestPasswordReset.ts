@@ -12,7 +12,7 @@ import getVerificationToken from "../getVerificationToken";
 import mailSender from "../mailSender";
 import forgetPasswordMailString from "../build/ForgetPasswordMail";
 
-const ForgetPassword = async (req, res) => {
+const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
   logger(`Request received for password reset, email: ${email}`, LogLevel.INFO);
 
@@ -114,4 +114,4 @@ const ForgetPassword = async (req, res) => {
   }
 };
 
-export default ForgetPassword;
+export default requestPasswordReset;
