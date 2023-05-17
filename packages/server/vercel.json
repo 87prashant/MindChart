@@ -11,5 +11,8 @@
       "src": "/(.*)",
       "dest": "server.ts"
     }
-  ]
+  ],
+  "functions": {
+    "routes/*.tx": {}
+  }
 }
