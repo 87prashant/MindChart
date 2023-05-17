@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ObjectId } from "bson"
+import { ObjectId } from "bson";
 
 const UserDataSchema = new mongoose.Schema(
   {
@@ -26,7 +26,7 @@ const UserDataSchema = new mongoose.Schema(
         },
         priority: { type: Number },
         description: { type: String },
-        _id: {type: ObjectId, unique: true, required: true}
+        _id: { type: ObjectId, unique: true, required: true },
       },
     ],
   },
