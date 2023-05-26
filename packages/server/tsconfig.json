@@ -10,7 +10,7 @@
       "outDir": "./dist",
       "allowJs": true
     },
-    "include": ["*"],
+    "include": ["*", "api/server.ts"],
     "exclude": [
         "node_modules/@types/d3-selection",
         "node_modules/@types/d3-fetch"
