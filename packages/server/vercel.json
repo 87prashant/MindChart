@@ -1,5 +1,7 @@
 {
   "functions": {
-    "server.ts": {}
+    "server.ts": {
+      "runtime": "@vercel/node"
+    }
   }
 }
