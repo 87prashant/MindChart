@@ -1,6 +1,6 @@
 {
   "functions": {
-    "/server.ts": {
+    "./server.ts": {
       "includeFiles": "routes/*.ts"
     }
   }
