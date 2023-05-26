@@ -1,15 +1,5 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.ts"
-    }
-  ],
   "functions": {
-    "routes/*.tx": {
-      "memory": 3008,
-      "maxDuration": 30
-    }
+    "server.ts": {}
   }
 }
